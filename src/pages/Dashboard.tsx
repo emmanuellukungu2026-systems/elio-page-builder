@@ -19,6 +19,7 @@ import {
   splitTags,
   waLink,
 } from "@/lib/elio";
+import { downloadBriefPdf } from "@/lib/brief-pdf";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
@@ -26,6 +27,7 @@ import {
   ArrowUpRight,
   Briefcase,
   Check,
+  Download,
   Eye,
   EyeOff,
   FolderGit2,
@@ -482,6 +484,34 @@ function Editor({ page }: { page: Page }) {
             >
               <MessageCircle className="size-3.5" /> {sb.conciergeCta}
             </Button>
+            <button
+              type="button"
+              onClick={() =>
+                downloadBriefPdf({
+                  businessName: page.displayName,
+                  trade: page.trade,
+                  location: page.location,
+                  since: page.since,
+                  email: page.email,
+                  whatsapp: page.whatsapp,
+                  instagram: page.instagram,
+                  linkedin: page.linkedin,
+                  headline: page.headline,
+                  bio: page.bio,
+                  story: page.story,
+                  accent: page.accent,
+                  style: page.style,
+                  logoUrl: page.logoUrl,
+                  coverUrl: page.coverUrl,
+                  username: page.username,
+                  profileLink: profileUrl(page.username),
+                  items: page.items,
+                })
+              }
+              className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-border/60 py-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              <Download className="size-3.5" /> {t.services.pdf.download}
+            </button>
           </div>
         </div>
       </div>

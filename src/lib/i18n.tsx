@@ -105,9 +105,9 @@ const en = {
   },
   services: {
     kicker: "Elio Concierge",
-    title: "We build it with you — free.",
+    title: "Your brief is your order.",
     subtitle:
-      "Send us your business details and our team assembles the page for you: structure, wording, images and colors. No fees, no subscriptions — Elio Pages is a free service.",
+      "Fill in your business details once — the form becomes a complete order brief. Send it to our team on WhatsApp, attach the generated PDF if you like, and we build and publish your page. Free.",
     steps: [
       {
         title: "Send your brief",
@@ -134,9 +134,20 @@ const en = {
       details: "Tell us about your business",
       detailsPh:
         "Where are you based? What services do you offer? Links to photos, socials or an existing site — anything that helps us tell your story.",
-      submit: "Send to WhatsApp",
-      submitShort: "Send via WhatsApp",
-      privacy: "Your brief is sent straight to our team on WhatsApp — nothing is stored for marketing.",
+      submit: "Send order on WhatsApp",
+      submitShort: "Send on WhatsApp",
+      privacy: "Your brief goes straight to our team on WhatsApp — that message is your order.",
+    },
+    pdf: {
+      download: "Download the brief as PDF",
+      attach: "PDF ready — attach it to the WhatsApp chat",
+      title: "How your order works",
+      lines: [
+        "1. Fill in the form — every field lands in the brief.",
+        "2. Tap “Send on WhatsApp”: the chat opens with your full brief pre-written.",
+        "3. Optional: attach the PDF version for a clean, printable order.",
+        "4. Our team replies, builds the page and publishes it with you.",
+      ],
     },
     made: {
       title: "The fine print",
@@ -240,9 +251,9 @@ const en = {
       addService: "Service",
       addPrice: "Offer",
       empty: "Nothing here yet. Add your first project, service or reference above.",
-      whatsappHandoff: "Send by WhatsApp",
+      whatsappHandoff: "Send order by WhatsApp",
       whatsappHandoffDesc:
-        "Transmit the whole brief to our team — we review it and publish the page with you.",
+        "Your full brief opens in WhatsApp as a pre-written message — that message is your order.",
     },
     item: {
       title: "Title",
@@ -267,10 +278,10 @@ const en = {
       open: "Open",
       copy: "Copy",
       copied: "Copied",
-      conciergeTitle: "Prefer we build it?",
+      conciergeTitle: "Your order, one tap away",
       conciergeText:
-        "Send this brief to our team on WhatsApp — we'll assemble the page for you, free.",
-      conciergeCta: "Send to WhatsApp",
+        "Send your full brief to our team on WhatsApp — the message is the order. Add the PDF for a clean copy.",
+      conciergeCta: "Send order on WhatsApp",
     },
   },
   directory: {
@@ -437,9 +448,9 @@ const fr: Dict = {
   },
   services: {
     kicker: "Conciergerie Elio",
-    title: "On la construit avec vous — gratuitement.",
+    title: "Votre brief vaut commande.",
     subtitle:
-      "Envoyez les informations de votre entreprise et notre équipe assemble la page pour vous : structure, textes, images et couleurs. Sans frais, sans abonnement — Elio Pages est un service gratuit.",
+      "Remplissez une fois les informations de votre entreprise — le formulaire devient un brief de commande complet. Envoyez-le à notre équipe sur WhatsApp, joignez le PDF généré si vous voulez, et nous créons et publions votre page. Gratuit.",
     steps: [
       {
         title: "Envoyez votre brief",
@@ -466,9 +477,20 @@ const fr: Dict = {
       details: "Parlez-nous de votre entreprise",
       detailsPh:
         "Où êtes-vous installés ? Quels services proposez-vous ? Liens vers photos, réseaux ou site existant — tout ce qui aide à raconter votre histoire.",
-      submit: "Envoyer sur WhatsApp",
-      submitShort: "Envoyer via WhatsApp",
-      privacy: "Votre brief part directement à notre équipe sur WhatsApp — rien n'est conservé pour du marketing.",
+      submit: "Envoyer la commande sur WhatsApp",
+      submitShort: "Envoyer sur WhatsApp",
+      privacy: "Votre brief part directement à notre équipe sur WhatsApp — ce message est votre commande.",
+    },
+    pdf: {
+      download: "Télécharger le brief en PDF",
+      attach: "PDF prêt — joignez-le à la conversation WhatsApp",
+      title: "Comment se passe votre commande",
+      lines: [
+        "1. Remplissez le formulaire — chaque champ arrive dans le brief.",
+        "2. Appuyez sur « Envoyer sur WhatsApp » : la discussion s'ouvre avec votre brief complet pré-écrit.",
+        "3. Optionnel : joignez la version PDF pour une commande propre et imprimable.",
+        "4. Notre équipe répond, construit la page et la publie avec vous.",
+      ],
     },
     made: {
       title: "En toute transparence",
@@ -572,9 +594,9 @@ const fr: Dict = {
       addService: "Service",
       addPrice: "Offre",
       empty: "Rien ici pour l'instant. Ajoutez votre premier projet, service ou référence ci-dessus.",
-      whatsappHandoff: "Envoyer par WhatsApp",
+      whatsappHandoff: "Envoyer la commande sur WhatsApp",
       whatsappHandoffDesc:
-        "Transmettez le brief complet à notre équipe — nous le relisons et publions la page avec vous.",
+        "Votre brief complet s'ouvre dans WhatsApp en message pré-écrit — ce message est votre commande.",
     },
     item: {
       title: "Titre",
@@ -599,10 +621,10 @@ const fr: Dict = {
       open: "Ouvrir",
       copy: "Copier",
       copied: "Copié",
-      conciergeTitle: "On la construit pour vous ?",
+      conciergeTitle: "Votre commande, en un geste",
       conciergeText:
-        "Envoyez ce brief à notre équipe sur WhatsApp — nous assemblons la page pour vous, gratuitement.",
-      conciergeCta: "Envoyer sur WhatsApp",
+        "Envoyez votre brief complet à notre équipe sur WhatsApp — le message est la commande. Ajoutez le PDF pour une copie propre.",
+      conciergeCta: "Envoyer la commande",
     },
   },
   directory: {
@@ -767,9 +789,9 @@ const tr: Dict = {
   },
   services: {
     kicker: "Elio Danışma",
-    title: "Sizin için ücretsiz kuruyoruz.",
+    title: "Brief'iniz sizin siparişinizdir.",
     subtitle:
-      "Firma bilgilerinizi gönderin; ekibimiz sayfayı sizin için kurar: yapı, metinler, görseller ve renkler. Ücret yok, abonelik yok — Elio Pages ücretsiz bir hizmettir.",
+      "Firma bilgilerinizi bir kez girin — form eksiksiz bir sipariş brief'ine dönüşür. Ekibimize WhatsApp'tan gönderin, isterseniz oluşturulan PDF'i ekleyin; sayfanızı kurup yayınlarız. Ücretsiz.",
     steps: [
       {
         title: "Bilgilerinizi gönderin",
@@ -796,9 +818,20 @@ const tr: Dict = {
       details: "Firmanızdan bahsedin",
       detailsPh:
         "Nerede faaliyetsiniz? Hangi hizmetleri veriyorsunuz? Fotoğraf, sosyal medya veya mevcut site linkleri — hikayenizi anlatmaya yarayan her şey.",
-      submit: "WhatsApp'tan gönder",
+      submit: "Siparişi WhatsApp'tan gönder",
       submitShort: "WhatsApp ile gönder",
-      privacy: "Brief doğrudan WhatsApp üzerinden ekibimize gider — pazarlama için saklanmaz.",
+      privacy: "Brief doğrudan WhatsApp üzerinden ekibimize gider — bu mesaj siparişinizdir.",
+    },
+    pdf: {
+      download: "Brief'i PDF olarak indir",
+      attach: "PDF hazır — WhatsApp sohbetine ekleyin",
+      title: "Siparişiniz nasıl işler",
+      lines: [
+        "1. Formu doldurun — her alan brief'e işlenir.",
+        "2. “WhatsApp ile gönder”e dokunun: sohbet, tam brief'iniz önceden yazılmış şekilde açılır.",
+        "3. İsterseniz PDF sürümünü ekleyin — temiz, yazdırılabilir bir sipariş için.",
+        "4. Ekibimiz cevap verir, sayfayı kurar ve sizinle yayınlar.",
+      ],
     },
     made: {
       title: "Küçük yazı",
@@ -902,9 +935,9 @@ const tr: Dict = {
       addService: "Hizmet",
       addPrice: "Teklif",
       empty: "Henüz bir şey yok. Yukarıdan ilk projenizi, hizmetinizi veya referansınızı ekleyin.",
-      whatsappHandoff: "WhatsApp ile gönder",
+      whatsappHandoff: "Siparişi WhatsApp ile gönder",
       whatsappHandoffDesc:
-        "Tüm brief'i ekibimize iletin — biz inceler ve sayfayı sizinle birlikte yayınlarız.",
+        "Tam brief'iniz WhatsApp'ta önceden yazılmış mesaj olarak açılır — bu mesaj siparişinizdir.",
     },
     item: {
       title: "Başlık",
@@ -929,10 +962,10 @@ const tr: Dict = {
       open: "Aç",
       copy: "Kopyala",
       copied: "Kopyalandı",
-      conciergeTitle: "Biz mi kuralım?",
+      conciergeTitle: "Siparişiniz tek dokunuşta",
       conciergeText:
-        "Bu brief'i WhatsApp'tan ekibimize gönderin — sayfayı sizin için ücretsiz kurarız.",
-      conciergeCta: "WhatsApp ile gönder",
+        "Tam brief'inizi WhatsApp'tan ekibimize gönderin — mesajın kendisi sipariştir. PDF'i de ekleyin.",
+      conciergeCta: "Siparişi gönder",
     },
   },
   directory: {

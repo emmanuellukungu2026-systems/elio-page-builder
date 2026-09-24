@@ -1,20 +1,18 @@
-import logo from "@/assets/logo.svg";
+import logo from "@/assets/logo.png";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { LangSwitcher } from "@/components/LangSwitcher";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
-const LINKS = [
-  { label: "Features", href: "/#features" },
-  { label: "Services", href: "/services" },
-  { label: "FAQ", href: "/#faq" },
-];
-
 /** Glass top bar: transparent at top, denser glass once scrolling. */
 export function Nav() {
+  const { t } = useI18n();
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,6 +20,13 @@ export function Nav() {
   const navigate = useNavigate();
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 24));
+
+  const links = [
+    { label: t.nav.features, href: "/#features" },
+    { label: t.nav.directory, href: "/directory" },
+    { label: t.nav.services, href: "/services" },
+    { label: t.nav.faq, href: "/#faq" },
+  ];
 
   return (
     <motion.header
@@ -40,17 +45,18 @@ export function Nav() {
         )}
       >
         <Link to="/" className="group flex items-center gap-2.5">
-          <img src={logo} alt="Elio" className="size-7 transition-transform duration-300 group-hover:rotate-12" />
+          <img
+            src={logo}
+            alt="Elio Pages"
+            className="size-7 rounded-md transition-transform duration-300 group-hover:scale-110"
+          />
           <span className="font-display text-lg font-semibold tracking-tight text-foreground">
-            Elio
-          </span>
-          <span className="hidden rounded-full border border-border/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground sm:inline-block">
-            Aethel
+            Elio <span className="text-muted-foreground">Pages</span>
           </span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          {LINKS.map((l) => (
+          {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
@@ -62,15 +68,13 @@ export function Nav() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {!isLoading && isAuthenticated ? (
-            <>
-              <Button size="sm" className="rounded-xl btn-glow" onClick={() => navigate("/dashboard")}>
-                My Elio
-              </Button>
-              <Button size="sm" variant="ghost" className="hidden rounded-xl sm:inline-flex" onClick={() => navigate("/dashboard")}>
-                Dashboard
-              </Button>
-            </>
+          <LangSwitcher />
+          <ThemeToggle />
+
+          {isLoading ? null : isAuthenticated ? (
+            <Button size="sm" className="btn-glow rounded-xl" onClick={() => navigate("/dashboard")}>
+              {t.nav.myElio}
+            </Button>
           ) : (
             <>
               <Button
@@ -79,13 +83,18 @@ export function Nav() {
                 className="hidden rounded-xl sm:inline-flex"
                 onClick={() => navigate("/auth?returnTo=%2Fdashboard")}
               >
-                Sign in
+                {t.nav.signIn}
               </Button>
-              <Button size="sm" className="btn-glow rounded-xl" onClick={() => navigate("/auth?returnTo=%2Fdashboard")}>
-                Create your Elio
+              <Button
+                size="sm"
+                className="btn-glow hidden rounded-xl sm:inline-flex"
+                onClick={() => navigate("/auth?returnTo=%2Fdashboard")}
+              >
+                {t.nav.create}
               </Button>
             </>
           )}
+
           <button
             className="ml-1 inline-flex rounded-lg p-2 text-muted-foreground hover:bg-accent md:hidden"
             aria-label="Toggle menu"
@@ -94,9 +103,10 @@ export function Nav() {
             {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
+
         {menuOpen && (
-          <div className="glass mx-3 mt-2 rounded-2xl p-3 md:hidden">
-            {LINKS.map((l) => (
+          <div className="glass absolute inset-x-3 top-full mt-2 rounded-2xl p-3 md:hidden">
+            {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
@@ -106,6 +116,14 @@ export function Nav() {
                 {l.label}
               </a>
             ))}
+            {!isAuthenticated && (
+              <button
+                onClick={() => navigate("/auth?returnTo=%2Fdashboard")}
+                className="block w-full rounded-xl px-3 py-2.5 text-left text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                {t.nav.signIn}
+              </button>
+            )}
           </div>
         )}
       </div>
