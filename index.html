@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/logo-64.png" />
@@ -10,7 +10,7 @@
       name="description"
       content="Elio Pages — premium portfolio pages for freelancers and small businesses. Browse the catalog, open a project, start a conversation."
     />
-    <meta name="theme-color" content="#070A14" />
+    <meta name="theme-color" content="#f6f5f1" />
     <title>Elio Pages — Premium portfolios for businesses that mean business</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,11 +19,12 @@
       rel="stylesheet"
     />
     <script>
-      // Apply saved theme/language before first paint to avoid flashes
+      // Apply saved theme before first paint. Default is light mode; dark is
+      // only restored if the visitor explicitly chose it.
       (function () {
         try {
           var t = localStorage.getItem("elio-theme");
-          if (t === "light") document.documentElement.classList.remove("dark");
+          if (t === "dark") document.documentElement.classList.add("dark");
         } catch (e) {}
         try {
           var l = localStorage.getItem("elio-lang");
