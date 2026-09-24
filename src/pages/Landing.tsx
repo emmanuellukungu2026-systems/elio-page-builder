@@ -50,7 +50,6 @@ export default function Landing() {
 
       {/* ================= HERO ================= */}
       <section className="relative overflow-hidden px-4 pt-36 pb-24 sm:px-6">
-        <div className="pointer-events-none absolute inset-0 grid-lines" aria-hidden="true" />
         <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <motion.div
@@ -234,7 +233,6 @@ export default function Landing() {
       <section className="relative px-4 py-24 sm:px-6">
         <Reveal className="mx-auto max-w-4xl">
           <div className="glass-strong relative overflow-hidden rounded-[2.5rem] p-8 sm:p-12">
-            <div className="pointer-events-none absolute inset-0 grid-lines opacity-60" aria-hidden="true" />
             <div className="relative grid items-center gap-8 sm:grid-cols-[1fr_auto]">
               <div>
                 <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan">
@@ -311,7 +309,6 @@ export default function Landing() {
       <section className="relative px-4 pb-8 pt-10 sm:px-6">
         <Reveal className="mx-auto max-w-4xl">
           <div className="glass-strong relative overflow-hidden rounded-[2.5rem] px-6 py-16 text-center sm:px-12">
-            <div className="pointer-events-none absolute inset-0 grid-lines opacity-60" aria-hidden="true" />
             <h2 className="relative font-display text-4xl font-bold tracking-tight sm:text-5xl">
               {t.finalCta.title}
             </h2>
