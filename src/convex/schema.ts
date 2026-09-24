@@ -32,25 +32,36 @@ const schema = defineSchema(
       role: v.optional(roleValidator), // role of the user. do not remove
     }).index("email", ["email"]), // index for the email. do not remove or modify
 
-    // add other tables here
-
-    // One personal Elio page per user
+    // One portfolio page per business
     elioPages: defineTable({
       userId: v.id("users"),
       username: v.string(), // unique, 3-24 chars, lowercase
-      displayName: v.string(),
-      headline: v.optional(v.string()), // e.g. "Developer • Creator"
+
+      // Identity
+      displayName: v.string(), // business name
+      trade: v.optional(v.string()), // sector / what they do
+      headline: v.optional(v.string()), // tagline
       bio: v.optional(v.string()),
       story: v.optional(v.string()),
       location: v.optional(v.string()),
-      avatarUrl: v.optional(v.string()),
-      accent: v.optional(v.string()), // accent color hex for the public page
-      email: v.optional(v.string()), // contact: email
-      whatsapp: v.optional(v.string()), // contact: whatsapp number
-      instagram: v.optional(v.string()), // contact: instagram handle or url
-      linkedin: v.optional(v.string()), // contact: linkedin handle or url
+      since: v.optional(v.string()), // founded year
+
+      // Contact
+      email: v.optional(v.string()),
+      whatsapp: v.optional(v.string()),
+      instagram: v.optional(v.string()),
+      linkedin: v.optional(v.string()),
+
+      // Look & feel
+      logoUrl: v.optional(v.string()),
+      coverUrl: v.optional(v.string()),
+      accent: v.optional(v.string()),
+      style: v.optional(v.string()), // noir | atelier | atoll | meridian
+
       isPublished: v.optional(v.boolean()),
+      publishedAt: v.optional(v.number()),
       updatedAt: v.optional(v.number()),
+
       items: v.array(
         v.object({
           id: v.string(),
@@ -60,20 +71,30 @@ const schema = defineSchema(
           imageUrl: v.optional(v.string()),
           linkUrl: v.optional(v.string()),
           tags: v.optional(v.array(v.string())),
+          date: v.optional(v.string()),
+          status: v.optional(v.string()),
         }),
       ),
     })
       .index("by_user", ["userId"])
-      .index("by_username", ["username"]),
+      .index("by_username", ["username"])
+      .index("by_published", ["isPublished"]),
 
-    // Orders for the concierge service ("commander une page personnalisée et pro")
+    // Visitor messages on a page
+    pageComments: defineTable({
+      pageId: v.id("elioPages"),
+      authorName: v.string(),
+      body: v.string(),
+    }).index("by_page", ["pageId"]),
+
+    // Trace of concierge briefs (delivered via WhatsApp)
     serviceOrders: defineTable({
       userId: v.optional(v.id("users")),
-      pack: v.string(), // essentiel | signature | prestige
+      pack: v.string(),
       name: v.string(),
       email: v.string(),
-      details: v.string(), // brief / links / notes
-      status: v.optional(v.string()), // new | in_progress | done | cancelled
+      details: v.string(),
+      status: v.optional(v.string()),
     }).index("by_user", ["userId"]),
   },
   {

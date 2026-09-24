@@ -48,62 +48,30 @@
 :root {
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Light theme — warm paper neutrals with the Elio bronze accent */
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #f6f5f1;
+  --foreground: #14151a;
+  --card: #ffffff;
+  --card-foreground: #14151a;
+  --popover: #ffffff;
+  --popover-foreground: #14151a;
+  --primary: #b4700a;
+  --primary-foreground: #fff8ec;
+  --secondary: #edeae2;
+  --secondary-foreground: #14151a;
+  --muted: #edeae2;
+  --muted-foreground: #5f6169;
+  --accent: #e7e3d8;
+  --accent-foreground: #14151a;
+  --destructive: #c92f2f;
+  --border: rgba(20, 21, 26, 0.12);
+  --input: rgba(20, 21, 26, 0.16);
+  --ring: #b4700a;
 }
 
 /* ============ Elio glass theme ============ */
-
-:root {
-  --background: #f7f7fb;
-  --foreground: #12141d;
-  --card: #ffffff;
-  --card-foreground: #12141d;
-  --popover: #ffffff;
-  --popover-foreground: #12141d;
-  --primary: #f0b03f;
-  --primary-foreground: #221503;
-  --secondary: #eef0f6;
-  --secondary-foreground: #12141d;
-  --muted: #eef0f6;
-  --muted-foreground: #6b7180;
-  --accent: #eef0f6;
-  --accent-foreground: #12141d;
-  --destructive: #e5484d;
-  --border: rgba(15, 18, 34, 0.1);
-  --input: rgba(15, 18, 34, 0.12);
-  --ring: #f0b03f;
-}
 
 .dark {
   --background: #070a14;
@@ -126,12 +94,89 @@
   --ring: #f0b03f;
 }
 
+/* ---------- Light-mode adjustments for the glass system ---------- */
+
+:root:not(.dark) .orbs {
+  background:
+    radial-gradient(1100px 700px at 85% -10%, rgba(180, 112, 10, 0.1), transparent 60%),
+    radial-gradient(900px 700px at -10% 30%, rgba(41, 128, 185, 0.08), transparent 60%),
+    radial-gradient(1000px 900px at 50% 110%, rgba(139, 147, 248, 0.08), transparent 60%),
+    var(--background);
+}
+
+:root:not(.dark) .orb-a {
+  background: radial-gradient(circle at 30% 30%, rgba(180, 112, 10, 0.16), transparent 70%);
+}
+:root:not(.dark) .orb-b {
+  background: radial-gradient(circle at 60% 40%, rgba(41, 128, 185, 0.12), transparent 70%);
+}
+:root:not(.dark) .orb-c {
+  background: radial-gradient(circle at 50% 50%, rgba(139, 147, 248, 0.12), transparent 70%);
+}
+
+:root:not(.dark) .glass,
+:root:not(.dark) .glass-strong {
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(20, 21, 26, 0.09);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 24px 60px -30px rgba(20, 21, 26, 0.25);
+}
+:root:not(.dark) .glass-strong {
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.8) inset,
+    0 40px 90px -40px rgba(20, 21, 26, 0.3);
+}
+
+:root:not(.dark) .grid-lines {
+  background-image:
+    linear-gradient(rgba(20, 21, 26, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 21, 26, 0.06) 1px, transparent 1px);
+}
+
+:root:not(.dark) .text-gradient {
+  background: linear-gradient(96deg, #8a5200 0%, #b4700a 38%, #1f6f8b 78%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+:root:not(.dark) ::-webkit-scrollbar-thumb {
+  background: rgba(20, 21, 26, 0.2);
+}
+:root:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: rgba(20, 21, 26, 0.32);
+}
+
+:root:not(.dark) ::selection {
+  background: rgba(180, 112, 10, 0.25);
+}
+
+/* Buttons that read as glass chips on light backgrounds */
+:root:not(.dark) .btn-outline-glass {
+  background: rgba(255, 255, 255, 0.55);
+}
+:root:not(.dark) .btn-outline-glass:hover {
+  background: rgba(255, 255, 255, 0.85);
+}
+
 @theme inline {
   --color-glass: rgba(255, 255, 255, 0.045);
   --color-glass-strong: rgba(255, 255, 255, 0.08);
   --color-ember: #f0b03f;
   --color-cyan: #67d4f2;
   --color-indigo-glow: #8b93f8;
+}
+
+/* In light mode, ember-tinted text/borders flip to the darker bronze */
+:root:not(.dark) .text-ember {
+  color: #8a5200;
+}
+:root:not(.dark) .text-cyan {
+  color: #1f6f8b;
+}
+:root:not(.dark) .text-indigo-glow {
+  color: #4f46e5;
 }
 
 @layer base {

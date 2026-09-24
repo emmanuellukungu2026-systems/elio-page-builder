@@ -2,7 +2,10 @@ import { v } from "convex/values";
 import { mutation } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
-/** Create a service order ("commander une page personnalisée et pro"). */
+/**
+ * Record a concierge brief. The brief itself is delivered to the team via
+ * WhatsApp; this row is a lightweight trace so nothing gets lost.
+ */
 export const createOrder = mutation({
   args: {
     pack: v.string(),
@@ -14,7 +17,7 @@ export const createOrder = mutation({
     const userId = await getAuthUserId(ctx);
     return await ctx.db.insert("serviceOrders", {
       userId: userId ?? undefined,
-      pack,
+      pack: pack || "whatsapp",
       name: name.trim(),
       email: email.trim(),
       details: details.trim(),

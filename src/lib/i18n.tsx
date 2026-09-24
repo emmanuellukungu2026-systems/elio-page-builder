@@ -1,0 +1,1058 @@
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+
+export type Lang = "en" | "fr" | "tr";
+
+const LANG_KEY = "elio-lang";
+
+const en = {
+  nav: {
+    features: "Features",
+    directory: "Directory",
+    services: "Concierge",
+    faq: "FAQ",
+    signIn: "Sign in",
+    myElio: "My page",
+    create: "Create your page",
+  },
+  theme: {
+    toggle: "Toggle dark mode",
+    light: "Light",
+    dark: "Dark",
+  },
+  langName: "Language",
+  hero: {
+    badge: "Elio Pages — by Aethel Technologies",
+    titleA: "Work that speaks",
+    titleB: "for your business.",
+    subtitle:
+      "One polished page that gathers your work, your story and your contact details — then hands your link and QR code to every client, on every card, in every meeting.",
+    cta: "Build your page",
+    secondary: "Browse the directory",
+    note: "Free for everyone · No code needed · Live in minutes",
+    cardRole: "Design & build studio",
+    cardCta: "Start a conversation",
+  },
+  how: {
+    kicker: "Built for business",
+    title: "Look established from day one.",
+    items: [
+      {
+        title: "Tell your story",
+        text: "Who you are, what you deliver and why clients trust you — written to convince, not just describe.",
+      },
+      {
+        title: "Show your work",
+        text: "Projects with pictures, dates, results and links. A portfolio that answers questions before they're asked.",
+      },
+      {
+        title: "Get the call",
+        text: "WhatsApp, email and socials sit right at the bottom of every project, so reaching you is one tap away.",
+      },
+    ],
+  },
+  features: {
+    kicker: "The catalog",
+    title: "Everything a client needs to choose you.",
+    profile: {
+      title: "Company profile",
+      text: "Your logo, your story, your location, your certifications — the essentials, presented with care.",
+    },
+    work: {
+      title: "Projects & references",
+      text: "Each job gets its own detail page: photos, timeline, scope and outcome, ready to be shared on its own.",
+    },
+    ideas: {
+      title: "What's next",
+      text: "Announce upcoming services and concepts. Show momentum, not just history.",
+    },
+    search: {
+      title: "Search & browse",
+      text: "Clients find you in the Elio directory by name, trade or city — and land straight on your work.",
+    },
+    comments: {
+      title: "Messages & comments",
+      text: "Visitors leave a note on any project. You reply, and a conversation becomes a contract.",
+    },
+    qr: {
+      title: "Link & QR code",
+      text: "One scan from a business card, a van sticker or an invoice opens your whole page.",
+    },
+  },
+  qr: {
+    kicker: "NFC & QR",
+    title: "Your page, in the physical world.",
+    text: "A freelancer pins the QR to their quotes. A studio prints it on packaging. A consultant adds it to an email signature. One scan, and the whole portfolio opens — no app required.",
+    bullets: [
+      "Personal QR code, always current",
+      "NFC card that opens your page with a tap",
+      "Works with any phone camera — nothing to install",
+    ],
+    cta: "Get my QR code",
+  },
+  directoryCta: {
+    kicker: "The directory",
+    title: "Businesses, side by side.",
+    text: "The Elio directory gathers every published page in one searchable catalog. Clients browse by trade or city, open a project that catches their eye and send the first message from there.",
+    cta: "Open the directory",
+  },
+  services: {
+    kicker: "Elio Concierge",
+    title: "We build it with you — free.",
+    subtitle:
+      "Send us your business details and our team assembles the page for you: structure, wording, images and colors. No fees, no subscriptions — Elio Pages is a free service.",
+    steps: [
+      {
+        title: "Send your brief",
+        text: "Fill in your business details below — or send them straight to our WhatsApp.",
+      },
+      {
+        title: "We craft the page",
+        text: "Our team structures your story, curates your photos and sets your colors and style.",
+      },
+      {
+        title: "Review & go live",
+        text: "You get the finished page, your personal link and your QR code — ready to share.",
+      },
+    ],
+    form: {
+      name: "Business name",
+      namePh: "Atelier Kivu",
+      contact: "Contact person",
+      contactPh: "Your name",
+      whatsapp: "WhatsApp number",
+      whatsappPh: "+90 5xx xxx xx xx",
+      trade: "What do you do?",
+      tradePh: "Carpentry, photography, accounting…",
+      details: "Tell us about your business",
+      detailsPh:
+        "Where are you based? What services do you offer? Links to photos, socials or an existing site — anything that helps us tell your story.",
+      submit: "Send to WhatsApp",
+      submitShort: "Send via WhatsApp",
+      privacy: "Your brief is sent straight to our team on WhatsApp — nothing is stored for marketing.",
+    },
+    made: {
+      title: "The fine print",
+      text: "Elio Pages is completely free — a student-built service by Aethel Technologies. No hidden fees, no commissions, no lock-in. You own your page and your data.",
+    },
+  },
+  faq: {
+    kicker: "FAQ",
+    title: "Questions, answered.",
+    sub: "Everything you need to know about creating, sharing and growing with Elio Pages.",
+    items: [
+      {
+        q: "How much does Elio Pages cost?",
+        a: "Nothing. Elio Pages is free — it's a student-built service by Aethel Technologies. There are no subscriptions, no commissions and no hidden fees. You keep full ownership of your page and everything on it.",
+      },
+      {
+        q: "Can you build the page for me?",
+        a: "Yes. Send us your business details through the concierge form and our team assembles the whole page for you — structure, wording, photos, colors and style. It's free too.",
+      },
+      {
+        q: "How do clients find my business?",
+        a: "Through your personal link or QR code on your cards and quotes, or through the Elio directory — a searchable catalog of every published page, browsable by trade and by city.",
+      },
+      {
+        q: "Can visitors contact me through the page?",
+        a: "Yes. WhatsApp, email and social links are one tap away on every project, and visitors can leave comments that you can reply to — turning interest into conversation.",
+      },
+      {
+        q: "What do I need to provide?",
+        a: "The essentials: your business name, logo, what you do, where you work, photos of your projects and the dates that matter. The concierge form walks you through all of it.",
+      },
+      {
+        q: "Does it work on phones?",
+        a: "Perfectly. Pages are designed mobile-first, and the QR code opens them instantly in any phone camera — no app to install for you or your clients.",
+      },
+    ],
+  },
+  finalCta: {
+    title: "Your business deserves a proper front door.",
+    text: "Create your Elio page today — free, polished and live in minutes.",
+    cta: "Create your page",
+  },
+  footer: {
+    blurb:
+      "Elio Pages gives freelancers and small businesses a premium home for their work — one page, one link, one QR code.",
+    product: "Product",
+    directory: "Directory",
+    concierge: "Concierge",
+    faq: "FAQ",
+    start: "Start",
+    create: "Create your page",
+    myPage: "My page",
+    aethel: "Aethel Technologies",
+    about: "About",
+    contact: "Contact",
+    privacy: "Privacy",
+    rights: "Elio Pages — a free service by Aethel Technologies.",
+  },
+  dashboard: {
+    onboarding: {
+      title: "Claim your address",
+      sub: "One business. One page. One address. Pick your username — it becomes your link and your QR code.",
+      username: "Username",
+      business: "Business name",
+      businessPh: "Atelier Kivu",
+      submit: "Create my page",
+    },
+    sections: {
+      identity: "Business identity",
+      identityDesc: "The essentials a client sees first — name, trade, location, contact.",
+      businessName: "Business name",
+      trade: "Trade / sector",
+      tradePh: "Joinery · Photography · Accounting",
+      location: "City / region",
+      since: "Founded / since",
+      sincePh: "2021",
+      email: "Contact email",
+      whatsapp: "WhatsApp number",
+      instagram: "Instagram",
+      linkedin: "LinkedIn",
+      headline: "Tagline",
+      headlinePh: "Joinery that lasts a generation",
+      bio: "Short pitch",
+      bioPh: "One or two sentences on what you deliver and to whom.",
+      story: "Full story",
+      storyPh: "How the business started, who you serve, what you're building next…",
+      look: "Look & feel",
+      lookDesc: "Choose the accent color and the style of your page.",
+      accent: "Accent color",
+      style: "Page style",
+      stylePh: "Pick a visual style",
+      logo: "Logo URL",
+      logoPh: "https://…/logo.png",
+      cover: "Cover image URL",
+      coverPh: "https://…/cover.jpg",
+      content: "Catalog",
+      contentDesc: "Add every project, service and reference — each becomes its own detail page.",
+      addProject: "Project",
+      addPortfolio: "Photo",
+      addIdea: "Upcoming",
+      addService: "Service",
+      addPrice: "Offer",
+      empty: "Nothing here yet. Add your first project, service or reference above.",
+      whatsappHandoff: "Send by WhatsApp",
+      whatsappHandoffDesc:
+        "Transmit the whole brief to our team — we review it and publish the page with you.",
+    },
+    item: {
+      title: "Title",
+      titlePh: "Summer kitchen — oak & marble",
+      description: "Description",
+      descriptionPh: "What was done, for whom, and the result.",
+      image: "Picture URL",
+      link: "Project link",
+      tags: "Tags (comma separated)",
+      tagsPh: "Kitchen, Oak, 2025",
+      date: "Date",
+      datePh: "March 2025",
+      status: "Status",
+      statusPh: "Delivered · In progress · Planned",
+    },
+    sidebar: {
+      yourLink: "Your link",
+      publish: "Publish",
+      unpublish: "Unpublish",
+      published: "Published — visible in the directory",
+      draft: "Draft — only you can see it",
+      open: "Open",
+      copy: "Copy",
+      copied: "Copied",
+      conciergeTitle: "Prefer we build it?",
+      conciergeText:
+        "Send this brief to our team on WhatsApp — we'll assemble the page for you, free.",
+      conciergeCta: "Send to WhatsApp",
+    },
+  },
+  directory: {
+    kicker: "Directory",
+    title: "Find the right business.",
+    sub: "Every published Elio page, in one searchable catalog. Filter by trade or city, open a profile, start the conversation.",
+    searchPh: "Search by name, trade or city…",
+    allTrades: "All trades",
+    empty: "No business matches your search yet.",
+    emptyCta: "Be the first — create your page",
+    pages: "pages",
+  },
+  profile: {
+    back: "Back to directory",
+    connect: "Get in touch",
+    story: "Our story",
+    since: "Since",
+    comment: "Leave a message",
+    commentPh: "Say hello, ask for a quote, share a reference…",
+    send: "Post message",
+    commentsTitle: "Messages",
+    commentsEmpty: "No messages yet — be the first to say hello.",
+    thanks: "Thanks! Your message is posted.",
+    madeWith: "Made with Elio Pages",
+    createYours: "Create yours",
+    notLive: "This page isn't live yet",
+    notLiveText:
+      "This business hasn't published its Elio page yet — or the address doesn't exist. Maybe it's yours?",
+    claim: "Claim this address",
+  },
+  itemDetail: {
+    back: "Back to the page",
+    scope: "About this work",
+    date: "Date",
+    status: "Status",
+    viewLink: "Open project link",
+    discuss: "Discuss this project",
+    discussText: "Interested in something similar? Message the business directly.",
+    contact: "Contact the business",
+  },
+  servicesConfirm: {
+    title: "Almost there",
+    text: "Your brief is ready. Tap below and it opens in WhatsApp, pre-filled — send it and our team takes it from there.",
+    again: "Edit brief",
+  },
+  auth: {
+    title: "Welcome back",
+    sub: "One business. One page. One address.",
+    emailPh: "name@example.com",
+    continue: "Continue",
+    or: "Or",
+    guest: "Continue as guest",
+    sending: "Sending code…",
+    checkTitle: "Check your email",
+    checkText: "We've sent a code to",
+    verify: "Verify code",
+    verifying: "Verifying…",
+    resend: "Didn't receive a code?",
+    tryAgain: "Try again",
+    different: "Use a different email",
+    footer: "Elio Pages — by Aethel Technologies",
+    back: "Back to home",
+  },
+  notFound: {
+    title: "This address doesn't exist — yet.",
+    text: "The page you're looking for isn't here, but yours could be.",
+    back: "Back to home",
+    create: "Create your page",
+  },
+};
+
+type Dict = typeof en;
+
+const fr: Dict = {
+  nav: {
+    features: "Fonctions",
+    directory: "Annuaire",
+    services: "Conciergerie",
+    faq: "FAQ",
+    signIn: "Se connecter",
+    myElio: "Ma page",
+    create: "Créer ma page",
+  },
+  theme: {
+    toggle: "Basculer le mode sombre",
+    light: "Clair",
+    dark: "Sombre",
+  },
+  langName: "Langue",
+  hero: {
+    badge: "Elio Pages — par Aethel Technologies",
+    titleA: "Un travail qui parle",
+    titleB: "pour votre entreprise.",
+    subtitle:
+      "Une page soignée qui rassemble votre travail, votre histoire et vos contacts — avec votre lien et votre QR code à présenter à chaque client, sur chaque carte, à chaque rendez-vous.",
+    cta: "Créer ma page",
+    secondary: "Parcourir l'annuaire",
+    note: "Gratuit pour tous · Sans code · En ligne en quelques minutes",
+    cardRole: "Studio de design & fabrication",
+    cardCta: "Démarrer la conversation",
+  },
+  how: {
+    kicker: "Pensé pour les pros",
+    title: "Ayez l'air établi dès le premier jour.",
+    items: [
+      {
+        title: "Racontez votre histoire",
+        text: "Qui vous êtes, ce que vous livrez et pourquoi les clients vous font confiance — écrit pour convaincre, pas seulement décrire.",
+      },
+      {
+        title: "Montrez vos réalisations",
+        text: "Des projets avec photos, dates, résultats et liens. Un portfolio qui répond aux questions avant qu'elles soient posées.",
+      },
+      {
+        title: "Recevez l'appel",
+        text: "WhatsApp, e-mail et réseaux sont au bas de chaque projet : vous contacter ne prend qu'un geste.",
+      },
+    ],
+  },
+  features: {
+    kicker: "Le catalogue",
+    title: "Tout ce qu'un client doit savoir pour vous choisir.",
+    profile: {
+      title: "Profil d'entreprise",
+      text: "Votre logo, votre histoire, votre ville, vos certifications — l'essentiel, présenté avec soin.",
+    },
+    work: {
+      title: "Projets & références",
+      text: "Chaque chantier a sa page dédiée : photos, calendrier, périmètre et résultat, partageable seule.",
+    },
+    ideas: {
+      title: "Et ensuite",
+      text: "Annoncez vos prochains services et concepts. Montrez l'élan, pas seulement l'historique.",
+    },
+    search: {
+      title: "Recherche & annuaire",
+      text: "Les clients vous trouvent dans l'annuaire Elio par nom, métier ou ville — et arrivent directement sur votre travail.",
+    },
+    comments: {
+      title: "Messages & commentaires",
+      text: "Les visiteurs laissent un mot sur n'importe quel projet. Vous répondez, et une conversation devient un contrat.",
+    },
+    qr: {
+      title: "Lien & QR code",
+      text: "Un scan depuis une carte de visite, une camionnette ou une facture ouvre toute votre page.",
+    },
+  },
+  qr: {
+    kicker: "NFC & QR",
+    title: "Votre page, dans le monde réel.",
+    text: "Un indépendant colle le QR sur ses devis. Un atelier l'imprime sur ses emballages. Un consultant l'ajoute à sa signature. Un scan, et tout le portfolio s'ouvre — sans application.",
+    bullets: [
+      "QR code personnel, toujours à jour",
+      "Carte NFC qui ouvre votre page d'un geste",
+      "Fonctionne avec n'importe quel appareil — rien à installer",
+    ],
+    cta: "Obtenir mon QR code",
+  },
+  directoryCta: {
+    kicker: "L'annuaire",
+    title: "Des entreprises, côte à côte.",
+    text: "L'annuaire Elio rassemble toutes les pages publiées dans un catalogue recherchable. Les clients filtrez par métier ou ville, ouvrent un projet qui les intéresse et envoient le premier message depuis là.",
+    cta: "Ouvrir l'annuaire",
+  },
+  services: {
+    kicker: "Conciergerie Elio",
+    title: "On la construit avec vous — gratuitement.",
+    subtitle:
+      "Envoyez les informations de votre entreprise et notre équipe assemble la page pour vous : structure, textes, images et couleurs. Sans frais, sans abonnement — Elio Pages est un service gratuit.",
+    steps: [
+      {
+        title: "Envoyez votre brief",
+        text: "Remplissez les informations ci-dessous — ou envoyez-les directement sur notre WhatsApp.",
+      },
+      {
+        title: "On crée la page",
+        text: "Notre équipe structure votre histoire, sélectionne vos photos et règle vos couleurs et votre style.",
+      },
+      {
+        title: "Validation & mise en ligne",
+        text: "Vous recevez la page finie, votre lien personnel et votre QR code — prêts à partager.",
+      },
+    ],
+    form: {
+      name: "Nom de l'entreprise",
+      namePh: "Atelier Kivu",
+      contact: "Personne de contact",
+      contactPh: "Votre nom",
+      whatsapp: "Numéro WhatsApp",
+      whatsappPh: "+90 5xx xxx xx xx",
+      trade: "Votre métier",
+      tradePh: "Menuiserie, photographie, comptabilité…",
+      details: "Parlez-nous de votre entreprise",
+      detailsPh:
+        "Où êtes-vous installés ? Quels services proposez-vous ? Liens vers photos, réseaux ou site existant — tout ce qui aide à raconter votre histoire.",
+      submit: "Envoyer sur WhatsApp",
+      submitShort: "Envoyer via WhatsApp",
+      privacy: "Votre brief part directement à notre équipe sur WhatsApp — rien n'est conservé pour du marketing.",
+    },
+    made: {
+      title: "En toute transparence",
+      text: "Elio Pages est entièrement gratuit — un service étudiant d'Aethel Technologies. Aucuns frais cachés, aucune commission, aucun engagement. Vous êtes propriétaire de votre page et de vos données.",
+    },
+  },
+  faq: {
+    kicker: "FAQ",
+    title: "Les réponses à vos questions.",
+    sub: "Tout ce qu'il faut savoir sur la création, le partage et la croissance avec Elio Pages.",
+    items: [
+      {
+        q: "Combien coûte Elio Pages ?",
+        a: "Rien. Elio Pages est gratuit — c'est un service étudiant d'Aethel Technologies. Pas d'abonnement, pas de commission, pas de frais cachés. Vous gardez la propriété de votre page et de son contenu.",
+      },
+      {
+        q: "Pouvez-vous créer la page pour moi ?",
+        a: "Oui. Envoyez-nous les informations de votre entreprise via le formulaire de conciergerie et notre équipe assemble la page complète pour vous — structure, textes, photos, couleurs et style. C'est gratuit aussi.",
+      },
+      {
+        q: "Comment les clients trouvent-ils mon entreprise ?",
+        a: "Via votre lien personnel ou votre QR code sur vos cartes et devis, ou via l'annuaire Elio — un catalogue recherchable de toutes les pages publiées, filtrable par métier et par ville.",
+      },
+      {
+        q: "Les visiteurs peuvent-ils me contacter depuis la page ?",
+        a: "Oui. WhatsApp, e-mail et réseaux sont à un geste sur chaque projet, et les visiteurs peuvent laisser des commentaires auxquels vous répondez — l'intérêt devient conversation.",
+      },
+      {
+        q: "Que dois-je fournir ?",
+        a: "L'essentiel : nom de l'entreprise, logo, métier, zone d'activité, photos de vos réalisations et les dates importantes. Le formulaire de conciergerie vous guide pour tout.",
+      },
+      {
+        q: "Cela fonctionne-t-il sur téléphone ?",
+        a: "Parfaitement. Les pages sont pensées mobile d'abord, et le QR code les ouvre instantanément depuis n'importe quel appareil photo — sans application, pour vous comme pour vos clients.",
+      },
+    ],
+  },
+  finalCta: {
+    title: "Votre entreprise mérite une vraie vitrine.",
+    text: "Créez votre page Elio aujourd'hui — gratuit, soignée, en ligne en quelques minutes.",
+    cta: "Créer ma page",
+  },
+  footer: {
+    blurb:
+      "Elio Pages offre aux indépendants et aux petites entreprises une vitrine premium pour leur travail — une page, un lien, un QR code.",
+    product: "Produit",
+    directory: "Annuaire",
+    concierge: "Conciergerie",
+    faq: "FAQ",
+    start: "Commencer",
+    create: "Créer ma page",
+    myPage: "Ma page",
+    aethel: "Aethel Technologies",
+    about: "À propos",
+    contact: "Contact",
+    privacy: "Confidentialité",
+    rights: "Elio Pages — un service gratuit d'Aethel Technologies.",
+  },
+  dashboard: {
+    onboarding: {
+      title: "Réclamez votre adresse",
+      sub: "Une entreprise. Une page. Une adresse. Choisissez votre identifiant — il devient votre lien et votre QR code.",
+      username: "Identifiant",
+      business: "Nom de l'entreprise",
+      businessPh: "Atelier Kivu",
+      submit: "Créer ma page",
+    },
+    sections: {
+      identity: "Identité de l'entreprise",
+      identityDesc: "L'essentiel que le client voit en premier — nom, métier, ville, contacts.",
+      businessName: "Nom de l'entreprise",
+      trade: "Métier / secteur",
+      tradePh: "Menuiserie · Photographie · Comptabilité",
+      location: "Ville / région",
+      since: "Fondée en",
+      sincePh: "2021",
+      email: "E-mail de contact",
+      whatsapp: "Numéro WhatsApp",
+      instagram: "Instagram",
+      linkedin: "LinkedIn",
+      headline: "Slogan",
+      headlinePh: "Une menuiserie qui traverse les générations",
+      bio: "Pitch court",
+      bioPh: "Une ou deux phrases sur ce que vous livrez et à qui.",
+      story: "Histoire complète",
+      storyPh: "Comment l'entreprise a commencé, qui vous servez, ce que vous préparez…",
+      look: "Apparence",
+      lookDesc: "Choisissez la couleur d'accent et le style de votre page.",
+      accent: "Couleur d'accent",
+      style: "Style de page",
+      stylePh: "Choisissez un style",
+      logo: "URL du logo",
+      logoPh: "https://…/logo.png",
+      cover: "URL de l'image de couverture",
+      coverPh: "https://…/couverture.jpg",
+      content: "Catalogue",
+      contentDesc: "Ajoutez chaque projet, service et référence — chacun devient sa propre page.",
+      addProject: "Projet",
+      addPortfolio: "Photo",
+      addIdea: "À venir",
+      addService: "Service",
+      addPrice: "Offre",
+      empty: "Rien ici pour l'instant. Ajoutez votre premier projet, service ou référence ci-dessus.",
+      whatsappHandoff: "Envoyer par WhatsApp",
+      whatsappHandoffDesc:
+        "Transmettez le brief complet à notre équipe — nous le relisons et publions la page avec vous.",
+    },
+    item: {
+      title: "Titre",
+      titlePh: "Cuisine d'été — chêne & marbre",
+      description: "Description",
+      descriptionPh: "Ce qui a été fait, pour qui, et le résultat.",
+      image: "URL de la photo",
+      link: "Lien du projet",
+      tags: "Tags (séparés par des virgules)",
+      tagsPh: "Cuisine, Chêne, 2025",
+      date: "Date",
+      datePh: "Mars 2025",
+      status: "Statut",
+      statusPh: "Livré · En cours · Prévu",
+    },
+    sidebar: {
+      yourLink: "Votre lien",
+      publish: "Publier",
+      unpublish: "Dépublier",
+      published: "Publiée — visible dans l'annuaire",
+      draft: "Brouillon — visible par vous seul",
+      open: "Ouvrir",
+      copy: "Copier",
+      copied: "Copié",
+      conciergeTitle: "On la construit pour vous ?",
+      conciergeText:
+        "Envoyez ce brief à notre équipe sur WhatsApp — nous assemblons la page pour vous, gratuitement.",
+      conciergeCta: "Envoyer sur WhatsApp",
+    },
+  },
+  directory: {
+    kicker: "Annuaire",
+    title: "Trouvez la bonne entreprise.",
+    sub: "Toutes les pages Elio publiées, dans un catalogue recherchable. Filtrez par métier ou ville, ouvrez un profil, lancez la conversation.",
+    searchPh: "Chercher par nom, métier ou ville…",
+    allTrades: "Tous les métiers",
+    empty: "Aucune entreprise ne correspond à votre recherche.",
+    emptyCta: "Soyez le premier — créez votre page",
+    pages: "pages",
+  },
+  profile: {
+    back: "Retour à l'annuaire",
+    connect: "Prendre contact",
+    story: "Notre histoire",
+    since: "Depuis",
+    comment: "Laisser un message",
+    commentPh: "Dites bonjour, demandez un devis, partagez une référence…",
+    send: "Publier le message",
+    commentsTitle: "Messages",
+    commentsEmpty: "Aucun message — soyez le premier à dire bonjour.",
+    thanks: "Merci ! Votre message est publié.",
+    madeWith: "Créé avec Elio Pages",
+    createYours: "Créez la vôtre",
+    notLive: "Cette page n'est pas encore en ligne",
+    notLiveText:
+      "Cette entreprise n'a pas encore publié sa page Elio — ou l'adresse n'existe pas. C'est peut-être la vôtre ?",
+    claim: "Réclamer cette adresse",
+  },
+  itemDetail: {
+    back: "Retour à la page",
+    scope: "À propos de ce travail",
+    date: "Date",
+    status: "Statut",
+    viewLink: "Ouvrir le lien du projet",
+    discuss: "Discuter de ce projet",
+    discussText: "Un projet similaire en tête ? Écrivez directement à l'entreprise.",
+    contact: "Contacter l'entreprise",
+  },
+  servicesConfirm: {
+    title: "Presque terminé",
+    text: "Votre brief est prêt. Appuyez ci-dessous : WhatsApp s'ouvre avec le message pré-rempli — envoyez-le et notre équipe prend le relais.",
+    again: "Modifier le brief",
+  },
+  auth: {
+    title: "Bon retour",
+    sub: "Une entreprise. Une page. Une adresse.",
+    emailPh: "nom@exemple.com",
+    continue: "Continuer",
+    or: "Ou",
+    guest: "Continuer en invité",
+    sending: "Envoi du code…",
+    checkTitle: "Vérifiez vos e-mails",
+    checkText: "Nous avons envoyé un code à",
+    verify: "Vérifier le code",
+    verifying: "Vérification…",
+    resend: "Code non reçu ?",
+    tryAgain: "Réessayer",
+    different: "Utiliser un autre e-mail",
+    footer: "Elio Pages — par Aethel Technologies",
+    back: "Retour à l'accueil",
+  },
+  notFound: {
+    title: "Cette adresse n'existe pas — encore.",
+    text: "La page que vous cherchez n'est pas ici, mais la vôtre pourrait l'être.",
+    back: "Retour à l'accueil",
+    create: "Créer ma page",
+  },
+};
+
+const tr: Dict = {
+  nav: {
+    features: "Özellikler",
+    directory: "Rehber",
+    services: "Danışma",
+    faq: "SSS",
+    signIn: "Giriş yap",
+    myElio: "Sayfam",
+    create: "Sayfanı oluştur",
+  },
+  theme: {
+    toggle: "Karanlık modu değiştir",
+    light: "Açık",
+    dark: "Koyu",
+  },
+  langName: "Dil",
+  hero: {
+    badge: "Elio Pages — Aethel Technologies",
+    titleA: "İşiniz sizin yerinize",
+    titleB: "konuşsun.",
+    subtitle:
+      "İşlerinizi, hikayenizi ve iletişim bilgilerinizi bir araya getiren özenli bir sayfa — kartvizitten fatura kadar her yerde paylaşabileceğiniz link ve QR koduyla.",
+    cta: "Sayfanı oluştur",
+    secondary: "Rehbere göz at",
+    note: "Herkes için ücretsiz · Kod gerekmez · Dakikalar içinde yayında",
+    cardRole: "Tasarım ve üretim atölyesi",
+    cardCta: "Sohbeti başlat",
+  },
+  how: {
+    kicker: "İş dünyası için",
+    title: "İlk günden kurulu görünün.",
+    items: [
+      {
+        title: "Hikayenizi anlatın",
+        text: "Kim olduğunuz, ne teslim ettiğiniz ve müşteriler neden size güvenir — sadece betimlemek değil, ikna etmek için yazılır.",
+      },
+      {
+        title: "İşlerinizi gösterin",
+        text: "Fotoğraflı, tarihli, sonuçlu ve linkli projeler. Sorular sorulmadan cevaplayan bir portfolyo.",
+      },
+      {
+        title: "Aramayı alın",
+        text: "WhatsApp, e-posta ve sosyal medya her projenin altında — size ulaşmak tek dokunuş.",
+      },
+    ],
+  },
+  features: {
+    kicker: "Katalog",
+    title: "Bir müşterinin sizi seçmesi için gereken her şey.",
+    profile: {
+      title: "Firma profili",
+      text: "Logonuz, hikayeniz, şehriniz, referanslarınız — öz, özenle sunulmuş.",
+    },
+    work: {
+      title: "Projeler & referanslar",
+      text: "Her işin kendi detay sayfası: fotoğraflar, takvim, kapsam ve sonuç — tek başına paylaşılabilir.",
+    },
+    ideas: {
+      title: "Sırada ne var",
+      text: "Yaklaşan hizmetleri ve konseptleri duyurun. Sadece geçmişi değil, ivmeyi gösterin.",
+    },
+    search: {
+      title: "Arama & rehber",
+      text: "Müşteriler sizi Elio rehberinde isim, meslek veya şehirle bulur — doğrudan işinize gelir.",
+    },
+    comments: {
+      title: "Mesajlar & yorumlar",
+      text: "Ziyaretçiler herhangi bir projeye not bırakır. Siz cevaplarsınız ve sohbet bir işe dönüşür.",
+    },
+    qr: {
+      title: "Link & QR kodu",
+      text: "Kartvizitten, araç kaplamasından veya faturadan tek tarama tüm sayfanızı açar.",
+    },
+  },
+  qr: {
+    kicker: "NFC & QR",
+    title: "Sayfanız, fiziksel dünyada.",
+    text: "Serbest çalışan QR'ı tekliflerine yapıştırır. Atölye ambalaja basar. Danışman e-posta imzasına ekler. Tek tarama — tüm portfolyo açılır, uygulama gerekmez.",
+    bullets: [
+      "Kişisel QR kodu, her zaman güncel",
+      "Tek dokunuşla sayfanızı açan NFC kart",
+      "Her telefon kamerasıyla çalışır — kuruluma gerek yok",
+    ],
+    cta: "QR kodumu al",
+  },
+  directoryCta: {
+    kicker: "Rehber",
+    title: "İşletmeler, yan yana.",
+    text: "Elio rehberi, yayınlanan tüm sayfaları aranabilir bir katalogda toplar. Müşteriler mesleğe veya şehre göre filtreler, gözlerine çarpan projeyi açar ve ilk mesajı oradan gönderir.",
+    cta: "Rehberi aç",
+  },
+  services: {
+    kicker: "Elio Danışma",
+    title: "Sizin için ücretsiz kuruyoruz.",
+    subtitle:
+      "Firma bilgilerinizi gönderin; ekibimiz sayfayı sizin için kurar: yapı, metinler, görseller ve renkler. Ücret yok, abonelik yok — Elio Pages ücretsiz bir hizmettir.",
+    steps: [
+      {
+        title: "Bilgilerinizi gönderin",
+        text: "Aşağıdaki forma firma bilgilerinizi girin — veya doğrudan WhatsApp'tan iletin.",
+      },
+      {
+        title: "Sayfayı biz kurarız",
+        text: "Ekibimiz hikayenizi yapılandırır, fotoğraflarınızı seçer, renklerinizi ve stilinizi ayarlar.",
+      },
+      {
+        title: "Onay & yayın",
+        text: "Bitmiş sayfayı, kişisel linkinizi ve QR kodunuzu alırsınız — paylaşmaya hazır.",
+      },
+    ],
+    form: {
+      name: "Firma adı",
+      namePh: "Atelier Kivu",
+      contact: "Yetkili kişi",
+      contactPh: "Adınız",
+      whatsapp: "WhatsApp numarası",
+      whatsappPh: "+90 5xx xxx xx xx",
+      trade: "Ne iş yapıyorsunuz?",
+      tradePh: "Marangozluk, fotoğrafçılık, muhasebe…",
+      details: "Firmanızdan bahsedin",
+      detailsPh:
+        "Nerede faaliyetsiniz? Hangi hizmetleri veriyorsunuz? Fotoğraf, sosyal medya veya mevcut site linkleri — hikayenizi anlatmaya yarayan her şey.",
+      submit: "WhatsApp'tan gönder",
+      submitShort: "WhatsApp ile gönder",
+      privacy: "Brief doğrudan WhatsApp üzerinden ekibimize gider — pazarlama için saklanmaz.",
+    },
+    made: {
+      title: "Küçük yazı",
+      text: "Elio Pages tamamen ücretsizdir — Aethel Technologies'in öğrenci yapımı bir hizmetidir. Gizli ücret yok, komisyon yok, bağlayıcılık yok. Sayfanız ve veriniz size aittir.",
+    },
+  },
+  faq: {
+    kicker: "SSS",
+    title: "Sorular, cevaplar.",
+    sub: "Elio Pages ile sayfa oluşturma, paylaşma ve büyütme hakkında bilmeniz gereken her şey.",
+    items: [
+      {
+        q: "Elio Pages ne kadar?",
+        a: "Hiç. Elio Pages ücretsizdir — Aethel Technologies'in öğrenci yapımı bir hizmetidir. Abonelik yok, komisyon yok, gizli ücret yok. Sayfanızın ve içeriğinin sahibi sizsiniz.",
+      },
+      {
+        q: "Sayfayı benim yerime kurabilir misiniz?",
+        a: "Evet. Danışma formu üzerinden firma bilgilerinizi gönderin; ekibimiz yapısından metinlerine, fotoğraflarından renklerine kadar tüm sayfayı sizin için kurar. Bu da ücretsiz.",
+      },
+      {
+        q: "Müşteriler işletmemi nasıl bulur?",
+        a: "Kartlarınıza ve tekliflerinize koyduğunuz kişisel link veya QR kod ile; ya da Elio rehberiyle — mesleğe ve şehre göre filtrelenebilen, yayınlanan tüm sayfaların aranabilir kataloğu.",
+      },
+      {
+        q: "Ziyaretçiler sayfadan bana ulaşabilir mi?",
+        a: "Evet. WhatsApp, e-posta ve sosyal medya her projede tek dokunuş uzağınızda; ziyaretçiler yorum bırakabilir, siz cevaplayabilirsiniz — ilgi sohbete dönüşür.",
+      },
+      {
+        q: "Neler sağlamam gerekiyor?",
+        a: "Temel bilgiler: firma adı, logo, meslek, hizmet bölgesi, işlerinizin fotoğrafları ve önemli tarihler. Danışma formu hepsinde size yol gösterir.",
+      },
+      {
+        q: "Telefonda çalışıyor mu?",
+        a: "Kusursuz. Sayfalar önce-mobil tasarlanmıştır ve QR kod her telefon kamerasından anında açar — sizin veya müşterilerinizin uygulama kurmasına gerek yok.",
+      },
+    ],
+  },
+  finalCta: {
+    title: "İşletmeniz düzgün bir cephe hak ediyor.",
+    text: "Elio sayfanızı bugün oluşturun — ücretsiz, özenli, dakikalar içinde yayında.",
+    cta: "Sayfanı oluştur",
+  },
+  footer: {
+    blurb:
+      "Elio Pages, serbest çalışanlara ve küçük işletmelere işleri için premium bir yuva sunar — bir sayfa, bir link, bir QR kodu.",
+    product: "Ürün",
+    directory: "Rehber",
+    concierge: "Danışma",
+    faq: "SSS",
+    start: "Başla",
+    create: "Sayfanı oluştur",
+    myPage: "Sayfam",
+    aethel: "Aethel Technologies",
+    about: "Hakkında",
+    contact: "İletişim",
+    privacy: "Gizlilik",
+    rights: "Elio Pages — Aethel Technologies'in ücretsiz hizmeti.",
+  },
+  dashboard: {
+    onboarding: {
+      title: "Adresinizi alın",
+      sub: "Bir firma. Bir sayfa. Bir adres. Kullanıcı adınızı seçin — linkiniz ve QR kodunuz olur.",
+      username: "Kullanıcı adı",
+      business: "Firma adı",
+      businessPh: "Atelier Kivu",
+      submit: "Sayfamı oluştur",
+    },
+    sections: {
+      identity: "Firma kimliği",
+      identityDesc: "Müşterinin ilk gördüğü temel bilgiler — ad, meslek, şehir, iletişim.",
+      businessName: "Firma adı",
+      trade: "Meslek / sektör",
+      tradePh: "Marangozluk · Fotoğrafçılık · Muhasebe",
+      location: "Şehir / bölge",
+      since: "Kuruluş",
+      sincePh: "2021",
+      email: "İletişim e-postası",
+      whatsapp: "WhatsApp numarası",
+      instagram: "Instagram",
+      linkedin: "LinkedIn",
+      headline: "Slogan",
+      headlinePh: "Nesiller boyu dayanan marangozluk",
+      bio: "Kısa tanıtım",
+      bioPh: "Ne teslim ettiğinizi ve kime, bir iki cümleyle.",
+      story: "Tüm hikaye",
+      storyPh: "İşletme nasıl başladı, kime hizmet veriyorsunuz, sıradaki adımınız…",
+      look: "Görünüm",
+      lookDesc: "Vurgu rengini ve sayfa stilini seçin.",
+      accent: "Vurgu rengi",
+      style: "Sayfa stili",
+      stylePh: "Bir stil seçin",
+      logo: "Logo bağlantısı",
+      logoPh: "https://…/logo.png",
+      cover: "Kapak görseli bağlantısı",
+      coverPh: "https://…/kapak.jpg",
+      content: "Katalog",
+      contentDesc: "Her projeyi, hizmeti ve referansı ekleyin — her biri kendi detay sayfası olur.",
+      addProject: "Proje",
+      addPortfolio: "Fotoğraf",
+      addIdea: "Yakında",
+      addService: "Hizmet",
+      addPrice: "Teklif",
+      empty: "Henüz bir şey yok. Yukarıdan ilk projenizi, hizmetinizi veya referansınızı ekleyin.",
+      whatsappHandoff: "WhatsApp ile gönder",
+      whatsappHandoffDesc:
+        "Tüm brief'i ekibimize iletin — biz inceler ve sayfayı sizinle birlikte yayınlarız.",
+    },
+    item: {
+      title: "Başlık",
+      titlePh: "Yaz mutfağı — meşe & mermer",
+      description: "Açıklama",
+      descriptionPh: "Ne yapıldı, kimin için ve sonuç ne oldu.",
+      image: "Fotoğraf bağlantısı",
+      link: "Proje bağlantısı",
+      tags: "Etiketler (virgülle)",
+      tagsPh: "Mutfak, Meşe, 2025",
+      date: "Tarih",
+      datePh: "Mart 2025",
+      status: "Durum",
+      statusPh: "Teslim edildi · Devam ediyor · Planlandı",
+    },
+    sidebar: {
+      yourLink: "Linkiniz",
+      publish: "Yayınla",
+      unpublish: "Yayından kaldır",
+      published: "Yayında — rehberde görünür",
+      draft: "Taslak — sadece siz görürsünüz",
+      open: "Aç",
+      copy: "Kopyala",
+      copied: "Kopyalandı",
+      conciergeTitle: "Biz mi kuralım?",
+      conciergeText:
+        "Bu brief'i WhatsApp'tan ekibimize gönderin — sayfayı sizin için ücretsiz kurarız.",
+      conciergeCta: "WhatsApp ile gönder",
+    },
+  },
+  directory: {
+    kicker: "Rehber",
+    title: "Doğru işletmeyi bulun.",
+    sub: "Yayınlanan tüm Elio sayfaları tek bir aranabilir katalogda. Mesleğe veya şehre göre filtreleyin, profili açın, sohbeti başlatın.",
+    searchPh: "İsim, meslek veya şehirle ara…",
+    allTrades: "Tüm meslekler",
+    empty: "Aramanıza uyan bir işletme yok.",
+    emptyCta: "İlk siz olun — sayfanızı oluşturun",
+    pages: "sayfa",
+  },
+  profile: {
+    back: "Rehbere dön",
+    connect: "İletişime geç",
+    story: "Hikayemiz",
+    since: "Beridir",
+    comment: "Mesaj bırakın",
+    commentPh: "Selam verin, fiyat isteyin, referans paylaşın…",
+    send: "Mesajı gönder",
+    commentsTitle: "Mesajlar",
+    commentsEmpty: "Henüz mesaj yok — ilk selamı siz verin.",
+    thanks: "Teşekkürler! Mesajınız yayınlandı.",
+    madeWith: "Elio Pages ile yapıldı",
+    createYours: "Kendi sayfanız",
+    notLive: "Bu sayfa henüz yayında değil",
+    notLiveText:
+      "Bu işletme henüz Elio sayfasını yayınlamadı — ya da adres mevcut değil. Belki sizindir?",
+    claim: "Bu adresi alın",
+  },
+  itemDetail: {
+    back: "Sayfaya dön",
+    scope: "Bu iş hakkında",
+    date: "Tarih",
+    status: "Durum",
+    viewLink: "Proje bağlantısını aç",
+    discuss: "Bu projeyi görüşelim",
+    discussText: "Benzer bir şey aklınızda mı? Doğrudan işletmeye yazın.",
+    contact: "İşletmeyle iletişim",
+  },
+  servicesConfirm: {
+    title: "Neredeyse bitti",
+    text: "Brief'iniz hazır. Aşağıya dokunun: WhatsApp önceden doldurulmuş mesajla açılır — gönderin, gerisini ekibimiz halleder.",
+    again: "Brief'i düzenle",
+  },
+  auth: {
+    title: "Tekrar hoş geldiniz",
+    sub: "Bir firma. Bir sayfa. Bir adres.",
+    emailPh: "ad@ornek.com",
+    continue: "Devam",
+    or: "Veya",
+    guest: "Misafir olarak devam et",
+    sending: "Kod gönderiliyor…",
+    checkTitle: "E-postanızı kontrol edin",
+    checkText: "Kodu gönderdiğimiz adres:",
+    verify: "Kodu doğrula",
+    verifying: "Doğrulanıyor…",
+    resend: "Kod gelmedi mi?",
+    tryAgain: "Tekrar dene",
+    different: "Başka e-posta kullan",
+    footer: "Elio Pages — Aethel Technologies",
+    back: "Ana sayfaya dön",
+  },
+  notFound: {
+    title: "Bu adres henüz yok.",
+    text: "Aradığınız sayfa burada değil — ama sizinki olabilir.",
+    back: "Ana sayfaya dön",
+    create: "Sayfanı oluştur",
+  },
+};
+
+const DICTS: Record<Lang, Dict> = { en, fr, tr };
+
+export const LANGS: { code: Lang; label: string; flag: string }[] = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "fr", label: "Français", flag: "🇫🇷" },
+  { code: "tr", label: "Türkçe", flag: "🇹🇷" },
+];
+
+type I18nContextValue = {
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  t: Dict;
+};
+
+const I18nContext = createContext<I18nContextValue | null>(null);
+
+export function I18nProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>(() => {
+    try {
+      const saved = localStorage.getItem(LANG_KEY) as Lang | null;
+      if (saved && saved in DICTS) return saved;
+    } catch {
+      /* ignore */
+    }
+    const nav = navigator.language.slice(0, 2);
+    if (nav === "fr" || nav === "tr") return nav;
+    return "en";
+  });
+
+  const setLang = useCallback((l: Lang) => {
+    setLangState(l);
+    try {
+      localStorage.setItem(LANG_KEY, l);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  const value = useMemo(() => ({ lang, setLang, t: DICTS[lang] }), [lang, setLang]);
+
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+}
+
+export function useI18n(): I18nContextValue {
+  const ctx = useContext(I18nContext);
+  if (!ctx) throw new Error("useI18n must be used within I18nProvider");
+  return ctx;
+}

@@ -1,9 +1,10 @@
+import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useAuth } from "@/hooks/use-auth";
-import logo from "@/assets/logo.svg";
+import { useI18n } from "@/lib/i18n";
 import { ArrowRight, Loader2, Mail, UserX } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
@@ -20,6 +21,8 @@ function resolveRedirectAfterAuth(returnTo: string | null, fallback = "/dashboar
 }
 
 function Auth({ redirectAfterAuth }: AuthProps = {}) {
+  const { t } = useI18n();
+  const a = t.auth;
   const { isLoading: authLoading, isAuthenticated, signIn } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -46,9 +49,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       setIsLoading(false);
     } catch (error) {
       console.error("Email sign-in error:", error);
-      setError(
-        error instanceof Error ? error.message : "Failed to send verification code. Please try again.",
-      );
+      setError(error instanceof Error ? error.message : "Failed to send verification code.");
       setIsLoading(false);
     }
   };
@@ -84,7 +85,6 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12">
-      {/* Atmosphere */}
       <div className="orbs" aria-hidden="true">
         <div className="orb orb-a" />
         <div className="orb orb-b" />
@@ -98,15 +98,15 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
               <div className="flex justify-center">
                 <img
                   src={logo}
-                  alt="Elio"
+                  alt="Elio Pages"
                   width={56}
                   height={56}
-                  className="mb-4 mt-2 cursor-pointer rounded-xl transition-transform duration-300 hover:rotate-12"
+                  className="mb-4 mt-2 cursor-pointer rounded-xl transition-transform duration-300 hover:scale-105"
                   onClick={() => navigate("/")}
                 />
               </div>
-              <CardTitle className="font-display text-2xl">Your space awaits</CardTitle>
-              <CardDescription>One page. One link. One identity.</CardDescription>
+              <CardTitle className="font-display text-2xl">{a.title}</CardTitle>
+              <CardDescription>{a.sub}</CardDescription>
             </CardHeader>
             <form onSubmit={handleEmailSubmit}>
               <CardContent className="space-y-4">
@@ -114,7 +114,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                   <Mail className="absolute left-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     name="email"
-                    placeholder="name@example.com"
+                    placeholder={a.emailPh}
                     type="email"
                     className="rounded-xl bg-white/[0.04] pl-9"
                     disabled={isLoading}
@@ -126,11 +126,11 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                 <Button type="submit" className="btn-glow w-full rounded-xl" disabled={isLoading}>
                   {isLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending code…
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {a.sending}
                     </>
                   ) : (
                     <>
-                      Continue <ArrowRight className="ml-1 h-4 w-4" />
+                      {a.continue} <ArrowRight className="ml-1 h-4 w-4" />
                     </>
                   )}
                 </Button>
@@ -140,19 +140,19 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                     <span className="w-full border-t border-border/60" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-transparent px-2 text-muted-foreground">Or</span>
+                    <span className="bg-transparent px-2 text-muted-foreground">{a.or}</span>
                   </div>
                 </div>
 
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full rounded-xl border-border/60 bg-white/[0.03]"
+                  className="btn-outline-glass w-full rounded-xl border-border/60"
                   onClick={handleGuestLogin}
                   disabled={isLoading}
                 >
                   <UserX className="mr-2 h-4 w-4" />
-                  Continue as guest
+                  {a.guest}
                 </Button>
               </CardContent>
             </form>
@@ -160,8 +160,10 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
         ) : (
           <>
             <CardHeader className="mt-2 text-center">
-              <CardTitle className="font-display text-2xl">Check your email</CardTitle>
-              <CardDescription>We've sent a code to {step.email}</CardDescription>
+              <CardTitle className="font-display text-2xl">{a.checkTitle}</CardTitle>
+              <CardDescription>
+                {a.checkText} {step.email}
+              </CardDescription>
             </CardHeader>
             <form onSubmit={handleOtpSubmit}>
               <CardContent className="pb-4">
@@ -192,9 +194,9 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                 </div>
                 {error && <p className="mt-2 text-center text-sm text-red-400">{error}</p>}
                 <p className="mt-4 text-center text-sm text-muted-foreground">
-                  Didn't receive a code?{" "}
+                  {a.resend}{" "}
                   <Button variant="link" className="h-auto p-0" onClick={() => setStep("signIn")}>
-                    Try again
+                    {a.tryAgain}
                   </Button>
                 </p>
               </CardContent>
@@ -206,11 +208,11 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Verifying…
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {a.verifying}
                     </>
                   ) : (
                     <>
-                      Verify code <ArrowRight className="ml-2 h-4 w-4" />
+                      {a.verify} <ArrowRight className="ml-2 h-4 w-4" />
                     </>
                   )}
                 </Button>
@@ -221,7 +223,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                   disabled={isLoading}
                   className="w-full"
                 >
-                  Use different email
+                  {a.different}
                 </Button>
               </CardFooter>
             </form>
@@ -229,13 +231,16 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
         )}
 
         <div className="rounded-b-3xl border-t border-border/50 px-6 py-4 text-center text-xs text-muted-foreground">
-          Elio by Aethel Technologies
+          {a.footer}
         </div>
       </Card>
 
       <p className="mt-6 text-sm text-muted-foreground">
-        <button className="underline-offset-4 transition-colors hover:text-foreground hover:underline" onClick={() => navigate("/")}>
-          ← Back to elio.aethel.io
+        <button
+          className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
+          onClick={() => navigate("/")}
+        >
+          ← {a.back}
         </button>
       </p>
     </div>

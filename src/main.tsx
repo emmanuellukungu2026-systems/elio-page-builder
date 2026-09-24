@@ -7,6 +7,7 @@ import { ConvexReactClient } from "convex/react";
 import React, { StrictMode, useEffect, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
+import { I18nProvider } from "@/lib/i18n";
 import "./index.css";
 
 // Lazy load route components for better code splitting
@@ -16,6 +17,8 @@ const Dashboard = lazy(() => import("./pages/Dashboard.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const Services = lazy(() => import("./pages/Services.tsx"));
 const Profile = lazy(() => import("./pages/Profile.tsx"));
+const Directory = lazy(() => import("./pages/Directory.tsx"));
+const ItemDetail = lazy(() => import("./pages/ItemDetail.tsx"));
 
 // Simple loading fallback for route transitions
 function RouteLoading() {
@@ -117,6 +120,7 @@ createRoot(document.getElementById("root")!).render(
         <VlyToolbar />
       </ToolbarErrorBoundary>
       <ConvexAuthProvider client={convex}>
+        <I18nProvider>
         <BrowserRouter>
           <RouteSyncer />
           <Suspense fallback={<RouteLoading />}>
@@ -135,12 +139,15 @@ createRoot(document.getElementById("root")!).render(
                 }
               />
               <Route path="/services" element={<Services />} />
+              <Route path="/directory" element={<Directory />} />
               <Route path="/u/:username" element={<Profile />} />
+              <Route path="/u/:username/i/:itemId" element={<ItemDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         </BrowserRouter>
         <Toaster />
+        </I18nProvider>
       </ConvexAuthProvider>
     </RootErrorBoundary>
   </StrictMode>,

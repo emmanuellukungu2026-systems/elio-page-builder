@@ -1,12 +1,11 @@
-import { ElioMark } from "@/components/ElioMark";
-import { SAMPLE_PAGE } from "@/lib/elio";
+import logo from "@/assets/logo.png";
+import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { Github, Instagram, MapPin, Mail } from "lucide-react";
+import { MessageCircle, MapPin } from "lucide-react";
 
 /**
- * The signature Elio glass profile card — the same visual language users get
- * on their public page. Used tilted in the hero, flat in feature sections.
+ * The signature Elio glass business card — the visual language every published
+ * page gets. Used tilted in the hero and flat in feature sections.
  */
 export function ElioCardPreview({
   className,
@@ -15,48 +14,45 @@ export function ElioCardPreview({
   className?: string;
   compact?: boolean;
 }) {
-  const p = SAMPLE_PAGE;
+  const { t } = useI18n();
   return (
     <div className={cn("glass-strong rounded-3xl p-6", className)}>
       <div className="flex items-center gap-4">
-        <div
-          className="relative flex size-14 items-center justify-center rounded-2xl text-xl font-semibold text-[#221503]"
-          style={{ background: `linear-gradient(135deg, ${p.accent}, #67d4f2)` }}
-        >
-          EL
-          <span className="absolute -bottom-1 -right-1 flex size-5 items-center justify-center rounded-full bg-background ring-1 ring-border">
-            <ElioMark className="size-3" />
-          </span>
+        <div className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#f0b03f] to-[#b4700a]">
+          <img src={logo} alt="" className="size-full object-cover" />
         </div>
         <div className="min-w-0">
-          <p className="truncate font-display text-lg font-semibold leading-tight">{p.displayName}</p>
-          <p className="truncate text-sm text-muted-foreground">{p.headline}</p>
+          <p className="truncate font-display text-lg font-semibold leading-tight">
+            Atelier Kivu
+          </p>
+          <p className="truncate text-sm text-muted-foreground">{t.hero.cardRole}</p>
         </div>
       </div>
 
       {!compact && (
         <>
-          <p className="mt-4 text-sm leading-6 text-foreground/85">{p.bio}</p>
+          <p className="mt-4 text-sm leading-6 text-foreground/85">
+            Joinery & interiors for homes that keep their promises — built to last a
+            generation.
+          </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            {(p.items ?? []).slice(0, 3).map((it) => (
+            {["Kitchen — oak & marble", "Café Ndera fit-out", "Library shelving"].map((title) => (
               <span
-                key={it.id}
+                key={title}
                 className="rounded-full border border-border/70 bg-white/[0.03] px-2.5 py-1 text-xs text-muted-foreground"
               >
-                {it.title}
+                {title}
               </span>
-              ))}
+            ))}
           </div>
 
           <div className="mt-5 flex items-center justify-between border-t border-border/50 pt-4">
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <Mail className="size-4 transition-colors hover:text-foreground" />
-              <Instagram className="size-4 transition-colors hover:text-foreground" />
-              <Github className="size-4 transition-colors hover:text-foreground" />
-            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-medium text-emerald-500">
+              <MessageCircle className="size-3" /> {t.hero.cardCta}
+            </span>
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="size-3.5" /> {p.location}
+              <MapPin className="size-3.5" /> Goma, DRC
             </span>
           </div>
         </>
