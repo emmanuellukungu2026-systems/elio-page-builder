@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo-64.png" />
+    <link rel="apple-touch-icon" href="/logo-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Elio Pages — premium portfolio pages for freelancers and small businesses. Browse the catalog, open a project, start a conversation."
+    />
+    <meta name="theme-color" content="#f6f5f1" />
+    <title>Elio Pages — Premium portfolios for businesses that mean business</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Apply saved theme before first paint. Default is light mode; dark is
+      // only restored if the visitor explicitly chose it.
+      (function () {
+        try {
+          var t = localStorage.getItem("elio-theme");
+          if (t === "dark") document.documentElement.classList.add("dark");
+        } catch (e) {}
+        try {
+          var l = localStorage.getItem("elio-lang");
+          if (l) document.documentElement.lang = l;
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-ChfVfabI.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-c8WFmkkH.js">
+    <link rel="modulepreload" crossorigin href="/assets/framer-motion-BSOYu5Hc.js">
+    <link rel="modulepreload" crossorigin href="/assets/radix-ui-DvF2jNUN.js">
+    <link rel="modulepreload" crossorigin href="/assets/charts-CHTVrLqD.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-uSASouVm.css">
+  </head>
+
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
