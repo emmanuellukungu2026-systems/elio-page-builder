@@ -5,8 +5,8 @@
 
 /* DO NOT CHANGE */
 @theme inline {
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Verdana", "Geneva", "Tahoma", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Verdana", "Geneva", "Tahoma", ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -46,110 +46,110 @@
 
 /* CHANGE VALUES FOR THEME */
 :root {
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Verdana", "Geneva", "Tahoma", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Verdana", "Geneva", "Tahoma", ui-sans-serif, system-ui, sans-serif;
 
-  /* Light theme — warm paper neutrals with the Elio bronze accent */
+  /* Light theme — cool daylight neutrals with royal blue accent */
   --radius: 0.625rem;
-  --background: #f6f5f1;
-  --foreground: #14151a;
+  --background: #f4f6fb;
+  --foreground: #10182b;
   --card: #ffffff;
-  --card-foreground: #14151a;
+  --card-foreground: #10182b;
   --popover: #ffffff;
-  --popover-foreground: #14151a;
-  --primary: #b4700a;
-  --primary-foreground: #fff8ec;
-  --secondary: #edeae2;
-  --secondary-foreground: #14151a;
-  --muted: #edeae2;
-  --muted-foreground: #5f6169;
-  --accent: #e7e3d8;
-  --accent-foreground: #14151a;
+  --popover-foreground: #10182b;
+  --primary: #1e4fd8;
+  --primary-foreground: #f3f7ff;
+  --secondary: #e8edf7;
+  --secondary-foreground: #10182b;
+  --muted: #e8edf7;
+  --muted-foreground: #5a6478;
+  --accent: #dfe7f6;
+  --accent-foreground: #10182b;
   --destructive: #c92f2f;
-  --border: rgba(20, 21, 26, 0.12);
-  --input: rgba(20, 21, 26, 0.16);
-  --ring: #b4700a;
+  --border: rgba(16, 24, 43, 0.12);
+  --input: rgba(16, 24, 43, 0.16);
+  --ring: #1e4fd8;
 }
 
-/* ============ Elio glass theme ============ */
+/* ============ Elio glass theme — night blue ============ */
 
 .dark {
-  --background: #070a14;
-  --foreground: #f2f4fb;
-  --card: rgba(255, 255, 255, 0.04);
-  --card-foreground: #f2f4fb;
-  --popover: #0c1020;
-  --popover-foreground: #f2f4fb;
-  --primary: #f0b03f;
-  --primary-foreground: #221503;
-  --secondary: rgba(255, 255, 255, 0.06);
-  --secondary-foreground: #f2f4fb;
-  --muted: rgba(255, 255, 255, 0.06);
-  --muted-foreground: #9aa1b5;
-  --accent: rgba(255, 255, 255, 0.07);
-  --accent-foreground: #f2f4fb;
+  --background: #070d1f;
+  --foreground: #eaf0ff;
+  --card: rgba(120, 150, 255, 0.05);
+  --card-foreground: #eaf0ff;
+  --popover: #0b1228;
+  --popover-foreground: #eaf0ff;
+  --primary: #4f7dff;
+  --primary-foreground: #071022;
+  --secondary: rgba(120, 150, 255, 0.08);
+  --secondary-foreground: #eaf0ff;
+  --muted: rgba(120, 150, 255, 0.08);
+  --muted-foreground: #97a3c2;
+  --accent: rgba(120, 150, 255, 0.1);
+  --accent-foreground: #eaf0ff;
   --destructive: #f2555a;
-  --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.14);
-  --ring: #f0b03f;
+  --border: rgba(130, 160, 255, 0.12);
+  --input: rgba(130, 160, 255, 0.16);
+  --ring: #4f7dff;
 }
 
 /* ---------- Light-mode adjustments for the glass system ---------- */
 
 :root:not(.dark) .orbs {
   background:
-    radial-gradient(1100px 700px at 85% -10%, rgba(180, 112, 10, 0.1), transparent 60%),
-    radial-gradient(900px 700px at -10% 30%, rgba(41, 128, 185, 0.08), transparent 60%),
-    radial-gradient(1000px 900px at 50% 110%, rgba(139, 147, 248, 0.08), transparent 60%),
+    radial-gradient(1100px 700px at 85% -10%, rgba(30, 79, 216, 0.09), transparent 60%),
+    radial-gradient(900px 700px at -10% 30%, rgba(28, 100, 242, 0.07), transparent 60%),
+    radial-gradient(1000px 900px at 50% 110%, rgba(63, 63, 160, 0.07), transparent 60%),
     var(--background);
 }
 
 :root:not(.dark) .orb-a {
-  background: radial-gradient(circle at 30% 30%, rgba(180, 112, 10, 0.16), transparent 70%);
+  background: radial-gradient(circle at 30% 30%, rgba(30, 79, 216, 0.14), transparent 70%);
 }
 :root:not(.dark) .orb-b {
-  background: radial-gradient(circle at 60% 40%, rgba(41, 128, 185, 0.12), transparent 70%);
+  background: radial-gradient(circle at 60% 40%, rgba(28, 100, 242, 0.11), transparent 70%);
 }
 :root:not(.dark) .orb-c {
-  background: radial-gradient(circle at 50% 50%, rgba(139, 147, 248, 0.12), transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.1), transparent 70%);
 }
 
 :root:not(.dark) .glass,
 :root:not(.dark) .glass-strong {
   background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(20, 21, 26, 0.09);
+  border: 1px solid rgba(16, 24, 43, 0.09);
   box-shadow:
     0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
-    0 24px 60px -30px rgba(20, 21, 26, 0.25);
+    0 24px 60px -30px rgba(16, 24, 43, 0.25);
 }
 :root:not(.dark) .glass-strong {
   background: rgba(255, 255, 255, 0.78);
   box-shadow:
     0 1px 0 0 rgba(255, 255, 255, 0.8) inset,
-    0 40px 90px -40px rgba(20, 21, 26, 0.3);
+    0 40px 90px -40px rgba(16, 24, 43, 0.3);
 }
 
 :root:not(.dark) .grid-lines {
   background-image:
-    linear-gradient(rgba(20, 21, 26, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(20, 21, 26, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(16, 24, 43, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 24, 43, 0.06) 1px, transparent 1px);
 }
 
 :root:not(.dark) .text-gradient {
-  background: linear-gradient(96deg, #8a5200 0%, #b4700a 38%, #1f6f8b 78%, #4f46e5 100%);
+  background: linear-gradient(96deg, #16308f 0%, #1e4fd8 38%, #0e7490 78%, #4338ca 100%);
   -webkit-background-clip: text;
   background-clip: text;
 }
 
 :root:not(.dark) ::-webkit-scrollbar-thumb {
-  background: rgba(20, 21, 26, 0.2);
+  background: rgba(16, 24, 43, 0.2);
 }
 :root:not(.dark) ::-webkit-scrollbar-thumb:hover {
-  background: rgba(20, 21, 26, 0.32);
+  background: rgba(16, 24, 43, 0.32);
 }
 
 :root:not(.dark) ::selection {
-  background: rgba(180, 112, 10, 0.25);
+  background: rgba(30, 79, 216, 0.22);
 }
 
 /* Buttons that read as glass chips on light backgrounds */
@@ -161,22 +161,23 @@
 }
 
 @theme inline {
-  --color-glass: rgba(255, 255, 255, 0.045);
-  --color-glass-strong: rgba(255, 255, 255, 0.08);
-  --color-ember: #f0b03f;
-  --color-cyan: #67d4f2;
-  --color-indigo-glow: #8b93f8;
+  --color-glass: rgba(130, 160, 255, 0.05);
+  --color-glass-strong: rgba(130, 160, 255, 0.09);
+  /* "ember" classes keep working app-wide but now resolve to royal blue */
+  --color-ember: #4f7dff;
+  --color-cyan: #38bdf8;
+  --color-indigo-glow: #818cf8;
 }
 
-/* In light mode, ember-tinted text/borders flip to the darker bronze */
+/* In light mode, accent-tinted text flips to the deeper royal blue */
 :root:not(.dark) .text-ember {
-  color: #8a5200;
+  color: #1e4fd8;
 }
 :root:not(.dark) .text-cyan {
-  color: #1f6f8b;
+  color: #0e7490;
 }
 :root:not(.dark) .text-indigo-glow {
-  color: #4f46e5;
+  color: #4338ca;
 }
 
 @layer base {
@@ -194,10 +195,10 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
   ::selection {
-    background: rgba(240, 176, 63, 0.32);
+    background: rgba(79, 125, 255, 0.3);
     color: var(--foreground);
   }
   ::-webkit-scrollbar {
@@ -208,46 +209,46 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(130, 160, 255, 0.14);
     border-radius: 8px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(130, 160, 255, 0.24);
   }
 }
 
 @layer components {
   /* Frosted glass panel: blur + thin light border + top sheen */
   .glass {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(130, 160, 255, 0.05);
+    border: 1px solid rgba(130, 160, 255, 0.12);
     box-shadow:
-      0 1px 0 0 rgba(255, 255, 255, 0.07) inset,
-      0 24px 60px -24px rgba(0, 0, 0, 0.6);
+      0 1px 0 0 rgba(160, 190, 255, 0.07) inset,
+      0 24px 60px -24px rgba(2, 6, 23, 0.6);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
   }
 
   /* Stronger glass for hero panels and the Elio preview card */
   .glass-strong {
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(130, 160, 255, 0.08);
+    border: 1px solid rgba(130, 160, 255, 0.16);
     box-shadow:
-      0 1px 0 0 rgba(255, 255, 255, 0.09) inset,
-      0 40px 90px -32px rgba(0, 0, 0, 0.7);
+      0 1px 0 0 rgba(160, 190, 255, 0.09) inset,
+      0 40px 90px -32px rgba(2, 6, 23, 0.7);
     backdrop-filter: blur(24px) saturate(150%);
     -webkit-backdrop-filter: blur(24px) saturate(150%);
   }
 
   .btn-glow {
     box-shadow:
-      0 8px 28px -6px rgba(240, 176, 63, 0.45),
-      0 1px 0 0 rgba(255, 255, 255, 0.25) inset;
+      0 8px 28px -6px rgba(79, 125, 255, 0.45),
+      0 1px 0 0 rgba(190, 210, 255, 0.25) inset;
   }
   .btn-glow:hover {
     box-shadow:
-      0 10px 36px -6px rgba(240, 176, 63, 0.6),
-      0 1px 0 0 rgba(255, 255, 255, 0.3) inset;
+      0 10px 36px -6px rgba(79, 125, 255, 0.6),
+      0 1px 0 0 rgba(190, 210, 255, 0.3) inset;
   }
 
   /* Slow-moving gradient orbs behind the whole UI */
@@ -257,9 +258,9 @@
     z-index: -1;
     overflow: hidden;
     background:
-      radial-gradient(1200px 800px at 85% -10%, rgba(139, 147, 248, 0.14), transparent 60%),
-      radial-gradient(900px 700px at -10% 30%, rgba(103, 212, 242, 0.1), transparent 60%),
-      radial-gradient(1000px 900px at 50% 110%, rgba(240, 176, 63, 0.1), transparent 60%),
+      radial-gradient(1200px 800px at 85% -10%, rgba(99, 102, 241, 0.15), transparent 60%),
+      radial-gradient(900px 700px at -10% 30%, rgba(56, 189, 248, 0.09), transparent 60%),
+      radial-gradient(1000px 900px at 50% 110%, rgba(79, 125, 255, 0.11), transparent 60%),
       var(--background);
   }
   .orb {
@@ -273,7 +274,7 @@
     height: 520px;
     top: -140px;
     right: -80px;
-    background: radial-gradient(circle at 30% 30%, rgba(139, 147, 248, 0.22), transparent 70%);
+    background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.24), transparent 70%);
     animation: drift-a 26s ease-in-out infinite alternate;
   }
   .orb-b {
@@ -281,7 +282,7 @@
     height: 460px;
     bottom: -120px;
     left: -100px;
-    background: radial-gradient(circle at 60% 40%, rgba(103, 212, 242, 0.16), transparent 70%);
+    background: radial-gradient(circle at 60% 40%, rgba(56, 189, 248, 0.15), transparent 70%);
     animation: drift-b 32s ease-in-out infinite alternate;
   }
   .orb-c {
@@ -289,7 +290,7 @@
     height: 420px;
     top: 38%;
     left: 55%;
-    background: radial-gradient(circle at 50% 50%, rgba(240, 176, 63, 0.12), transparent 70%);
+    background: radial-gradient(circle at 50% 50%, rgba(79, 125, 255, 0.13), transparent 70%);
     animation: drift-c 38s ease-in-out infinite alternate;
   }
   @keyframes drift-a {
@@ -320,8 +321,8 @@
   /* Subtle grid texture for hero/backdrop sections */
   .grid-lines {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      linear-gradient(rgba(150, 175, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(150, 175, 255, 0.06) 1px, transparent 1px);
     background-size: 44px 44px;
     mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 75%);
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 75%);
@@ -329,16 +330,16 @@
 
   /* Gradient text used for hero emphasis */
   .text-gradient {
-    background: linear-gradient(96deg, #ffd98a 0%, #f0b03f 38%, #67d4f2 78%, #8b93f8 100%);
+    background: linear-gradient(96deg, #93b4ff 0%, #4f7dff 38%, #38bdf8 78%, #818cf8 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  /* Hairline divider with a warm core */
+  /* Hairline divider with a cool core */
   .divider-glow {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(240, 176, 63, 0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(79, 125, 255, 0.45), transparent);
   }
 }
 
