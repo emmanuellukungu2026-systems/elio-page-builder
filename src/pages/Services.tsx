@@ -81,23 +81,23 @@ export default function Services() {
       <Atmosphere />
       <Nav />
 
-      <main className="mx-auto max-w-6xl px-4 pt-32 pb-24 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pt-28 pb-24 sm:px-6">
         <Reveal className="max-w-2xl">
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">
             {t.services.kicker}
           </p>
-          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight sm:text-5xl">
+          <h1 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-5xl">
             {t.services.title}
           </h1>
-          <p className="mt-5 leading-7 text-muted-foreground">{t.services.subtitle}</p>
+          <p className="mt-4 leading-7 text-muted-foreground">{t.services.subtitle}</p>
         </Reveal>
 
-        {/* Prominent order panel */}
+        {/* Prominent order panel — first thing on screen, mobile included */}
         <div
           id="order"
-          className="rounded-[2rem] border-2 border-primary/30 bg-card shadow-[0_2px_8px_rgba(16,24,43,0.1)]"
+          className="mt-6 rounded-[1.75rem] border-2 border-primary/30 bg-card shadow-[0_2px_8px_rgba(16,24,43,0.1)] sm:mt-8 sm:rounded-[2rem]"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 px-6 py-4 sm:px-8">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 px-4 py-3.5 sm:gap-3 sm:px-8 sm:py-4">
             <div className="flex items-center gap-2.5">
               <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <MessageCircle className="size-4" />
@@ -114,7 +114,7 @@ export default function Services() {
             </span>
           </div>
 
-          <div className="grid gap-10 px-6 py-7 sm:px-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="grid gap-8 px-4 py-5 sm:px-8 sm:py-7 lg:grid-cols-[1.2fr_0.8fr] lg:gap-10">
             <div>
             {sent ? (
               <div className="flex flex-col items-center py-6 text-center">
@@ -171,7 +171,11 @@ export default function Services() {
                   </div>
                 </div>
 
-                <Button type="submit" className="btn-glow mt-6 w-full rounded-2xl bg-emerald-600 text-white hover:bg-emerald-500" disabled={sending}>
+                <Button
+                  type="submit"
+                  className="btn-glow mt-6 h-12 w-full rounded-2xl bg-emerald-600 text-base text-white hover:bg-emerald-500"
+                  disabled={sending}
+                >
                   {sending ? <Loader2 className="size-4 animate-spin" /> : <MessageCircle className="size-4" />}
                   {f.submit}
                 </Button>
@@ -192,8 +196,8 @@ export default function Services() {
             )}
             </div>
 
-            {/* Side column: what happens next + free note */}
-            <div className="space-y-4">
+            {/* Side column: what happens next + free note (below form on mobile) */}
+            <div className="space-y-4 lg:border-l lg:border-border/60 lg:pl-8">
               <div className="glass rounded-2xl p-5">
                 <div className="flex items-center gap-2.5">
                   <ListChecks className="size-5 text-ember" />
