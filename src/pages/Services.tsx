@@ -10,6 +10,7 @@ import { api } from "@/convex/_generated/api";
 import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { downloadBriefPdf, type BriefData } from "@/lib/brief-pdf";
 import { useI18n } from "@/lib/i18n";
+import { photoStrip } from "@/lib/photos";
 import { useMutation } from "convex/react";
 import { Check, Download, FileText, ListChecks, Loader2, MessageCircle, ShieldCheck } from "lucide-react";
 import { useState } from "react";
@@ -223,6 +224,26 @@ export default function Services() {
           </div>
         </div>
       </main>
+
+      {/* Photo strip — proof of finished pages, below the order panel so the form stays first on mobile */}
+      <section className="relative px-4 pb-20 sm:px-6">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          {[photoStrip[1], photoStrip[2], photoStrip[5], photoStrip[7]].map((src, i) => (
+            <div
+              key={src}
+              className="group relative overflow-hidden rounded-2xl border border-border/50"
+            >
+              <img
+                src={src}
+                alt=""
+                loading="lazy"
+                className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#070d1f]/50 via-transparent to-transparent" />
+            </div>
+          ))}
+        </div>
+      </section>
 
       <Footer />
     </div>

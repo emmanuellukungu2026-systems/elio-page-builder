@@ -97,6 +97,12 @@ const en = {
     ],
     cta: "Get my QR code",
   },
+  gallery: {
+    kicker: "Made with Elio",
+    title: "Real work, presented properly.",
+    text: "The kind of pages Elio builds for working businesses — every photo in its place, every project given room to breathe.",
+    band: "Your work deserves better than a camera roll.",
+  },
   directoryCta: {
     kicker: "The directory",
     title: "Businesses, side by side.",
@@ -440,6 +446,12 @@ const fr: Dict = {
     ],
     cta: "Obtenir mon QR code",
   },
+  gallery: {
+    kicker: "Créé avec Elio",
+    title: "Du vrai travail, présenté comme il se doit.",
+    text: "Le genre de pages qu'Elio construit pour les entreprises qui travaillent — chaque photo à sa place, chaque projet mis en valeur.",
+    band: "Votre travail mérite mieux qu'une pellicule de téléphone.",
+  },
   directoryCta: {
     kicker: "L'annuaire",
     title: "Des entreprises, côte à côte.",
@@ -780,6 +792,12 @@ const tr: Dict = {
       "Her telefon kamerasıyla çalışır — kuruluma gerek yok",
     ],
     cta: "QR kodumu al",
+  },
+  gallery: {
+    kicker: "Elio ile yapıldı",
+    title: "Gerçek işler, layıkıyla sunulmuş.",
+    text: "Elio'nun çalışan işletmeler için kurduğu sayfa tarzı — her fotoğraf yerli yerinde, her projeye nefes alacak alan.",
+    band: "İşiniz telefon galerinizden daha fazlasını hak ediyor.",
   },
   directoryCta: {
     kicker: "Rehber",

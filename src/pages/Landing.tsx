@@ -13,6 +13,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useI18n } from "@/lib/i18n";
+import { photoStrip, photos } from "@/lib/photos";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -30,6 +31,7 @@ import {
   Store,
 } from "lucide-react";
 import { Link } from "react-router";
+import { cn } from "@/lib/utils";
 
 export default function Landing() {
   const { t } = useI18n();
@@ -125,6 +127,12 @@ export default function Landing() {
                 <ElioCardPreview />
               </TiltCard>
             </div>
+            <div
+              className="pointer-events-none absolute -left-16 -top-14 -z-20 hidden h-44 w-44 overflow-hidden rounded-3xl border border-border/50 opacity-70 sm:block"
+              aria-hidden="true"
+            >
+              <img src={photos.studio} alt="" className="size-full object-cover" />
+            </div>
             <div className="glass absolute -left-6 top-10 -z-10 hidden h-40 w-40 rotate-[-8deg] rounded-3xl sm:block" />
             <div className="glass absolute -right-5 -bottom-8 -z-10 h-28 w-48 rotate-[6deg] rounded-3xl" />
           </motion.div>
@@ -191,6 +199,53 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ================= GALLERY ================= */}
+      <section className="relative px-4 py-24 sm:px-6">
+        <Reveal className="mx-auto max-w-6xl">
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan">
+            {t.gallery.kicker}
+          </p>
+          <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            {t.gallery.title}
+          </h2>
+          <p className="mt-4 max-w-xl leading-7 text-muted-foreground">{t.gallery.text}</p>
+        </Reveal>
+        <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          {photoStrip.map((src, i) => (
+            <Reveal key={src} delay={i * 0.05}>
+              <figure
+                className={cn(
+                  "group relative overflow-hidden rounded-3xl border border-border/50",
+                  i % 4 === 1 || i % 4 === 2 ? "lg:mt-8" : "",
+                )}
+              >
+                <img
+                  src={src}
+                  alt=""
+                  loading="lazy"
+                  className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#070d1f]/55 via-transparent to-transparent" />
+              </figure>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal className="mx-auto mt-10 max-w-6xl">
+          <div className="glass relative overflow-hidden rounded-3xl">
+            <img
+              src={photos.team}
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 size-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/80 to-background/40" />
+            <p className="relative max-w-md px-6 py-10 font-display text-lg font-semibold leading-relaxed sm:px-10 sm:py-14 sm:text-xl">
+              {t.gallery.band}
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
       {/* ================= QR ================= */}
       <section className="relative px-4 py-24 sm:px-6">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
@@ -233,6 +288,13 @@ export default function Landing() {
       <section className="relative px-4 py-24 sm:px-6">
         <Reveal className="mx-auto max-w-4xl">
           <div className="glass-strong relative overflow-hidden rounded-[2.5rem] p-8 sm:p-12">
+            <img
+              src={photos.craft}
+              alt=""
+              loading="lazy"
+              className="pointer-events-none absolute inset-0 size-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/85 to-background/70" />
             <div className="relative grid items-center gap-8 sm:grid-cols-[1fr_auto]">
               <div>
                 <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan">
