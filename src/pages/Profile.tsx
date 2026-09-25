@@ -287,7 +287,7 @@ export default function Profile() {
             )}
 
             <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-              <ElioMark className="size-3.5" />
+              <ElioMark className="size-3.5" invert />
               <span className="font-mono">{profileUrl(page.username).replace(/^https?:\/\//, "")}</span>
             </div>
           </div>
@@ -395,7 +395,7 @@ export default function Profile() {
           className="mt-10 flex items-center justify-between text-xs text-muted-foreground"
         >
           <span className="inline-flex items-center gap-1.5">
-            <ElioMark className="size-3.5" /> {p.madeWith}
+            <ElioMark className="size-3.5" invert /> {p.madeWith}
           </span>
           <Link to="/" className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground">
             {p.createYours}
