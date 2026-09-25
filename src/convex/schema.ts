@@ -30,7 +30,11 @@ const schema = defineSchema(
       isAnonymous: v.optional(v.boolean()), // is the user anonymous. do not remove
 
       role: v.optional(roleValidator), // role of the user. do not remove
-    }).index("email", ["email"]), // index for the email. do not remove or modify
+
+      loginId: v.optional(v.string()), // 5-digit account ID, shown to the user as their "ID"
+    })
+      .index("email", ["email"]) // index for the email. do not remove or modify
+      .index("by_login_id", ["loginId"]),
 
     // One portfolio page per business
     elioPages: defineTable({

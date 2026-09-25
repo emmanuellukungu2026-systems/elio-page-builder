@@ -7,7 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import { OWNER_EMAILS } from "@/lib/elio";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { Menu, LogOut, X } from "lucide-react";
+import { Hash, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import {
@@ -89,10 +89,19 @@ export function Nav() {
                     <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/15 font-display text-[10px] font-bold text-primary">
                       {(user?.email ?? "?").slice(0, 1).toUpperCase()}
                     </span>
-                    <span className="truncate">{user?.email}</span>
+                    <span className="truncate">{user?.email ?? user?.loginId}</span>
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-44 rounded-xl border-border/60">
+                  <div className="px-2 py-1.5">
+                    <p className="truncate text-xs text-muted-foreground">{user?.email ?? "—"}</p>
+                    {user?.loginId && (
+                      <p className="mt-0.5 flex items-center gap-1.5 font-mono text-xs font-semibold text-foreground">
+                        <Hash className="size-3 text-primary" /> {user.loginId}
+                      </p>
+                    )}
+                  </div>
+                  <div className="mx-2 border-t border-border/60" />
                   <DropdownMenuItem
                     className="cursor-pointer gap-2"
                     onClick={async () => {
@@ -180,7 +189,12 @@ export function Nav() {
             )}
             {isAuthenticated && (
               <div className="rounded-xl border border-border/60 bg-white/[0.03] px-3 py-2">
-                <p className="truncate text-xs font-medium text-foreground">{user?.email}</p>
+                {user?.email && <p className="truncate text-xs font-medium text-foreground">{user.email}</p>}
+                {user?.loginId && (
+                  <p className="mt-0.5 flex items-center gap-1.5 font-mono text-xs font-semibold text-foreground">
+                    <Hash className="size-3 text-primary" /> {user.loginId}
+                  </p>
+                )}
                 <button
                   onClick={async () => {
                     setMenuOpen(false);
