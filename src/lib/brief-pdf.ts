@@ -120,7 +120,7 @@ export function buildBriefPdf(d: BriefData): Blob {
   doc.setFillColor(...accent);
   doc.roundedRect(M + 110, y - 9, 44, 16, 4, 4, "F");
   doc.setFont("helvetica", "normal").setFontSize(11).setTextColor(...INK);
-  doc.text(d.accent ?? "#b0700a", M + 164, y + 3);
+  doc.text(d.accent ?? "#1e4fd8", M + 164, y + 3);
   y += 30;
   row("Page style", d.style);
   row("Logo URL", d.logoUrl);

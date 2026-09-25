@@ -47,7 +47,7 @@ export default function ItemDetail() {
   }
 
   const { item, business } = data;
-  const accent = business.accent ?? "#f0b03f";
+  const accent = business.accent ?? "#1e4fd8";
   const style = styleById(business.style);
   const serif = style.id === "atelier";
 

@@ -18,7 +18,7 @@ export function ElioCardPreview({
   return (
     <div className={cn("glass-strong rounded-3xl p-6", className)}>
       <div className="flex items-center gap-4">
-        <div className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#f0b03f] to-[#b4700a]">
+        <div className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#1e4fd8] to-[#0b2a6b]">
           <img src={logo} alt="" className="size-full object-cover" />
         </div>
         <div className="min-w-0">

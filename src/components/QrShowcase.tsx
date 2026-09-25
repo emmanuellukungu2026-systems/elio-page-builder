@@ -26,7 +26,7 @@ export function QrShowcase({ username, className }: { username: string; classNam
     <div className={cn("glass-strong flex flex-col items-center gap-4 rounded-3xl p-6", className)}>
       <div className="relative overflow-hidden rounded-2xl bg-white p-4">
         <QRCodeSVG value={url} size={148} bgColor="#ffffff" fgColor="#0b0e1a" level="M" />
-        <div className="pointer-events-none absolute inset-x-3 h-8 rounded-full bg-gradient-to-r from-transparent via-[#f0b03f]/50 to-transparent blur-sm animate-scan" />
+        <div className="pointer-events-none absolute inset-x-3 h-8 rounded-full bg-gradient-to-r from-transparent via-[#1e4fd8]/50 to-transparent blur-sm animate-scan" />
       </div>
       <p className="font-mono text-sm text-muted-foreground">{url.replace(/^https?:\/\//, "")}</p>
       <div className="flex gap-2">

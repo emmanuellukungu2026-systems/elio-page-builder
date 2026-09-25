@@ -4,6 +4,7 @@ import { LangSwitcher } from "@/components/LangSwitcher";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useI18n } from "@/lib/i18n";
+import { OWNER_EMAILS } from "@/lib/elio";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -16,8 +17,10 @@ export function Nav() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const navigate = useNavigate();
+  const isOwner =
+    isAuthenticated && !!user?.email && OWNER_EMAILS.includes(user.email.trim().toLowerCase());
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 24));
 
@@ -72,9 +75,21 @@ export function Nav() {
           <ThemeToggle />
 
           {isLoading ? null : isAuthenticated ? (
-            <Button size="sm" className="btn-glow rounded-xl" onClick={() => navigate("/dashboard")}>
-              {t.nav.myElio}
-            </Button>
+            <>
+              <Button size="sm" className="btn-glow rounded-xl" onClick={() => navigate("/dashboard")}>
+                {t.nav.myElio}
+              </Button>
+              {isOwner && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="hidden rounded-xl border-border/70 sm:inline-flex"
+                  onClick={() => navigate("/admin")}
+                >
+                  Studio
+                </Button>
+              )}
+            </>
           ) : (
             <>
               <Button
@@ -116,6 +131,17 @@ export function Nav() {
                 {l.label}
               </a>
             ))}
+            {isOwner && (
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate("/admin");
+                }}
+                className="block w-full rounded-xl px-3 py-2.5 text-left text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                Studio
+              </button>
+            )}
             {!isAuthenticated && (
               <button
                 onClick={() => navigate("/auth?returnTo=%2Fdashboard")}

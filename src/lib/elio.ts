@@ -36,7 +36,14 @@ export const PAGE_STYLES = [
 
 export type PageStyleId = (typeof PAGE_STYLES)[number]["id"];
 
-export const ACCENTS = ["#f0b03f", "#b4700a", "#2980b9", "#0e6f7a", "#4f46e5", "#f2789f"];
+export const ACCENTS = ["#1e4fd8", "#4f7dff", "#0e7490", "#0e6f7a", "#4338ca", "#0b2a6b"];
+
+/** Emails allowed into the admin studio — the Aethel Technologies team. */
+export const OWNER_EMAILS = [
+  "emmanuellukungu6@gmail.com",
+  "emmanuellukungu80@gmail.com",
+  "emmanuellukungu77@gmail.com",
+];
 
 export function styleById(id?: string | null) {
   return PAGE_STYLES.find((s) => s.id === id) ?? PAGE_STYLES[0];
@@ -132,7 +139,7 @@ export function buildBrief(input: {
   if (input.bio) lines.push(`*Pitch:* ${input.bio}`);
   if (input.story) lines.push(`*Story:* ${input.story}`);
   lines.push("");
-  lines.push(`*Look:* accent ${input.accent ?? "#f0b03f"} · style ${input.style ?? "noir"}`);
+  lines.push(`*Look:* accent ${input.accent ?? "#1e4fd8"} · style ${input.style ?? "noir"}`);
   if (input.logoUrl) lines.push(`*Logo:* ${input.logoUrl}`);
   if (input.coverUrl) lines.push(`*Cover:* ${input.coverUrl}`);
   lines.push("");

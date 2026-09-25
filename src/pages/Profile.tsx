@@ -110,7 +110,7 @@ export default function Profile() {
     );
   }
 
-  const accent = page.accent ?? "#f0b03f";
+  const accent = page.accent ?? "#1e4fd8";
   const style = styleById(page.style);
   const serif = style.id === "atelier";
 

@@ -1,5 +1,5 @@
 import { Atmosphere } from "@/components/Atmosphere";
-import { ElioCardPreview } from "@/components/ElioCardPreview";
+import { NfcHeroVisual } from "@/components/NfcHeroVisual";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { QrShowcase } from "@/components/QrShowcase";
@@ -115,26 +115,22 @@ export default function Landing() {
             </motion.p>
           </div>
 
-          {/* Tilted floating business card */}
+          {/* NFC-ad moment: card tapping the phone */}
           <motion.div
-            initial={{ opacity: 0, y: 40, rotate: 4 }}
-            animate={{ opacity: 1, y: 0, rotate: 2 }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.35, ease: [0.21, 0.6, 0.35, 1] }}
-            className="relative mx-auto w-full max-w-sm [perspective:1200px]"
+            className="relative mx-auto w-full max-w-md"
           >
             <div className="animate-floaty">
-              <TiltCard max={7}>
-                <ElioCardPreview />
-              </TiltCard>
+              <NfcHeroVisual />
             </div>
             <div
-              className="pointer-events-none absolute -left-16 -top-14 -z-20 hidden h-44 w-44 overflow-hidden rounded-3xl border border-border/50 opacity-70 sm:block"
+              className="pointer-events-none absolute -left-20 top-6 -z-20 hidden h-48 w-48 overflow-hidden rounded-3xl border border-border/50 opacity-60 sm:block"
               aria-hidden="true"
             >
               <img src={photos.studio} alt="" className="size-full object-cover" />
             </div>
-            <div className="glass absolute -left-6 top-10 -z-10 hidden h-40 w-40 rotate-[-8deg] rounded-3xl sm:block" />
-            <div className="glass absolute -right-5 -bottom-8 -z-10 h-28 w-48 rotate-[6deg] rounded-3xl" />
           </motion.div>
         </div>
 

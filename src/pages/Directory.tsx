@@ -126,7 +126,7 @@ export default function Directory() {
                         background:
                           p.coverUrl && p.coverKind
                             ? undefined
-                            : `linear-gradient(135deg, ${p.accent ?? "#f0b03f"}33, transparent 70%)`,
+                            : `linear-gradient(135deg, ${p.accent ?? "#1e4fd8"}33, transparent 70%)`,
                       }}
                     >
                       {p.coverKind ? (
@@ -139,7 +139,7 @@ export default function Directory() {
                         <div
                           className="size-full"
                           style={{
-                            background: `radial-gradient(300px 160px at 50% 120%, ${p.accent ?? "#f0b03f"}55, transparent)`,
+                            background: `radial-gradient(300px 160px at 50% 120%, ${p.accent ?? "#1e4fd8"}55, transparent)`,
                           }}
                         />
                       )}

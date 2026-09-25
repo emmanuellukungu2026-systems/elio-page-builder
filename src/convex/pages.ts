@@ -238,7 +238,7 @@ export const createPage = mutation({
       userId,
       username: check.value,
       displayName: displayName.trim() || check.value,
-      accent: "#f0b03f",
+      accent: "#1e4fd8",
       style: "noir",
       isPublished: false,
       items: [],
