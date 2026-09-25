@@ -12,7 +12,7 @@ import { downloadBriefPdf, type BriefData } from "@/lib/brief-pdf";
 import { useI18n } from "@/lib/i18n";
 import { photoStrip } from "@/lib/photos";
 import { useMutation } from "convex/react";
-import { Check, Download, FileText, ListChecks, Loader2, MessageCircle, ShieldCheck } from "lucide-react";
+import { Check, Download, FileText, ListChecks, Loader2, MessageCircle, Send, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -28,6 +28,8 @@ export default function Services() {
   const [details, setDetails] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [studioSent, setStudioSent] = useState(false);
+  const [studioSending, setStudioSending] = useState(false);
   const traceOrder = useMutation(api.orders.createOrder);
 
   const briefData: BriefData = {
@@ -53,6 +55,28 @@ export default function Services() {
   ]
     .filter((l) => l !== "")
     .join("\n");
+
+  /** Land the brief straight into the Aethel team's studio (/admin orders). */
+  const sendToStudio = async () => {
+    if (!businessName.trim() || !details.trim()) {
+      toast.error(`${f.name} & ${f.details} — required`);
+      return;
+    }
+    setStudioSending(true);
+    try {
+      await traceOrder({
+        pack: "aethel-team",
+        name: `${businessName} (${contactName || "no contact"})`,
+        email: whatsapp || trade || "-",
+        details: details.slice(0, 2000),
+      });
+      setStudioSent(true);
+    } catch {
+      toast.error("Could not reach the studio — please use WhatsApp instead.");
+    } finally {
+      setStudioSending(false);
+    }
+  };
 
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,6 +168,24 @@ export default function Services() {
                   {t.servicesConfirm.again}
                 </Button>
               </div>
+            ) : studioSent ? (
+              <div className="flex flex-col items-center py-6 text-center">
+                <div className="flex size-14 items-center justify-center rounded-full bg-primary/15">
+                  <Send className="size-7 text-primary" />
+                </div>
+                <h2 className="mt-5 font-display text-2xl font-semibold">
+                  {t.servicesConfirm.studioTitle}
+                </h2>
+                <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
+                  {t.servicesConfirm.studioText}
+                </p>
+                <Button variant="outline" className="mt-6 rounded-2xl" onClick={() => downloadBriefPdf(briefData)}>
+                  <Download className="size-4" /> {p.download}
+                </Button>
+                <Button variant="ghost" className="mt-2 rounded-xl" onClick={() => setStudioSent(false)}>
+                  {t.servicesConfirm.again}
+                </Button>
+              </div>
             ) : (
               <form onSubmit={send}>
                 <div className="space-y-4">
@@ -196,6 +238,18 @@ export default function Services() {
                 >
                   {sending ? <Loader2 className="size-4 animate-spin" /> : <MessageCircle className="size-4" />}
                   {f.submit}
+                </Button>
+
+                {/* Straight to the studio: lands in the Aethel team's /admin orders */}
+                <Button
+                  type="button"
+                  onClick={sendToStudio}
+                  disabled={studioSending}
+                  variant="outline"
+                  className="mt-3 h-12 w-full rounded-2xl border-primary/40 text-primary hover:bg-primary/10"
+                >
+                  {studioSending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+                  {f.sendTeam}
                 </Button>
 
                 <div className="mt-6 flex flex-col items-center gap-3">

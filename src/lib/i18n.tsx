@@ -142,6 +142,7 @@ const en = {
         "Where are you based? What services do you offer? Links to photos, socials or an existing site — anything that helps us tell your story.",
       submit: "Send order on WhatsApp",
       submitShort: "Send on WhatsApp",
+      sendTeam: "Send to the Aethel team for approval",
       privacy: "Your brief goes straight to our team on WhatsApp — that message is your order.",
     },
     pdf: {
@@ -414,6 +415,9 @@ const en = {
     title: "Almost there",
     text: "Your brief is ready. Tap below and it opens in WhatsApp, pre-filled — send it and our team takes it from there.",
     again: "Edit brief",
+    studioTitle: "Sent to the Aethel team",
+    studioText:
+      "Your brief just landed in the studio. The Aethel team reviews it and builds your page — we'll reach out as soon as it's live.",
   },
   auth: {
     title: "Welcome back",
@@ -573,6 +577,7 @@ const fr: Dict = {
         "Où êtes-vous installés ? Quels services proposez-vous ? Liens vers photos, réseaux ou site existant — tout ce qui aide à raconter votre histoire.",
       submit: "Envoyer la commande sur WhatsApp",
       submitShort: "Envoyer sur WhatsApp",
+      sendTeam: "Envoyer à l'équipe Aethel pour approbation",
       privacy: "Votre brief part directement à notre équipe sur WhatsApp — ce message est votre commande.",
     },
     pdf: {
@@ -845,6 +850,9 @@ const fr: Dict = {
     title: "Presque terminé",
     text: "Votre brief est prêt. Appuyez ci-dessous : WhatsApp s'ouvre avec le message pré-rempli — envoyez-le et notre équipe prend le relais.",
     again: "Modifier le brief",
+    studioTitle: "Envoyé à l'équipe Aethel",
+    studioText:
+      "Votre brief vient d'arriver dans le studio. L'équipe Aethel l'examine et construit votre page — nous vous contactons dès qu'elle est en ligne.",
   },
   auth: {
     title: "Bon retour",
@@ -1002,6 +1010,7 @@ const tr: Dict = {
         "Nerede faaliyetsiniz? Hangi hizmetleri veriyorsunuz? Fotoğraf, sosyal medya veya mevcut site linkleri — hikayenizi anlatmaya yarayan her şey.",
       submit: "Siparişi WhatsApp'tan gönder",
       submitShort: "WhatsApp ile gönder",
+      sendTeam: "Onay için Aethel ekibine gönder",
       privacy: "Brief doğrudan WhatsApp üzerinden ekibimize gider — bu mesaj siparişinizdir.",
     },
     pdf: {
@@ -1274,6 +1283,9 @@ const tr: Dict = {
     title: "Neredeyse bitti",
     text: "Brief'iniz hazır. Aşağıya dokunun: WhatsApp önceden doldurulmuş mesajla açılır — gönderin, gerisini ekibimiz halleder.",
     again: "Brief'i düzenle",
+    studioTitle: "Aethel ekibine gönderildi",
+    studioText:
+      "Brief'iniz stüdyoya ulaştı. Aethel ekibi inceler ve sayfanızı kurar — yayına alınca size haber veririz.",
   },
   auth: {
     title: "Tekrar hoş geldiniz",

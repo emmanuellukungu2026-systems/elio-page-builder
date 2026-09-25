@@ -43,8 +43,8 @@ export function Nav() {
     >
       <div
         className={cn(
-          "mx-auto flex max-w-6xl items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-300 sm:px-5",
-          scrolled ? "glass mx-3 lg:mx-auto" : "bg-transparent",
+          "glass mx-3 flex max-w-6xl items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-300 sm:px-5 lg:mx-auto",
+          scrolled && "glass-strong",
         )}
       >
         <Link to="/" className="group flex items-center gap-2.5" aria-label="Elio Pages">
