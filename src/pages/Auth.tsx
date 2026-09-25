@@ -9,11 +9,14 @@ import { api } from "@/convex/_generated/api";
 import { useI18n } from "@/lib/i18n";
 import {
   ArrowRight,
+  CheckCircle2,
   Hash,
   KeyRound,
   Loader2,
   Lock,
   Mail,
+  Phone,
+  User,
   UserPlus,
   UserX,
 } from "lucide-react";
@@ -38,6 +41,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
   const { t } = useI18n();
   const a = t.auth;
   const { isLoading: authLoading, isAuthenticated, signIn } = useAuth();
+  const completeRegistration = useMutation(api.users.completeRegistration);
   const ensureLoginId = useMutation(api.users.ensureLoginId);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -47,9 +51,14 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
   const [mode, setMode] = useState<Mode>("signIn");
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
+  // Sign-up fundamentals
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [newUserId, setNewUserId] = useState<string | null>(null);
+  const [assignedId, setAssignedId] = useState<string | null>(null);
+  const [idSaved, setIdSaved] = useState(false);
 
   // Legacy email-OTP flow state
   const [otpStep, setOtpStep] = useState<{ email: string } | null>(null);
@@ -68,23 +77,44 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
     setIsLoading(true);
     setError(null);
     try {
+      if (mode === "signUp") {
+        // The Password provider keys accounts on its `email` param — we use a
+        // deterministic internal address derived from the phone/email so the
+        // same person signing up twice is rejected instead of duplicated.
+        const accountKey = email.trim().toLowerCase() || phone.replace(/\D/g, "");
+        await signIn("password", {
+          flow: "signUp",
+          email: `${accountKey}@elio.internal`,
+          password,
+        });
+        // Store the fundamentals + generate the random 5-digit ID.
+        const loginId = await completeRegistration({
+          name: fullName,
+          phone,
+          email,
+        });
+        setAssignedId(loginId);
+        setIsLoading(false);
+        return;
+      }
+      // Sign-in: by email, or by 5-digit ID alone.
+      const key = loginId
+        ? `${loginId}@id.elio.internal`
+        : email.trim().toLowerCase();
       await signIn("password", {
-        flow: mode === "signUp" ? "signUp" : "signIn",
-        // Convex Auth's Password provider stores the account identifier in
-        // `email` — we pass the 5-digit ID there so the same table works.
-        email: `${loginId}@elio.local`,
+        flow: "signIn",
+        email: `${key}@elio.internal`,
         password,
       });
-      const id = await ensureLoginId();
-      if (mode === "signUp") setNewUserId(id);
+      await ensureLoginId();
       navigate(redirect);
     } catch (err) {
-      console.error("Credentials sign-in error:", err);
+      console.error("Credentials flow error:", err);
       const raw = err instanceof Error ? err.message : "";
       setError(
         mode === "signUp"
           ? a.errors.signUpFailed
-          : raw.toLowerCase().includes("invalid")
+          : raw.toLowerCase().includes("invalid") || raw.toLowerCase().includes("account")
             ? a.errors.invalidCredentials
             : a.errors.signInFailed,
       );
@@ -92,19 +122,14 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
     }
   };
 
-  const handleEmailSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
-    setError(null);
+  const handleOtpSignIn = async (emailAddr: string) => {
     try {
-      const formData = new FormData(event.currentTarget);
-      await signIn("email-otp", formData);
-      setOtpStep({ email: formData.get("email") as string });
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Email sign-in error:", error);
-      setError(error instanceof Error ? error.message : "Failed to send verification code.");
-      setIsLoading(false);
+      const fd = new FormData();
+      fd.set("email", emailAddr);
+      await signIn("email-otp", fd);
+      setOtpStep({ email: emailAddr });
+    } catch {
+      setError(a.errors.emailFailed);
     }
   };
 
@@ -138,8 +163,8 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
     }
   };
 
-  // Success screen after creating an account — show the new 5-digit ID.
-  if (newUserId) {
+  // Success screen after sign-up — the generated ID must be written down.
+  if (assignedId) {
     return (
       <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-12">
         <div className="orbs" aria-hidden="true">
@@ -152,18 +177,35 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
             <div className="flex justify-center">
               <img src={logo} alt="Elio Pages" width={56} height={56} className="mb-4 mt-2 rounded-xl" />
             </div>
-            <CardTitle className="font-display text-2xl">{a.idTitle}</CardTitle>
+            <CardTitle className="font-display flex items-center justify-center gap-2 text-2xl">
+              <CheckCircle2 className="size-6 text-emerald-500" /> {a.idTitle}
+            </CardTitle>
             <CardDescription>{a.idText}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center pb-4">
-            <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-white/[0.04] px-6 py-4">
-              <Hash className="size-5 text-primary" />
-              <span className="font-display text-3xl font-bold tracking-[0.2em]">{newUserId}</span>
+            <div className="flex items-center gap-3 rounded-2xl border-2 border-primary/40 bg-primary/5 px-8 py-5">
+              <Hash className="size-6 text-primary" />
+              <span className="font-display text-4xl font-bold tracking-[0.25em] text-primary">{assignedId}</span>
             </div>
-            <p className="mt-4 text-center text-xs leading-5 text-muted-foreground">{a.idHint}</p>
+            <p className="mt-5 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-center text-xs font-medium leading-5 text-amber-600 dark:text-amber-400">
+              ⚠️ {a.idWarning}
+            </p>
+            <label className="mt-4 flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
+              <input
+                type="checkbox"
+                checked={idSaved}
+                onChange={(e) => setIdSaved(e.target.checked)}
+                className="size-4 accent-[var(--primary)]"
+              />
+              {a.idConfirm}
+            </label>
           </CardContent>
           <CardFooter>
-            <Button className="btn-glow w-full rounded-xl" onClick={() => navigate(redirect)}>
+            <Button
+              className="btn-glow w-full rounded-xl"
+              disabled={!idSaved}
+              onClick={() => navigate(redirect)}
+            >
               {a.idContinue} <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </CardFooter>
@@ -295,23 +337,92 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
 
             <form onSubmit={handleCredentialsSubmit}>
               <CardContent className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">{a.idLabel}</Label>
-                  <div className="relative flex items-center">
-                    <Hash className="absolute left-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      value={loginId}
-                      onChange={(e) => setLoginId(e.target.value.replace(/\D/g, "").slice(0, 5))}
-                      placeholder="12345"
-                      inputMode="numeric"
-                      autoComplete={mode === "signUp" ? "off" : "username"}
-                      className="rounded-xl bg-white/[0.04] pl-9 font-mono tracking-[0.2em]"
-                      disabled={isLoading}
-                      required
-                    />
+                {mode === "signUp" && (
+                  <>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs text-muted-foreground">{a.nameLabel}</Label>
+                      <div className="relative flex items-center">
+                        <User className="absolute left-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          placeholder={a.namePh}
+                          autoComplete="name"
+                          className="rounded-xl bg-white/[0.04] pl-9"
+                          disabled={isLoading}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-muted-foreground">{a.phoneLabel}</Label>
+                        <div className="relative flex items-center">
+                          <Phone className="absolute left-3 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            type="tel"
+                            inputMode="tel"
+                            autoComplete="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder="+243 …"
+                            className="rounded-xl bg-white/[0.04] pl-9"
+                            disabled={isLoading}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs text-muted-foreground">
+                          {a.emailLabel} <span className="text-muted-foreground/60">({a.optional})</span>
+                        </Label>
+                        <div className="relative flex items-center">
+                          <Mail className="absolute left-3 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            type="email"
+                            autoComplete="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="name@example.com"
+                            className="rounded-xl bg-white/[0.04] pl-9"
+                            disabled={isLoading}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {mode === "signIn" && (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">{a.idLabel}</Label>
+                    <div className="relative flex items-center">
+                      <Hash className="absolute left-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        value={loginId}
+                        onChange={(e) => setLoginId(e.target.value.replace(/\D/g, "").slice(0, 5))}
+                        placeholder="12345"
+                        inputMode="numeric"
+                        autoComplete="username"
+                        className="rounded-xl bg-white/[0.04] pl-9 font-mono tracking-[0.2em]"
+                        disabled={isLoading || !!email}
+                      />
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      {a.idHelp}{" "}
+                      <button
+                        type="button"
+                        className="underline underline-offset-2 hover:text-foreground"
+                        onClick={() => {
+                          const addr = window.prompt(a.emailPrompt);
+                          if (addr) handleOtpSignIn(addr.trim());
+                        }}
+                      >
+                        {a.emailOtpCta}
+                      </button>
+                    </p>
                   </div>
-                  {mode === "signIn" && <p className="text-[11px] text-muted-foreground">{a.idHelp}</p>}
-                </div>
+                )}
 
                 <div className="space-y-1.5">
                   <Label className="text-xs text-muted-foreground">{a.passwordLabel}</Label>
@@ -336,7 +447,11 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
 
                 {error && <p className="text-sm text-red-400">{error}</p>}
 
-                <Button type="submit" className="btn-glow w-full rounded-xl" disabled={isLoading || loginId.length !== 5}>
+                <Button
+                  type="submit"
+                  className="btn-glow w-full rounded-xl"
+                  disabled={isLoading || (mode === "signIn" && loginId.length !== 5 && !email)}
+                >
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {a.sending}
@@ -352,37 +467,16 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                   )}
                 </Button>
 
-                <div className="relative mt-2">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-border/60" />
+                {mode === "signIn" && (
+                  <div className="relative mt-2">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t border-border/60" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-transparent px-2 text-muted-foreground">{a.or}</span>
+                    </div>
                   </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-transparent px-2 text-muted-foreground">{a.or}</span>
-                  </div>
-                </div>
-
-                {/* Email OTP fallback */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="btn-outline-glass w-full rounded-xl border-border/60"
-                  onClick={async () => {
-                    const email = window.prompt(a.emailPrompt);
-                    if (!email) return;
-                    try {
-                      const fd = new FormData();
-                      fd.set("email", email);
-                      await signIn("email-otp", fd);
-                      setOtpStep({ email });
-                    } catch {
-                      setError(a.errors.emailFailed);
-                    }
-                  }}
-                  disabled={isLoading}
-                >
-                  <Mail className="mr-2 h-4 w-4" />
-                  {a.emailOtpCta}
-                </Button>
+                )}
 
                 <Button
                   type="button"

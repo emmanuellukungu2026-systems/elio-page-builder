@@ -31,9 +31,38 @@ async function generateUniqueLoginId(ctx: { db: any }): Promise<string> {
 }
 
 /**
- * Ensure the signed-in user has a 5-digit login ID and returns it.
- * Called by the client right after sign-in/sign-up; safe to call repeatedly.
+ * Enrich the signed-in user with the fundamental identity fields captured at
+ * sign-up (name, phone, email) and make sure they have a 5-digit login ID.
+ * Called right after the credentials signUp flow completes.
  */
+export const completeRegistration = mutation({
+  args: {
+    name: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    email: v.optional(v.string()),
+  },
+  handler: async (ctx, { name, phone, email }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) throw new Error("Not signed in.");
+    const user = await ctx.db.get(userId);
+    if (!user) throw new Error("User not found.");
+
+    const patch: Record<string, unknown> = {};
+    if (name?.trim() && !user.name) patch.name = name.trim();
+    if (phone?.trim() && user.phone !== phone.trim()) patch.phone = phone.trim();
+    if (email?.trim() && !user.email) patch.email = email.trim().toLowerCase();
+
+    let loginId = user.loginId;
+    if (!loginId) {
+      loginId = await generateUniqueLoginId(ctx);
+      patch.loginId = loginId;
+    }
+    if (Object.keys(patch).length > 0) await ctx.db.patch(userId, patch);
+    return loginId;
+  },
+});
+
+/** Ensure the signed-in user has a 5-digit login ID and returns it. */
 export const ensureLoginId = mutation({
   args: {},
   handler: async (ctx) => {
@@ -49,13 +78,13 @@ export const ensureLoginId = mutation({
   },
 });
 
-/** Look up whether a login ID is already taken (used for UX hints). */
-export const loginIdExists = query({
-  args: { loginId: v.string() },
-  handler: async (ctx, { loginId }) => {
+/** Check whether a name is already used (for sign-up UX hints). */
+export const nameExists = query({
+  args: { name: v.string() },
+  handler: async (ctx, { name }) => {
     const found = await ctx.db
       .query("users")
-      .withIndex("by_login_id", (q) => q.eq("loginId", loginId))
+      .withIndex("email", (q) => q.eq("email", name.trim().toLowerCase()))
       .first();
     return found !== null;
   },

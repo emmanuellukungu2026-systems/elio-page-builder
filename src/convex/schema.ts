@@ -32,6 +32,7 @@ const schema = defineSchema(
       role: v.optional(roleValidator), // role of the user. do not remove
 
       loginId: v.optional(v.string()), // 5-digit account ID, shown to the user as their "ID"
+      phone: v.optional(v.string()), // fundamental contact captured at sign-up
     })
       .index("email", ["email"]) // index for the email. do not remove or modify
       .index("by_login_id", ["loginId"]),

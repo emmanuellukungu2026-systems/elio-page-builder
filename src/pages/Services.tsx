@@ -11,13 +11,16 @@ import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { downloadBriefPdf, type BriefData } from "@/lib/brief-pdf";
 import { useI18n } from "@/lib/i18n";
 import { photoStrip } from "@/lib/photos";
+import { useAuth } from "@/hooks/use-auth";
 import { useMutation } from "convex/react";
-import { Check, Download, FileText, ListChecks, Loader2, MessageCircle, Send, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, Download, FileText, ListChecks, Loader2, Lock, MessageCircle, Send, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 import { toast } from "sonner";
 
 export default function Services() {
   const { t } = useI18n();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const f = t.services.form;
   const p = t.services.pdf;
 
@@ -142,7 +145,29 @@ export default function Services() {
 
           <div className="grid gap-8 px-4 py-5 sm:px-8 sm:py-7 lg:grid-cols-[1.2fr_0.8fr] lg:gap-10">
             <div>
-            {sent ? (
+            {!authLoading && !isAuthenticated ? (
+              /* Gate: orders require an account (5-digit ID + password). */
+              <div className="flex flex-col items-center py-10 text-center">
+                <div className="flex size-14 items-center justify-center rounded-full bg-primary/15">
+                  <Lock className="size-6 text-primary" />
+                </div>
+                <h2 className="mt-5 font-display text-2xl font-semibold">{t.orderGate.title}</h2>
+                <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{t.orderGate.text}</p>
+                <ul className="mt-4 space-y-1.5 text-left text-sm text-muted-foreground">
+                  {t.orderGate.benefits.map((b) => (
+                    <li key={b} className="flex items-center gap-2">
+                      <Check className="size-4 text-emerald-500" /> {b}
+                    </li>
+                  ))}
+                </ul>
+                <Button size="lg" className="btn-glow mt-7 h-12 rounded-2xl px-8 text-base" asChild>
+                  <Link to={`/auth?returnTo=%2Fservices`}>
+                    {t.orderGate.cta} <ArrowRight className="ml-2 size-4" />
+                  </Link>
+                </Button>
+                <p className="mt-3 text-xs text-muted-foreground">{t.orderGate.hint}</p>
+              </div>
+            ) : sent ? (
               <div className="flex flex-col items-center py-6 text-center">
                 <div className="flex size-14 items-center justify-center rounded-full bg-emerald-500/15">
                   <Check className="size-7 text-emerald-500" />
