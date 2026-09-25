@@ -2,6 +2,7 @@ import { Atmosphere } from "@/components/Atmosphere";
 import { ElioMark } from "@/components/ElioMark";
 import { ImageUpload } from "@/components/ImageUpload";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
+import { PageLoading } from "@/components/PageLoading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -110,11 +111,7 @@ export default function Admin() {
   const [selected, setSelected] = useState<Id<"elioPages"> | null>(null);
 
   if (isLoading || me === undefined) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="size-6 animate-spin text-muted-foreground" />
-      </main>
-    );
+    return <PageLoading />;
   }
 
   if (!isAuthenticated || me === null || !me.isOwner) {

@@ -2,6 +2,7 @@ import '@vly-ai/integrations';
 import { Toaster } from "@/components/ui/sonner";
 import { RequireAuth } from "@/components/RequireAuth";
 import { CatMascot } from "@/components/CatMascot";
+import { PageLoading } from "@/components/PageLoading";
 import { VlyToolbar } from "../vly-toolbar-readonly.tsx";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { ConvexReactClient } from "convex/react";
@@ -24,11 +25,7 @@ const ItemDetail = lazy(() => import("./pages/ItemDetail.tsx"));
 
 // Simple loading fallback for route transitions
 function RouteLoading() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-pulse text-muted-foreground">Loading...</div>
-    </div>
-  );
+  return <PageLoading />;
 }
 
 /** Silent error boundary — if VlyToolbar crashes it renders nothing instead of

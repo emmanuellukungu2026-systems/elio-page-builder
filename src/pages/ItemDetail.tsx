@@ -1,5 +1,6 @@
 import { Atmosphere } from "@/components/Atmosphere";
 import { ElioMark } from "@/components/ElioMark";
+import { PageLoading } from "@/components/PageLoading";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { styleById, waLink } from "@/lib/elio";
@@ -26,11 +27,7 @@ export default function ItemDetail() {
   const d = t.itemDetail;
 
   if (data === undefined) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="size-6 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <PageLoading />;
   }
 
   if (data === null) {

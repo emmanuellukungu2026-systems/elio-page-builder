@@ -1,5 +1,6 @@
 import { Atmosphere } from "@/components/Atmosphere";
 import { ElioMark } from "@/components/ElioMark";
+import { PageLoading } from "@/components/PageLoading";
 import { StandardProfile } from "@/components/StandardProfile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,11 +89,7 @@ export default function Profile() {
   }, [page]);
 
   if (page === undefined) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="size-6 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <PageLoading />;
   }
 
   if (page === null) {
