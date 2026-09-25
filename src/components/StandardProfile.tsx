@@ -18,6 +18,7 @@ import {
   MessageCircle,
   Tag,
 } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router";
 
 type Item = Doc<"elioPages">["items"][number];
@@ -57,7 +58,9 @@ const KIND_ICON: Record<string, typeof FolderGit2> = {
  */
 export function StandardProfile({ page }: { page: StandardPage }) {
   const { t } = useI18n();
+  const [avatarBroken, setAvatarBroken] = useState(false);
   const accent = page.accent ?? "#1e4fd8";
+  const initials = page.displayName.slice(0, 2).toUpperCase();
   const photoItems = (page.items ?? []).filter((it) => !!it.imageUrl);
   const waMessage = `Hello ${page.displayName} — found you through your Elio page.`;
 
@@ -100,18 +103,19 @@ export function StandardProfile({ page }: { page: StandardPage }) {
           className="flex items-center justify-between pt-8"
         >
           <div className="flex min-w-0 items-center gap-2.5">
-            {page.logoUrl ? (
+            {page.logoUrl && !avatarBroken ? (
               <img
                 src={page.logoUrl}
                 alt={page.displayName}
-                className="size-9 rounded-full object-cover ring-2 ring-border/60"
+                onError={() => setAvatarBroken(true)}
+                className="size-9 rounded-full object-cover object-[50%_32%] ring-2 ring-border/60"
               />
             ) : (
               <div
                 className="flex size-9 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold text-white"
                 style={{ background: `linear-gradient(135deg, ${accent}, #0b2a6b)` }}
               >
-                {page.displayName.slice(0, 2).toUpperCase()}
+                {initials}
               </div>
             )}
             <span className="truncate font-display text-sm font-semibold tracking-tight">
@@ -134,26 +138,35 @@ export function StandardProfile({ page }: { page: StandardPage }) {
           transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
           className="relative mt-10 text-center"
         >
-          {/* Accent halo behind the avatar, mockup style */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-0 size-44 -translate-x-1/2 rounded-full opacity-30 blur-3xl"
-            style={{ background: accent }}
-          />
-
-          {page.logoUrl ? (
-            <img
-              src={page.logoUrl}
-              alt={page.displayName}
-              className="relative mx-auto size-32 rounded-full object-cover shadow-xl ring-4 ring-background"
-            />
-          ) : (
+          {/* Oversized avatar — accent halo + gradient ring + background gap ring */}
+          <div className="relative mx-auto w-fit">
             <div
-              className="relative mx-auto flex size-32 items-center justify-center rounded-full font-display text-4xl font-bold text-white shadow-xl ring-4 ring-background"
-              style={{ background: `linear-gradient(135deg, ${accent}, #0b2a6b)` }}
+              className="pointer-events-none absolute -inset-7 rounded-full opacity-35 blur-3xl"
+              style={{ background: accent }}
+            />
+            <div
+              className="relative rounded-full p-[3px] shadow-xl"
+              style={{ background: `linear-gradient(160deg, ${accent}, ${accent}00 72%)` }}
             >
-              {page.displayName.slice(0, 2).toUpperCase()}
+              <div className="rounded-full bg-background p-1">
+                {page.logoUrl && !avatarBroken ? (
+                  <img
+                    src={page.logoUrl}
+                    alt={page.displayName}
+                    onError={() => setAvatarBroken(true)}
+                    className="size-32 rounded-full object-cover object-[50%_32%] sm:size-36"
+                  />
+                ) : (
+                  <div
+                    className="flex size-32 items-center justify-center rounded-full font-display text-4xl font-bold text-white sm:size-36"
+                    style={{ background: `linear-gradient(135deg, ${accent}, #0b2a6b)` }}
+                  >
+                    {initials}
+                  </div>
+                )}
+              </div>
             </div>
-          )}
+          </div>
 
           <h1 className="mt-6 font-display text-3xl font-bold tracking-tight sm:text-4xl">
             {t.profile.hi} {page.displayName}

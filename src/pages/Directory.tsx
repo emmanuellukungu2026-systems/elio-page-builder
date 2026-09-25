@@ -147,7 +147,10 @@ export default function Directory() {
                         <img
                           src={p.logoUrl}
                           alt=""
-                          className="absolute bottom-3 left-4 size-12 rounded-xl object-cover ring-2 ring-background"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
+                          className="absolute bottom-3 left-4 size-14 rounded-full object-cover object-[50%_32%] shadow-lg ring-2 ring-background"
                         />
                       )}
                     </div>

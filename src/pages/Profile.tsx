@@ -77,6 +77,7 @@ export default function Profile() {
   const { isAuthenticated } = useAuth();
   const { t, lang } = useI18n();
   const p = t.profile;
+  const [avatarBroken, setAvatarBroken] = useState(false);
 
   const groups = useMemo(() => {
     if (!page) return [];
@@ -175,23 +176,35 @@ export default function Profile() {
           </div>
 
           <div className="px-7 pb-7 text-center sm:px-9">
-            {page.logoUrl ? (
-              <img
-                src={page.logoUrl}
-                alt={page.displayName}
-                className="mx-auto -mt-12 size-24 rounded-3xl object-cover ring-4 ring-background"
-              />
-            ) : (
+            {/* Circular avatar — accent halo + gradient ring + background gap ring */}
+            <div className="relative mx-auto -mt-14 w-fit">
               <div
-                className="mx-auto -mt-12 flex size-24 items-center justify-center rounded-3xl font-display text-3xl font-bold text-[#fff]"
-                style={{
-                  background: `linear-gradient(135deg, ${accent}, #1c1c22)`,
-                  color: "#fff",
-                }}
+                className="pointer-events-none absolute -inset-5 rounded-full opacity-30 blur-2xl"
+                style={{ background: accent }}
+              />
+              <div
+                className="relative rounded-full p-[3px] shadow-xl"
+                style={{ background: `linear-gradient(160deg, ${accent}, ${accent}00 72%)` }}
               >
-                {page.displayName.slice(0, 2).toUpperCase()}
+                <div className="rounded-full bg-background p-1">
+                  {page.logoUrl && !avatarBroken ? (
+                    <img
+                      src={page.logoUrl}
+                      alt={page.displayName}
+                      onError={() => setAvatarBroken(true)}
+                      className="size-28 rounded-full object-cover object-[50%_32%]"
+                    />
+                  ) : (
+                    <div
+                      className="flex size-28 items-center justify-center rounded-full font-display text-3xl font-bold text-white"
+                      style={{ background: `linear-gradient(135deg, ${accent}, #1c1c22)` }}
+                    >
+                      {page.displayName.slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
+            </div>
 
             <h1 className="mt-5 font-display text-3xl font-bold tracking-tight">
               {page.displayName}
