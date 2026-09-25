@@ -3,10 +3,10 @@ import { ElioMark } from "@/components/ElioMark";
 import type { Doc } from "@/convex/_generated/dataModel";
 import { waLink } from "@/lib/elio";
 import { useI18n } from "@/lib/i18n";
-import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import {
   Briefcase,
+  ChevronDown,
   FolderGit2,
   Images,
   Instagram,
@@ -14,8 +14,8 @@ import {
   Linkedin,
   Mail,
   MapPin,
+  Menu,
   MessageCircle,
-  Phone,
   Tag,
 } from "lucide-react";
 import { Link } from "react-router";
@@ -50,9 +50,10 @@ const KIND_ICON: Record<string, typeof FolderGit2> = {
 };
 
 /**
- * "Standard" template — a one-screen link-in-bio page (à la Emily Johnson
- * mockup): rounded cover, floating avatar, name + role, big CTA button,
- * icon-only contact row, and a square photo grid of the catalog.
+ * "Standard" template — personal portfolio mobile design (Figma reference):
+ * top bar with menu icon, oversized round avatar with accent halo, "Hi, I'm X"
+ * greeting, location line, WhatsApp pill CTA, animated scroll chevron, then the
+ * catalog grid.
  */
 export function StandardProfile({ page }: { page: StandardPage }) {
   const { t } = useI18n();
@@ -90,58 +91,85 @@ export function StandardProfile({ page }: { page: StandardPage }) {
     <div className="relative min-h-screen pb-16">
       <Atmosphere />
 
-      {/* Floating avatar + cover, like the mockup */}
-      <div className="relative mx-auto max-w-md px-4 pt-8 sm:px-6">
+      <div className="relative mx-auto max-w-md px-4 sm:px-6">
+        {/* ===== Top bar: mini logo + name + menu icon, mockup style ===== */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
-          className="relative"
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-between pt-8"
         >
-          {/* Rounded cover photo */}
-          <div className="h-44 overflow-hidden rounded-[2rem] border border-border/60 sm:h-52">
-            {page.coverUrl ? (
-              <img src={page.coverUrl} alt="" className="size-full object-cover" />
-            ) : (
-              <div
-                className="size-full"
-                style={{ background: `radial-gradient(400px 200px at 50% 120%, ${accent}55, transparent)` }}
-              />
-            )}
-          </div>
-
-          {/* Avatar overlapping the cover */}
-          <div className="relative z-10 -mt-10 flex justify-center">
+          <div className="flex min-w-0 items-center gap-2.5">
             {page.logoUrl ? (
               <img
                 src={page.logoUrl}
                 alt={page.displayName}
-                className="size-24 rounded-full object-cover shadow-lg ring-4 ring-background"
+                className="size-9 rounded-full object-cover ring-2 ring-border/60"
               />
             ) : (
               <div
-                className="flex size-24 items-center justify-center rounded-full font-display text-2xl font-bold text-white shadow-lg ring-4 ring-background"
+                className="flex size-9 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold text-white"
                 style={{ background: `linear-gradient(135deg, ${accent}, #0b2a6b)` }}
               >
                 {page.displayName.slice(0, 2).toUpperCase()}
               </div>
             )}
+            <span className="truncate font-display text-sm font-semibold tracking-tight">
+              {page.displayName}
+            </span>
           </div>
-
-          <div className="mt-4 text-center">
-            <h1 className="font-display text-2xl font-bold tracking-tight">{page.displayName}</h1>
-            {(page.headline || page.trade) && (
-              <p className="mt-1 text-sm text-muted-foreground">{page.headline || page.trade}</p>
-            )}
-            {page.location && (
-              <p className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="size-3" /> {page.location}
-              </p>
-            )}
-          </div>
+          <span
+            title={t.profile.menu}
+            className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-white/[0.04] text-muted-foreground backdrop-blur"
+          >
+            <Menu className="size-4" />
+            <span className="sr-only">{t.profile.menu}</span>
+          </span>
         </motion.div>
 
-        {/* Primary CTA */}
+        {/* ===== Hero: oversized avatar + greeting ===== */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
+          className="relative mt-10 text-center"
+        >
+          {/* Accent halo behind the avatar, mockup style */}
+          <div
+            className="pointer-events-none absolute left-1/2 top-0 size-44 -translate-x-1/2 rounded-full opacity-30 blur-3xl"
+            style={{ background: accent }}
+          />
+
+          {page.logoUrl ? (
+            <img
+              src={page.logoUrl}
+              alt={page.displayName}
+              className="relative mx-auto size-32 rounded-full object-cover shadow-xl ring-4 ring-background"
+            />
+          ) : (
+            <div
+              className="relative mx-auto flex size-32 items-center justify-center rounded-full font-display text-4xl font-bold text-white shadow-xl ring-4 ring-background"
+              style={{ background: `linear-gradient(135deg, ${accent}, #0b2a6b)` }}
+            >
+              {page.displayName.slice(0, 2).toUpperCase()}
+            </div>
+          )}
+
+          <h1 className="mt-6 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            {t.profile.hi} {page.displayName}
+            <span style={{ color: accent }}>.</span>
+          </h1>
+          {(page.headline || page.trade) && (
+            <p className="mt-2 text-sm text-muted-foreground">{page.headline || page.trade}</p>
+          )}
+          {page.location && (
+            <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+              <MapPin className="size-3.5" /> {page.location}
+            </p>
+          )}
+        </motion.div>
+
+        {/* ===== Primary CTA ===== */}
         {page.whatsapp && (
           <motion.a
             initial={{ opacity: 0, y: 16 }}
@@ -150,7 +178,7 @@ export function StandardProfile({ page }: { page: StandardPage }) {
             href={waLink(page.whatsapp, waMessage)}
             target="_blank"
             rel="noreferrer"
-            className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-white shadow-lg transition-transform active:scale-[0.98]"
+            className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-white shadow-lg transition-transform active:scale-[0.98]"
             style={{ background: accent }}
           >
             <MessageCircle className="size-4" />
@@ -158,7 +186,7 @@ export function StandardProfile({ page }: { page: StandardPage }) {
           </motion.a>
         )}
 
-        {/* Icon-only contact row */}
+        {/* ===== Icon-only contact row ===== */}
         {contactIcons.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -176,12 +204,13 @@ export function StandardProfile({ page }: { page: StandardPage }) {
                 className="flex size-11 items-center justify-center rounded-2xl border border-border/60 bg-white/[0.04] text-muted-foreground backdrop-blur transition-all hover:scale-105 hover:text-foreground"
               >
                 <c.icon className="size-4" />
+                <span className="sr-only">{c.title}</span>
               </a>
             ))}
           </motion.div>
         )}
 
-        {/* Short bio */}
+        {/* ===== Short bio ===== */}
         {page.bio && (
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -193,9 +222,34 @@ export function StandardProfile({ page }: { page: StandardPage }) {
           </motion.p>
         )}
 
-        {/* Square photo grid — the catalog, mockup style */}
+        {/* ===== Animated scroll chevron, mockup style ===== */}
+        {photoItems.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, y: [0, 8, 0] }}
+            transition={{
+              opacity: { duration: 0.5, delay: 0.5 },
+              y: { duration: 1.6, repeat: Infinity, ease: "easeInOut" },
+            }}
+            className="mt-8 flex justify-center"
+          >
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById("std-catalog")?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="flex size-10 items-center justify-center rounded-full border border-border/60 bg-white/[0.04] text-muted-foreground backdrop-blur transition-colors hover:text-foreground"
+            >
+              <ChevronDown className="size-4" />
+              <span className="sr-only">{t.profile.menu}</span>
+            </button>
+          </motion.div>
+        )}
+
+        {/* ===== Catalog grid ===== */}
         {photoItems.length > 0 && (
           <motion.section
+            id="std-catalog"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
@@ -203,7 +257,6 @@ export function StandardProfile({ page }: { page: StandardPage }) {
           >
             <div className="grid grid-cols-2 gap-3">
               {photoItems.map((item: Item) => {
-                const Icon = KIND_ICON[item.kind] ?? FolderGit2;
                 const inner = (
                   <>
                     <img
@@ -236,7 +289,7 @@ export function StandardProfile({ page }: { page: StandardPage }) {
           </motion.section>
         )}
 
-        {/* Service chips for kinds without photos */}
+        {/* ===== Service chips for kinds without photos ===== */}
         {(() => {
           const noPhoto = (page.items ?? []).filter((it) => !it.imageUrl);
           if (noPhoto.length === 0) return null;
@@ -266,7 +319,7 @@ export function StandardProfile({ page }: { page: StandardPage }) {
           );
         })()}
 
-        {/* Footer mark */}
+        {/* ===== Footer mark ===== */}
         <motion.footer
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

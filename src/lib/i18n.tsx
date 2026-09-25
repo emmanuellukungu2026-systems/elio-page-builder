@@ -383,6 +383,8 @@ const en = {
   profile: {
     back: "Back to directory",
     connect: "Get in touch",
+    hi: "Hi, I'm",
+    menu: "Menu",
     story: "Our story",
     since: "Since",
     comment: "Leave a message",
@@ -812,6 +814,8 @@ const fr: Dict = {
   profile: {
     back: "Retour à l'annuaire",
     connect: "Prendre contact",
+    hi: "Salut, je suis",
+    menu: "Menu",
     story: "Notre histoire",
     since: "Depuis",
     comment: "Laisser un message",
@@ -1239,6 +1243,8 @@ const tr: Dict = {
   profile: {
     back: "Rehbere dön",
     connect: "İletişime geç",
+    hi: "Merhaba, ben",
+    menu: "Menü",
     story: "Hikayemiz",
     since: "Beridir",
     comment: "Mesaj bırakın",
