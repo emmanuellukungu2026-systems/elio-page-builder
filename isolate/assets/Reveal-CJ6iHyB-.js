@@ -1,1 +1,0 @@
-import{j as n,m as a}from"./framer-motion-BSOYu5Hc.js";function s({children:i,delay:t=0,y:o=28,className:e}){return n.jsx(a.div,{className:e,initial:{opacity:0,y:o},whileInView:{opacity:1,y:0},viewport:{once:!0,margin:"-80px"},transition:{duration:.7,delay:t,ease:[.21,.6,.35,1]},children:i})}export{s as R};
