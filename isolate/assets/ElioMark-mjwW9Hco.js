@@ -1,0 +1,1 @@
+import{j as r}from"./framer-motion-BSOYu5Hc.js";import{l as s}from"./logo-DP0RiOWa.js";import{a as m}from"./index-jDYCSOog.js";function e({className:o}){return r.jsx("img",{src:s,alt:"Elio",className:m("size-6 rounded-md",o)})}export{e as E};
