@@ -381,3 +381,25 @@
     cursor: pointer;
   }
 }
+
+/* ============ Mobile ergonomics ============ */
+/* Keep iOS Safari from auto-zooming when a form field gets focus: */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* Respect notched phones: pad page tops/backs without extra margins elsewhere. */
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top), 0px);
+}
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+}
+.px-safe {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}

@@ -82,7 +82,7 @@ export default function Services() {
       <Atmosphere />
       <Nav />
 
-      <main className="mx-auto max-w-6xl px-4 pt-28 pb-24 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 pt-28 pb-20 sm:px-6">
         <Reveal className="max-w-2xl">
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">
             {t.services.kicker}
@@ -98,20 +98,21 @@ export default function Services() {
           id="order"
           className="mt-6 rounded-[1.75rem] border-2 border-primary/30 bg-card shadow-[0_2px_8px_rgba(16,24,43,0.1)] sm:mt-8 sm:rounded-[2rem]"
         >
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 px-4 py-3.5 sm:gap-3 sm:px-8 sm:py-4">
-            <div className="flex items-center gap-2.5">
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <div className="flex items-center justify-between gap-3 border-b border-border/60 px-4 py-3.5 sm:px-8 sm:py-4">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <MessageCircle className="size-4" />
               </span>
-              <div>
-                <p className="font-display text-base font-semibold leading-tight">
+              <div className="min-w-0">
+                <p className="truncate font-display text-base font-semibold leading-tight">
                   {t.services.title}
                 </p>
-                <p className="text-xs text-muted-foreground">{t.services.kicker}</p>
+                <p className="truncate text-xs text-muted-foreground">{t.services.kicker}</p>
               </div>
             </div>
-            <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            <span className="shrink-0 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
               100% free
+
             </span>
           </div>
 
@@ -159,7 +160,15 @@ export default function Services() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="wa">{f.whatsapp}</Label>
-                      <Input id="wa" type="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder={f.whatsappPh} />
+                      <Input
+                        id="wa"
+                        type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
+                        value={whatsapp}
+                        onChange={(e) => setWhatsapp(e.target.value)}
+                        placeholder={f.whatsappPh}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="trade">{f.trade}</Label>
@@ -168,7 +177,15 @@ export default function Services() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="details">{f.details}</Label>
-                    <Textarea id="details" value={details} onChange={(e) => setDetails(e.target.value)} placeholder={f.detailsPh} rows={6} required />
+                    <Textarea
+                      id="details"
+                      value={details}
+                      onChange={(e) => setDetails(e.target.value)}
+                      placeholder={f.detailsPh}
+                      rows={4}
+                      className="min-h-24"
+                      required
+                    />
                   </div>
                 </div>
 
@@ -226,7 +243,7 @@ export default function Services() {
       </main>
 
       {/* Photo strip — proof of finished pages, below the order panel so the form stays first on mobile */}
-      <section className="relative px-4 pb-20 sm:px-6">
+      <section className="relative px-4 pb-10 sm:px-6">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
           {[photoStrip[1], photoStrip[2], photoStrip[5], photoStrip[7]].map((src, i) => (
             <div

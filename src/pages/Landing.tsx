@@ -51,7 +51,7 @@ export default function Landing() {
       <Nav />
 
       {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden px-4 pt-36 pb-24 sm:px-6">
+      <section className="relative overflow-hidden px-4 pt-32 pb-20 sm:px-6 sm:pt-36 sm:pb-24">
         <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <motion.div

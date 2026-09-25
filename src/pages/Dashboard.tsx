@@ -38,28 +38,29 @@ export default function Dashboard() {
   return (
     <div className="relative min-h-screen">
       <Atmosphere />
-      <header className="sticky top-0 z-40 border-b border-border/50 bg-background/40 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2.5">
-            <ElioMark className="size-6" />
-            <span className="font-display text-lg font-semibold tracking-tight">
+      <header className="sticky top-0 z-40 border-b border-border/50 bg-background/40 backdrop-blur-xl pt-safe">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
+          <Link to="/" className="flex min-w-0 items-center gap-2.5">
+            <ElioMark className="size-6 shrink-0" />
+            <span className="min-w-0 truncate font-display text-lg font-semibold tracking-tight">
               Elio <span className="text-muted-foreground">Pages</span>
             </span>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5">
             <Button variant="ghost" size="sm" className="rounded-xl" onClick={() => navigate("/directory")}>
               {t.nav.directory}
             </Button>
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               className="rounded-xl"
+              aria-label={t.nav.signIn}
               onClick={async () => {
                 await signOut();
                 navigate("/");
               }}
             >
-              <LogOut className="size-4" /> {t.nav.signIn}
+              <LogOut className="size-4" />
             </Button>
           </div>
         </div>
@@ -75,9 +76,9 @@ export default function Dashboard() {
         {page !== undefined && page !== null && (
           <Link
             to={`/u/${page.username}`}
-            className="glass group mt-8 flex items-center justify-between gap-4 rounded-3xl p-6 transition-all hover:bg-white/[0.06]"
+            className="glass group mt-8 flex items-center justify-between gap-3 rounded-3xl p-4 transition-all hover:bg-white/[0.06] sm:gap-4 sm:p-6"
           >
-            <div className="flex min-w-0 items-center gap-4">
+            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
               <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ember/15 text-ember">
                 <Store className="size-5" />
               </span>
@@ -87,14 +88,14 @@ export default function Dashboard() {
               </div>
             </div>
             <span className="flex shrink-0 items-center gap-1.5 text-sm font-medium text-ember">
-              {page.isPublished ? t.nav.myElio : t.admin.draft}
+              <span className="hidden sm:inline">{page.isPublished ? t.nav.myElio : t.admin.draft}</span>
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </span>
           </Link>
         )}
 
         {/* The two moves a client can make */}
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <Link
             to="/services"
             className="glass-strong group flex flex-col rounded-3xl p-7 transition-all hover:-translate-y-0.5"

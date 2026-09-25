@@ -66,7 +66,7 @@ export function NfcHeroVisual({ className }: { className?: string }) {
       </div>
 
       {/* ============ The NFC card, tapping the phone ============ */}
-      <div className="absolute -left-8 -top-10 w-44 -rotate-[14deg] sm:-left-12">
+      <div className="absolute -left-2 -top-8 w-40 -rotate-[14deg] sm:-left-12 sm:-top-10 sm:w-44">
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#111527] to-[#0b0e1a] p-4 shadow-[0_18px_40px_-18px_rgba(11,20,45,0.55)] ring-1 ring-white/10">
           {/* Card artwork: chip + wordmark */}
           <div className="flex items-center justify-between">
@@ -103,11 +103,11 @@ export function NfcHeroVisual({ className }: { className?: string }) {
       </div>
 
       {/* ============ Floating chips, echoing the ad's icon row ============ */}
-      <div className="glass-strong absolute -bottom-5 left-0 flex items-center gap-1.5 rounded-2xl px-3 py-2 text-[11px] font-medium">
+      <div className="glass-strong absolute -bottom-4 left-1 flex items-center gap-1.5 rounded-2xl px-3 py-2 text-[11px] font-medium sm:-bottom-5">
         <QrCode className="size-3.5 text-[#1e4fd8]" />
         QR
       </div>
-      <div className="glass-strong absolute -right-3 top-24 flex items-center gap-1.5 rounded-2xl px-3 py-2 text-[11px] font-medium">
+      <div className="glass-strong absolute right-1 top-24 flex items-center gap-1.5 rounded-2xl px-3 py-2 text-[11px] font-medium sm:-right-3">
         <Nfc className="size-3.5 text-[#1e4fd8]" />
         NFC
       </div>

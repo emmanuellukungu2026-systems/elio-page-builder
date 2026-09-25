@@ -149,8 +149,8 @@ export default function Admin() {
   return (
     <div className="relative min-h-screen">
       <Atmosphere />
-      <header className="sticky top-0 z-40 border-b border-border/50 bg-background/40 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <header className="sticky top-0 z-40 border-b border-border/50 bg-background/40 backdrop-blur-xl pt-safe">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5">
             <ElioMark className="size-6" />
             <span className="font-display text-lg font-semibold tracking-tight">
@@ -719,7 +719,7 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
 
         {/* Right: publish desk */}
         <div className="space-y-5">
-          <div className="glass-strong sticky top-24 rounded-3xl p-6">
+          <div className="glass-strong rounded-3xl p-5 sm:p-6 lg:sticky lg:top-24">
             <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               {page.isPublished ? a.published : a.draft}
             </h3>

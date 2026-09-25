@@ -81,7 +81,10 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="border-t border-border/40 py-5 text-center text-xs text-muted-foreground/70">
+      <div
+        className="border-t border-border/40 py-5 text-center text-xs text-muted-foreground/70"
+        style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
+      >
         © {new Date().getFullYear()} Aethel Technologies · {t.footer.rights}
       </div>
     </footer>
