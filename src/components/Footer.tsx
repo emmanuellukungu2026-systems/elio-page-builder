@@ -1,4 +1,5 @@
 import logo from "@/assets/logo.png";
+import { AethelMark } from "@/components/AethelMark";
 import { useI18n } from "@/lib/i18n";
 import { Link } from "react-router";
 
@@ -67,6 +68,10 @@ export function Footer() {
             <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               {t.footer.aethel}
             </h4>
+            <div className="mt-3 flex items-center gap-2">
+              <AethelMark className="size-7 rounded-lg" />
+              <span className="font-display text-sm font-semibold">Aethel Technologies</span>
+            </div>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
                 <span className="text-muted-foreground">{t.footer.about}</span>
@@ -85,7 +90,9 @@ export function Footer() {
         className="border-t border-border/40 py-5 text-center text-xs text-muted-foreground/70"
         style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
       >
-        © {new Date().getFullYear()} Aethel Technologies · {t.footer.rights}
+        <span className="inline-flex items-center justify-center gap-1.5">
+          <AethelMark className="size-4" /> © {new Date().getFullYear()} Aethel Technologies · {t.footer.rights}
+        </span>
       </div>
     </footer>
   );

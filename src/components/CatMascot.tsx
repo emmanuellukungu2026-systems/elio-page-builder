@@ -7,46 +7,78 @@ const STEPS = 5;
 /** Page anchors per step: the bubble points at a real section when it exists. */
 const ANCHORS: (string | null)[] = ["#how", "/directory", "/services", "/dashboard", "#faq"];
 
-/** Sleepy studio cat — hand-drawn SVG mascot of Elio Pages. */
+/** Kawaii studio cat — chunky, blushy, big sparkly eyes. */
 function CatFace({ happy = false }: { happy?: boolean }) {
   return (
-    <svg viewBox="0 0 64 64" className="size-full" aria-hidden="true">
-      {/* ears */}
-      <path d="M14 22 L10 6 L26 14 Z" fill="#2b2f3a" />
-      <path d="M50 22 L54 6 L38 14 Z" fill="#2b2f3a" />
-      <path d="M15.5 19.5 L13 10.5 L22.5 15 Z" fill="#f2a4b3" />
-      <path d="M48.5 19.5 L51 10.5 L41.5 15 Z" fill="#f2a4b3" />
-      {/* head */}
-      <circle cx="32" cy="36" r="22" fill="#2b2f3a" />
-      {/* eyes */}
+    <svg viewBox="0 0 72 72" className="size-full" aria-hidden="true">
+      <defs>
+        <radialGradient id="cat-fur" cx="38%" cy="30%" r="80%">
+          <stop offset="0%" stopColor="#4a5268" />
+          <stop offset="55%" stopColor="#363d4f" />
+          <stop offset="100%" stopColor="#232838" />
+        </radialGradient>
+      </defs>
+
+      {/* chunky rounded ears */}
+      <path
+        d="M12 30 C10 14 13 8 17 7 C21 6 27 13 30 20 Z"
+        fill="url(#cat-fur)"
+      />
+      <path
+        d="M60 30 C62 14 59 8 55 7 C51 6 45 13 42 20 Z"
+        fill="url(#cat-fur)"
+      />
+      <path d="M16 24 C15 14 16.5 11 18 10.5 C19.8 10 23 15 24.8 20.5 Z" fill="#f7b8c4" />
+      <path d="M56 24 C57 14 55.5 11 54 10.5 C52.2 10 49 15 47.2 20.5 Z" fill="#f7b8c4" />
+
+      {/* big round head */}
+      <ellipse cx="36" cy="42" rx="26" ry="23" fill="url(#cat-fur)" />
+
+      {/* fluffy cheek tufts */}
+      <circle cx="12" cy="47" r="5" fill="url(#cat-fur)" />
+      <circle cx="60" cy="47" r="5" fill="url(#cat-fur)" />
+
+      {/* huge sparkly eyes */}
       {happy ? (
         <>
-          <path d="M20 34 q4 -4 8 0" stroke="#f6e7c9" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-          <path d="M36 34 q4 -4 8 0" stroke="#f6e7c9" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+          <path d="M22 42 q5.5 -7 11 0" stroke="#ffe9c7" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <path d="M39 42 q5.5 -7 11 0" stroke="#ffe9c7" strokeWidth="3" fill="none" strokeLinecap="round" />
         </>
       ) : (
         <>
-          <ellipse cx="24" cy="34" rx="3.4" ry="4.4" fill="#f6e7c9" />
-          <ellipse cx="40" cy="34" rx="3.4" ry="4.4" fill="#f6e7c9" />
-          <circle cx="24.6" cy="34.8" r="1.3" fill="#1a1d26" />
-          <circle cx="40.6" cy="34.8" r="1.3" fill="#1a1d26" />
+          <ellipse cx="27" cy="42" rx="5.6" ry="7" fill="#ffe9c7" />
+          <ellipse cx="45" cy="42" rx="5.6" ry="7" fill="#ffe9c7" />
+          {/* pupils */}
+          <ellipse cx="27" cy="43.4" rx="3.4" ry="4.6" fill="#1d2233" />
+          <ellipse cx="45" cy="43.4" rx="3.4" ry="4.6" fill="#1d2233" />
+          {/* double sparkle highlights */}
+          <circle cx="25.4" cy="40.2" r="2" fill="#ffffff" />
+          <circle cx="43.4" cy="40.2" r="2" fill="#ffffff" />
+          <circle cx="29" cy="46" r="0.9" fill="#ffffff" opacity="0.9" />
+          <circle cx="47" cy="46" r="0.9" fill="#ffffff" opacity="0.9" />
         </>
       )}
-      {/* nose + mouth */}
-      <path d="M30.4 41 h3.2 l-1.6 2 Z" fill="#f2a4b3" />
+
+      {/* blush */}
+      <ellipse cx="17.5" cy="49" rx="4.4" ry="2.6" fill="#f78fa7" opacity="0.55" />
+      <ellipse cx="54.5" cy="49" rx="4.4" ry="2.6" fill="#f78fa7" opacity="0.55" />
+
+      {/* tiny triangle nose + w-mouth */}
+      <path d="M33.6 48.5 h4.8 l-2.4 2.8 Z" fill="#f78fa7" />
       <path
-        d={happy ? "M27 45.5 q5 4 10 0" : "M29 45 q3 2.4 6 0"}
-        stroke="#f6e7c9"
-        strokeWidth="1.8"
+        d={happy ? "M28 53.5 q4 4.4 8 0 q4 4.4 8 0" : "M29.5 53.5 q3.2 3 6.5 0 q3.2 3 6.5 0"}
+        stroke="#ffe9c7"
+        strokeWidth="1.7"
         fill="none"
         strokeLinecap="round"
       />
-      {/* whiskers */}
-      <g stroke="#cdd5e8" strokeWidth="1.1" strokeLinecap="round" opacity="0.75">
-        <path d="M8 38 l8 1.4" />
-        <path d="M9 43 l7.5 -1" />
-        <path d="M56 38 l-8 1.4" />
-        <path d="M55 43 l-7.5 -1" />
+
+      {/* whiskers — soft and curved */}
+      <g stroke="#e8edf9" strokeWidth="1.3" strokeLinecap="round" opacity="0.8">
+        <path d="M9 44 q7 1.2 10 2" fill="none" />
+        <path d="M10 50 q6.5 -0.4 9.4 -1.4" fill="none" />
+        <path d="M63 44 q-7 1.2 -10 2" fill="none" />
+        <path d="M62 50 q-6.5 -0.4 -9.4 -1.4" fill="none" />
       </g>
     </svg>
   );
@@ -229,18 +261,20 @@ export function CatMascot() {
           animate={
             open
               ? { y: 0, rotate: 0 }
-              : { y: nudge ? [0, -6, 0] : 0, rotate: nudge ? [0, -3, 0] : 0 }
+              : { y: nudge ? [0, -7, 0] : 0, rotate: nudge ? [0, -4, 0] : 0 }
           }
           transition={open ? { duration: 0.2 } : { duration: 0.6 }}
-          whileHover={{ scale: 1.06 }}
-          whileTap={{ scale: 0.94 }}
-          className="relative flex size-14 items-center justify-center rounded-full border border-border/60 bg-background/85 shadow-lg backdrop-blur-md"
+          whileHover={{ scale: 1.08, rotate: -3 }}
+          whileTap={{ scale: 0.92 }}
+          className="relative flex size-16 items-center justify-center rounded-full border border-[#3a4256]/70 bg-gradient-to-b from-[#f9f4ea] to-[#ece2cf] shadow-[0_6px_18px_rgba(2,6,23,0.35),inset_0_-3px_6px_rgba(2,6,23,0.12)]"
         >
           <CatFace happy={justFinished || open} />
-          {/* zzz sparkle when cat is closed/bubble hidden */}
-          {!open && !justFinished && (
-            <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">
-              ?
+          {/* little heart badge instead of a boring question mark */}
+          {!open && (
+            <span className="absolute -right-1.5 -top-1.5 flex size-5 items-center justify-center rounded-full bg-[#f78fa7] text-[10px] leading-none shadow-md">
+              <svg viewBox="0 0 12 12" className="size-3 fill-white" aria-hidden="true">
+                <path d="M6 10.5 C3.2 8.4 1.2 6.6 1.2 4.4 C1.2 2.9 2.4 1.8 3.8 1.8 C4.7 1.8 5.5 2.3 6 3 C6.5 2.3 7.3 1.8 8.2 1.8 C9.6 1.8 10.8 2.9 10.8 4.4 C10.8 6.6 8.8 8.4 6 10.5 Z" />
+              </svg>
             </span>
           )}
         </motion.button>
