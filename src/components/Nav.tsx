@@ -11,7 +11,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
-/** Glass top bar: transparent at top, denser glass once scrolling. */
+/** Solid top bar — always opaque, slightly denser once scrolling. */
 export function Nav() {
   const { t } = useI18n();
   const { scrollY } = useScroll();

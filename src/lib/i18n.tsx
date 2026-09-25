@@ -443,6 +443,35 @@ const en = {
     back: "Back to home",
     create: "Create your page",
   },
+  mascot: {
+    welcome: "Psst — new here? Let me show you around Elio Pages in 5 quick steps!",
+    next: "Next",
+    back: "Back",
+    skip: "Skip tour",
+    done: "Done",
+    steps: [
+      {
+        title: "One page, one link",
+        text: "Each business gets a premium portfolio page at a single address — like elio.pages/u/atelier-kivu. That link lives on your NFC card and QR code.",
+      },
+      {
+        title: "Browse the directory",
+        text: "Every published page is searchable in the directory by name, trade or city. Find a joiner, a photographer, an accountant — then start the conversation.",
+      },
+      {
+        title: "Order your page free",
+        text: "On the concierge, fill the 2-minute brief and send it — the Aethel team builds your page for you, free of charge.",
+      },
+      {
+        title: "Your studio dashboard",
+        text: "Once signed in, your dashboard follows your order and shows your page the moment it goes live.",
+      },
+      {
+        title: "Tap, scan, meet",
+        text: "Your finished page ships on a physical NFC card — one tap on any phone opens it. Ready to take the tour for real?",
+      },
+    ],
+  },
 };
 
 type Dict = typeof en;
@@ -878,6 +907,35 @@ const fr: Dict = {
     back: "Retour à l'accueil",
     create: "Créer ma page",
   },
+  mascot: {
+    welcome: "Psst — nouveau ici ? Je vous fais visiter Elio Pages en 5 étapes rapides !",
+    next: "Suivant",
+    back: "Retour",
+    skip: "Passer la visite",
+    done: "Terminer",
+    steps: [
+      {
+        title: "Une page, un lien",
+        text: "Chaque entreprise reçoit une page portfolio premium à une seule adresse — comme elio.pages/u/atelier-kivu. Ce lien vit sur votre carte NFC et votre QR code.",
+      },
+      {
+        title: "Parcourez l'annuaire",
+        text: "Toutes les pages publiées sont cherchables dans l'annuaire par nom, métier ou ville. Trouvez un menuisier, un photographe, un comptable — puis lancez la conversation.",
+      },
+      {
+        title: "Commandez gratuitement",
+        text: "Sur la conciergerie, remplissez le brief de 2 minutes et envoyez-le — l'équipe Aethel construit votre page pour vous, gratuitement.",
+      },
+      {
+        title: "Votre tableau de bord",
+        text: "Une fois connecté, votre tableau de bord suit votre commande et affiche votre page dès sa mise en ligne.",
+      },
+      {
+        title: "Tap, scan, rencontre",
+        text: "Votre page finie arrive sur une carte NFC physique — un tap sur n'importe quel téléphone l'ouvre. Prêt à faire la visite pour de vrai ?",
+      },
+    ],
+  },
 };
 
 const tr: Dict = {
@@ -1310,6 +1368,35 @@ const tr: Dict = {
     text: "Aradığınız sayfa burada değil — ama sizinki olabilir.",
     back: "Ana sayfaya dön",
     create: "Sayfanı oluştur",
+  },
+  mascot: {
+    welcome: "Psst — burada mısın? Elio Pages'i 5 hızlı adımda gezdireyim!",
+    next: "İleri",
+    back: "Geri",
+    skip: "Turu atla",
+    done: "Bitir",
+    steps: [
+      {
+        title: "Bir sayfa, bir bağlantı",
+        text: "Her firma tek bir adreste premium bir portföy sayfası alır — örneğin elio.pages/u/atelier-kivu. Bu bağlantı NFC kartınızda ve QR kodunuzda yaşar.",
+      },
+      {
+        title: "Rehberi keşfet",
+        text: "Yayınlanan tüm sayfalar rehberde isim, meslek veya şehre göre aranabilir. Bir marangoz, fotoğrafçı, muhasebeci bul — sonra sohbete başla.",
+      },
+      {
+        title: "Ücretsiz sipariş ver",
+        text: "Concierge'de 2 dakikalık brief'i doldur ve gönder — Aethel ekibi sayfanı senin için ücretsiz kurar.",
+      },
+      {
+        title: "Stüdyo panelin",
+        text: "Giriş yaptıktan sonra panelin siparişini takip eder ve sayfan yayına girdiği an gösterir.",
+      },
+      {
+        title: "Dokun, tara, tanış",
+        text: "Biten sayfan fiziksel bir NFC karta gelir — herhangi bir telefona dokunmak açar. Turu gerçekten atmaya hazır mısın?",
+      },
+    ],
   },
 };
 

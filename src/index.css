@@ -116,12 +116,12 @@
 
 :root:not(.dark) .glass,
 :root:not(.dark) .glass-strong {
-  background: rgba(255, 255, 255, 0.62);
+  background: #ffffff;
   border: 1px solid rgba(16, 24, 43, 0.09);
   box-shadow: 0 1px 2px rgba(16, 24, 43, 0.08);
 }
 :root:not(.dark) .glass-strong {
-  background: rgba(255, 255, 255, 0.78);
+  background: #ffffff;
   box-shadow: 0 1px 3px rgba(16, 24, 43, 0.1);
 }
 
@@ -215,22 +215,18 @@
 }
 
 @layer components {
-  /* Frosted glass panel — quiet, near-flat, no dramatic depth */
+  /* Frosted panel — fully opaque, content never shows through */
   .glass {
-    background: rgba(130, 160, 255, 0.05);
+    background: #0c1428;
     border: 1px solid rgba(130, 160, 255, 0.12);
     box-shadow: 0 1px 2px rgba(2, 6, 23, 0.24);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
   }
 
-  /* Stronger glass for hero panels and the preview card */
+  /* Stronger panel for hero sections and the nav once scrolled */
   .glass-strong {
-    background: rgba(130, 160, 255, 0.08);
+    background: #101a33;
     border: 1px solid rgba(130, 160, 255, 0.16);
     box-shadow: 0 2px 6px rgba(2, 6, 23, 0.28);
-    backdrop-filter: blur(24px) saturate(150%);
-    -webkit-backdrop-filter: blur(24px) saturate(150%);
   }
 
   .btn-glow {
