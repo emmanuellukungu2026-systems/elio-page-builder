@@ -1,5 +1,6 @@
 import { Atmosphere } from "@/components/Atmosphere";
 import { ElioMark } from "@/components/ElioMark";
+import { ImageUpload } from "@/components/ImageUpload";
 import { QrShowcase } from "@/components/QrShowcase";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -64,6 +65,7 @@ type AdminPage = {
   coverUrl?: string;
   accent?: string;
   style?: string;
+  template?: string;
   isPublished: boolean;
   itemCount: number;
   items: {
@@ -189,6 +191,7 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
+  const [newTemplate, setNewTemplate] = useState<"standard" | "pro">("pro");
   const [creating, setCreating] = useState(false);
   const adminCreatePage = useMutation(api.admin.adminCreatePage);
   const usernameCheck = useQuery(
@@ -204,6 +207,7 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
       const id = await adminCreatePage({
         username: username.trim(),
         displayName: displayName.trim(),
+        template: newTemplate,
         ...(clientEmail.trim() ? { clientEmail: clientEmail.trim() } : {}),
       });
       toast.success(a.save);
@@ -231,6 +235,7 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
     setUsername(slug);
     setDisplayName(o.name);
     setClientEmail(o.email);
+    setNewTemplate("pro");
     setShowNew(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -319,6 +324,26 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
               If this email matches a signed-up client, the page links to their account — it then
               appears in their portal at /dashboard.
             </p>
+          </div>
+          <div className="mt-4 space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">{a.template}</Label>
+            <div className="flex gap-2">
+              {(["standard", "pro"] as const).map((tpl) => (
+                <button
+                  key={tpl}
+                  type="button"
+                  onClick={() => setNewTemplate(tpl)}
+                  className={cn(
+                    "flex-1 rounded-xl border px-3 py-2 text-xs font-medium transition-all",
+                    newTemplate === tpl
+                      ? "border-ember bg-ember/10 text-foreground"
+                      : "border-border/60 text-muted-foreground hover:bg-white/[0.04]",
+                  )}
+                >
+                  {tpl === "standard" ? a.templateStandard : a.templatePro}
+                </button>
+              ))}
+            </div>
           </div>
           <Button
             className="btn-glow mt-5 rounded-2xl"
@@ -626,6 +651,48 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
           </Studio>
 
           <Studio title={a.look} desc={a.lookDesc}>
+            {/* Template picker — Standard (link-in-bio) vs Professional (full) */}
+            <Field label={a.template}>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {([
+                  { id: "standard", label: a.templateStandard, desc: a.templateStandardDesc },
+                  { id: "pro", label: a.templatePro, desc: a.templateProDesc },
+                ] as const).map((tpl) => (
+                  <button
+                    key={tpl.id}
+                    type="button"
+                    onClick={() => save({ template: tpl.id })}
+                    className={cn(
+                      "rounded-2xl border p-4 text-left transition-all",
+                      (page.template ?? "pro") === tpl.id
+                        ? "border-ember ring-1 ring-ember/50"
+                        : "border-border/60 hover:bg-white/[0.04]",
+                    )}
+                  >
+                    <span className="block text-sm font-semibold">{tpl.label}</span>
+                    <span className="mt-1 block text-xs leading-5 text-muted-foreground">{tpl.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </Field>
+
+            {/* Photo uploads — Convex Storage, owner-only */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <ImageUpload
+                label={a.uploadLogo}
+                value={page.logoUrl}
+                aspect="aspect-square"
+                onUploaded={(url) => save({ logoUrl: url })}
+                onClear={() => save({ logoUrl: "" })}
+              />
+              <ImageUpload
+                label={a.uploadCover}
+                value={page.coverUrl}
+                onUploaded={(url) => save({ coverUrl: url })}
+                onClear={() => save({ coverUrl: "" })}
+              />
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label={s.logo}>
                 <Input defaultValue={page.logoUrl ?? ""} key={page._id + "lg"} placeholder={s.logoPh} onBlur={(e) => save({ logoUrl: e.target.value })} />
@@ -844,10 +911,13 @@ function AdminItemCard({ item, pageId }: { item: AdminPage["items"][number]; pag
           <Field label={i18.description}>
             <Textarea defaultValue={item.description ?? ""} key={item.id + "-d"} rows={3} placeholder={i18.descriptionPh} onBlur={(e) => update({ description: e.target.value })} />
           </Field>
+          <ImageUpload
+            label={t.admin.uploadItemPhoto}
+            value={item.imageUrl}
+            onUploaded={(url) => update({ imageUrl: url })}
+            onClear={() => update({ imageUrl: "" })}
+          />
           <div className="grid gap-3 sm:grid-cols-2">
-            <Field label={i18.image}>
-              <Input defaultValue={item.imageUrl ?? ""} key={item.id + "-i"} placeholder="https://…" onBlur={(e) => update({ imageUrl: e.target.value })} />
-            </Field>
             <Field label={i18.link}>
               <Input defaultValue={item.linkUrl ?? ""} key={item.id + "-l"} placeholder="https://…" onBlur={(e) => update({ linkUrl: e.target.value })} />
             </Field>

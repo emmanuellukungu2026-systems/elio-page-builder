@@ -63,6 +63,7 @@ function publicPage(page: {
   coverUrl?: string;
   accent?: string;
   style?: string;
+  template?: string;
   items: {
     id: string;
     kind: string;
@@ -92,6 +93,7 @@ function publicPage(page: {
     coverUrl: page.coverUrl,
     accent: page.accent,
     style: page.style,
+    template: page.template,
     items: page.items,
   };
 }
@@ -266,6 +268,7 @@ export const updatePage = mutation({
     coverUrl: v.optional(v.string()),
     accent: v.optional(v.string()),
     style: v.optional(v.string()),
+    template: v.optional(v.string()), // standard | pro
     isPublished: v.optional(v.boolean()),
   },
   handler: async (ctx, { pageId, isPublished, ...patch }) => {

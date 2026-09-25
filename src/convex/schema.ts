@@ -57,6 +57,7 @@ const schema = defineSchema(
       coverUrl: v.optional(v.string()),
       accent: v.optional(v.string()),
       style: v.optional(v.string()), // noir | atelier | atoll | meridian
+      template: v.optional(v.string()), // standard (link-in-bio) | pro (full portfolio)
 
       isPublished: v.optional(v.boolean()),
       publishedAt: v.optional(v.number()),

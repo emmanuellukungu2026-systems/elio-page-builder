@@ -1,5 +1,6 @@
 import { Atmosphere } from "@/components/Atmosphere";
 import { ElioMark } from "@/components/ElioMark";
+import { StandardProfile } from "@/components/StandardProfile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -113,6 +114,11 @@ export default function Profile() {
   const accent = page.accent ?? "#1e4fd8";
   const style = styleById(page.style);
   const serif = style.id === "atelier";
+
+  // Standard template: one-screen link-in-bio page.
+  if ((page.template ?? "pro") === "standard") {
+    return <StandardProfile page={page} />;
+  }
 
   return (
     <div className="relative min-h-screen">

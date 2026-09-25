@@ -47,15 +47,12 @@ export function Nav() {
           scrolled ? "glass mx-3 lg:mx-auto" : "bg-transparent",
         )}
       >
-        <Link to="/" className="group flex items-center gap-2.5">
+        <Link to="/" className="group flex items-center gap-2.5" aria-label="Elio Pages">
           <img
             src={logo}
             alt="Elio Pages"
-            className="size-7 rounded-md transition-transform duration-300 group-hover:scale-110"
+            className="size-8 rounded-md transition-transform duration-300 group-hover:scale-110"
           />
-          <span className="font-display text-lg font-semibold tracking-tight text-foreground">
-            Elio <span className="text-muted-foreground">Pages</span>
-          </span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
