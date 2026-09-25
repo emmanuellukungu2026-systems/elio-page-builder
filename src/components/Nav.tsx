@@ -7,9 +7,15 @@ import { useI18n } from "@/lib/i18n";
 import { OWNER_EMAILS } from "@/lib/elio";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, LogOut, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 /** Solid top bar — always opaque, slightly denser once scrolling. */
 export function Nav() {
@@ -17,7 +23,7 @@ export function Nav() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { isAuthenticated, isLoading, user, signOut } = useAuth();
   const navigate = useNavigate();
   const isOwner =
     isAuthenticated && !!user?.email && OWNER_EMAILS.includes(user.email.trim().toLowerCase());
@@ -73,6 +79,31 @@ export function Nav() {
 
           {isLoading ? null : isAuthenticated ? (
             <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    title={user?.email}
+                    className="hidden max-w-[13rem] items-center gap-2 rounded-xl border border-border/60 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground md:inline-flex"
+                  >
+                    <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/15 font-display text-[10px] font-bold text-primary">
+                      {(user?.email ?? "?").slice(0, 1).toUpperCase()}
+                    </span>
+                    <span className="truncate">{user?.email}</span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-44 rounded-xl border-border/60">
+                  <DropdownMenuItem
+                    className="cursor-pointer gap-2"
+                    onClick={async () => {
+                      await signOut();
+                      navigate("/");
+                    }}
+                  >
+                    <LogOut className="size-4" /> {t.nav.signOut}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button size="sm" className="btn-glow rounded-xl" onClick={() => navigate("/dashboard")}>
                 {t.nav.myElio}
               </Button>
@@ -146,6 +177,21 @@ export function Nav() {
               >
                 {t.nav.signIn}
               </button>
+            )}
+            {isAuthenticated && (
+              <div className="rounded-xl border border-border/60 bg-white/[0.03] px-3 py-2">
+                <p className="truncate text-xs font-medium text-foreground">{user?.email}</p>
+                <button
+                  onClick={async () => {
+                    setMenuOpen(false);
+                    await signOut();
+                    navigate("/");
+                  }}
+                  className="mt-1 inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <LogOut className="size-3" /> {t.nav.signOut}
+                </button>
+              </div>
             )}
           </div>
         )}

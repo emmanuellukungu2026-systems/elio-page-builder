@@ -1,12 +1,28 @@
 import logo from "@/assets/logo.png";
 import { AethelMark } from "@/components/AethelMark";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
 import { useI18n } from "@/lib/i18n";
 import { Link } from "react-router";
 
 export function Footer() {
   const { t } = useI18n();
+  const { isAuthenticated } = useAuth();
   return (
     <footer className="relative z-10 mt-24 border-t border-border/60">
+      {!isAuthenticated && (
+        <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
+          <div className="glass-strong flex flex-col items-center justify-between gap-4 rounded-3xl p-6 sm:flex-row sm:p-7">
+            <div className="min-w-0 text-center sm:text-left">
+              <p className="font-display text-lg font-semibold">{t.account.title}</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">{t.account.text}</p>
+            </div>
+            <Button size="lg" className="btn-glow shrink-0 rounded-2xl px-6" asChild>
+              <Link to="/auth?returnTo=%2Fdashboard">{t.account.cta}</Link>
+            </Button>
+          </div>
+        </div>
+      )}
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
           <div className="flex items-center gap-2.5">

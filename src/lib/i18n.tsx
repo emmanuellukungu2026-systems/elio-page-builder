@@ -21,6 +21,8 @@ const en = {
     signIn: "Sign in",
     myElio: "My page",
     create: "Create your page",
+    signOut: "Sign out",
+    accountCta: "Sign in for your account",
   },
   theme: {
     toggle: "Toggle dark mode",
@@ -443,6 +445,11 @@ const en = {
     back: "Back to home",
     create: "Create your page",
   },
+  account: {
+    title: "Create your free account",
+    text: "Sign in to follow your page order, preview it before it goes live and keep your link at hand.",
+    cta: "Sign in / Create account",
+  },
   mascot: {
     welcome: "Psst — new here? Let me show you around Elio Pages in 5 quick steps!",
     next: "Next",
@@ -485,6 +492,8 @@ const fr: Dict = {
     signIn: "Se connecter",
     myElio: "Ma page",
     create: "Créer ma page",
+    signOut: "Se déconnecter",
+    accountCta: "Connectez-vous pour votre compte",
   },
   theme: {
     toggle: "Basculer le mode sombre",
@@ -907,6 +916,11 @@ const fr: Dict = {
     back: "Retour à l'accueil",
     create: "Créer ma page",
   },
+  account: {
+    title: "Créez votre compte gratuit",
+    text: "Connectez-vous pour suivre la création de votre page, la prévisualiser avant sa mise en ligne et garder votre lien à portée de main.",
+    cta: "Se connecter / Créer un compte",
+  },
   mascot: {
     welcome: "Psst — nouveau ici ? Je vous fais visiter Elio Pages en 5 étapes rapides !",
     next: "Suivant",
@@ -947,6 +961,8 @@ const tr: Dict = {
     signIn: "Giriş yap",
     myElio: "Sayfam",
     create: "Sayfanı oluştur",
+    signOut: "Çıkış yap",
+    accountCta: "Hesabınız için giriş yapın",
   },
   theme: {
     toggle: "Karanlık modu değiştir",
@@ -1368,6 +1384,11 @@ const tr: Dict = {
     text: "Aradığınız sayfa burada değil — ama sizinki olabilir.",
     back: "Ana sayfaya dön",
     create: "Sayfanı oluştur",
+  },
+  account: {
+    title: "Ücretsiz hesabını oluştur",
+    text: "Giriş yap: sayfa siparişini takip et, yayına alınmadan önce önizle ve bağlantını elinin altında tut.",
+    cta: "Giriş yap / Hesap oluştur",
   },
   mascot: {
     welcome: "Psst — burada mısın? Elio Pages'i 5 hızlı adımda gezdireyim!",
