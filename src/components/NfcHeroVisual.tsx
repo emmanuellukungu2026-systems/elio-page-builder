@@ -1,7 +1,7 @@
 import logo from "@/assets/logo.png";
 import { photos } from "@/lib/photos";
 import { useI18n } from "@/lib/i18n";
-import { Nfc, MessageCircle, QrCode, MapPin } from "lucide-react";
+import { Nfc, MessageCircle, Link2, MapPin } from "lucide-react";
 
 /**
  * The hero visual, inspired by the konchiwa.app ad: a hand-tap moment reduced
@@ -104,8 +104,8 @@ export function NfcHeroVisual({ className }: { className?: string }) {
 
       {/* ============ Floating chips, echoing the ad's icon row ============ */}
       <div className="glass-strong absolute -bottom-4 left-1 flex items-center gap-1.5 rounded-2xl px-3 py-2 text-[11px] font-medium sm:-bottom-5">
-        <QrCode className="size-3.5 text-[#1e4fd8]" />
-        QR
+        <Link2 className="size-3.5 text-[#1e4fd8]" />
+        /u/link
       </div>
       <div className="glass-strong absolute right-1 top-24 flex items-center gap-1.5 rounded-2xl px-3 py-2 text-[11px] font-medium sm:-right-3">
         <Nfc className="size-3.5 text-[#1e4fd8]" />

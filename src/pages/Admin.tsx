@@ -1,7 +1,7 @@
 import { Atmosphere } from "@/components/Atmosphere";
 import { ElioMark } from "@/components/ElioMark";
 import { ImageUpload } from "@/components/ImageUpload";
-import { QrShowcase } from "@/components/QrShowcase";
+import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +38,7 @@ import {
   MessageCircle,
   Plus,
   ShieldAlert,
+  ShieldCheck,
   Store,
   Tag,
   Trash2,
@@ -242,10 +243,25 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
 
   return (
     <div className="space-y-10">
-      <div className="max-w-2xl">
-        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">{a.title}</h1>
-        <p className="mt-3 leading-7 text-muted-foreground">{a.subtitle}</p>
-      </div>
+      {/* ============ Aethel Team — admin-only build desk ============ */}
+      <section>
+        <div className="glass-strong relative overflow-hidden rounded-3xl p-6 sm:p-8">
+          <div className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-[#1e4fd8]/15 blur-3xl" />
+          <div className="flex flex-wrap items-center gap-3">
+            <Badge className="rounded-full bg-[#1e4fd8] text-white hover:bg-[#1e4fd8]/90">
+              <ShieldCheck className="size-3.5" /> {a.teamBadge}
+            </Badge>
+            <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              Aethel Technologies
+            </span>
+          </div>
+          <h1 className="mt-4 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            {a.teamTitle}
+          </h1>
+          <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">{a.teamIntro}</p>
+        </div>
+        <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{a.subtitle}</p>
+      </section>
 
       {/* ============ Orders ============ */}
       <section>
@@ -845,8 +861,10 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
               </a>
             )}
 
-            <div className="mt-5">
-              <QrShowcase username={page.username} />
+            {/* Physical NFC card + one-click link (no QR) */}
+            <div className="mt-5 border-t border-border/50 pt-5">
+              <p className="font-display text-sm font-semibold">{a.nfcTitle}</p>
+              <NfcLinkCard username={page.username} className="mt-3" />
             </div>
           </div>
         </div>

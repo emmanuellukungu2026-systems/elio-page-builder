@@ -1,8 +1,8 @@
 import { Atmosphere } from "@/components/Atmosphere";
 import { NfcHeroVisual } from "@/components/NfcHeroVisual";
+import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
-import { QrShowcase } from "@/components/QrShowcase";
 import { Reveal } from "@/components/Reveal";
 import { TiltCard } from "@/components/TiltCard";
 import { Button } from "@/components/ui/button";
@@ -25,8 +25,6 @@ import {
   MessageCircle,
   Nfc,
   Search,
-  QrCode,
-  ScanLine,
   Sparkles,
   Store,
 } from "lucide-react";
@@ -42,7 +40,7 @@ export default function Landing() {
     { icon: Lightbulb, key: "ideas" as const },
     { icon: Search, key: "search" as const },
     { icon: MessageCircle, key: "comments" as const },
-    { icon: QrCode, key: "qr" as const },
+    { icon: Nfc, key: "qr" as const },
   ];
 
   return (
@@ -273,7 +271,7 @@ export default function Landing() {
           <Reveal delay={0.15} className="mx-auto w-full max-w-sm">
             <div className="[perspective:1000px]">
               <TiltCard max={6}>
-                <QrShowcase username="atelier-kivu" />
+                <NfcLinkCard username="atelier-kivu" />
               </TiltCard>
             </div>
           </Reveal>
