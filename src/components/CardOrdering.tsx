@@ -22,35 +22,70 @@ import type { ReactNode } from "react";
 
 function StandardCard({ businessName, businessLogo }: { businessName: string; businessLogo?: string }) {
   return (
-    <div className="relative h-[120px] w-[190px] -rotate-[4deg] rounded-2xl bg-gradient-to-br from-[#111527] to-[#0b0e1a] p-4 shadow-[0_18px_40px_-18px_rgba(11,20,45,0.55)] ring-1 ring-white/10">
-      <div className="flex items-center justify-between">
-        <div className="flex size-8 items-center justify-center overflow-hidden rounded-lg bg-white">
-          {businessLogo ? (
-            <img src={businessLogo} alt="" className="size-full object-cover" />
-          ) : (
-            <span className="font-display text-xs font-bold text-[#0b0e1a]">
-              {businessName.slice(0, 1)}
-            </span>
-          )}
+    <div className="relative h-[288px] w-[230px]">
+      {/* Front — business logo + Aethel logo side by side, three brand dots */}
+      <div className="absolute left-0 top-0 flex h-[136px] w-[230px] flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-[#17171b] to-[#0a0a0c] shadow-[0_18px_40px_-18px_rgba(11,20,45,0.65)] ring-1 ring-white/10">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center overflow-hidden rounded-xl bg-white">
+            {businessLogo ? (
+              <img src={businessLogo} alt="" className="size-full object-cover" />
+            ) : (
+              <span className="font-display text-xs font-bold text-[#0b0e1a]">
+                {businessName.slice(0, 1)}
+              </span>
+            )}
+          </div>
+          <span className="h-7 w-px bg-white/15" />
+          <AethelMark className="size-10 rounded-xl bg-white/95 p-1" />
         </div>
-        <svg
-          viewBox="0 0 24 24"
-          className="size-5 text-white/70"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          aria-hidden="true"
-        >
-          <path d="M6 8.5a7 7 0 0 1 0 7" />
-          <path d="M9.5 6.5a10 10 0 0 1 0 11" />
-          <path d="M13 4.5a13.5 13.5 0 0 1 0 15" />
+        <div className="mt-3 flex gap-1.5">
+          <span className="size-1.5 rounded-full bg-[#ea4335]" />
+          <span className="size-1.5 rounded-full bg-[#34a853]" />
+          <span className="size-1.5 rounded-full bg-[#4285f4]" />
+        </div>
+      </div>
+
+      {/* Back — QR code centered, contactless mark fused inside */}
+      <div className="absolute left-4 top-[152px] flex h-[136px] w-[222px] items-center justify-center rounded-2xl bg-gradient-to-br from-[#131317] to-[#08080a] shadow-[0_18px_40px_-18px_rgba(11,20,45,0.65)] ring-1 ring-white/10">
+        <svg viewBox="0 0 33 33" className="size-[76px]" aria-hidden="true">
+          <defs>
+            <pattern id="qrCells" width="5" height="5" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="2" height="2" fill="white" />
+              <rect x="3" y="1" width="1.6" height="1.6" fill="white" />
+              <rect x="1" y="3" width="1.8" height="1.8" fill="white" />
+              <rect x="4" y="4" width="1.2" height="1.2" fill="white" />
+            </pattern>
+          </defs>
+          <rect x="6" y="6" width="21" height="21" fill="url(#qrCells)" />
+          <g fill="white">
+            <rect width="7" height="7" />
+            <rect x="26" width="7" height="7" />
+            <rect y="26" width="7" height="7" />
+          </g>
+          <g fill="#0c0f16">
+            <rect x="1" y="1" width="5" height="5" />
+            <rect x="27" y="1" width="5" height="5" />
+            <rect x="1" y="27" width="5" height="5" />
+          </g>
+          <g fill="white">
+            <rect x="2.5" y="2.5" width="2" height="2" />
+            <rect x="28.5" y="2.5" width="2" height="2" />
+            <rect x="2.5" y="28.5" width="2" height="2" />
+          </g>
+          <circle cx="16.5" cy="16.5" r="4.2" fill="#0c0f16" />
+          <g
+            transform="translate(16.5 16.5) scale(0.32) translate(-9.5 -12)"
+            stroke="white"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            fill="none"
+          >
+            <path d="M6 8.5a7 7 0 0 1 0 7" />
+            <path d="M9.5 6.5a10 10 0 0 1 0 11" />
+            <path d="M13 4.5a13.5 13.5 0 0 1 0 15" />
+          </g>
         </svg>
       </div>
-      <p className="mt-5 font-display text-[13px] font-semibold leading-tight text-white">
-        {businessName} <span className="text-white/60">· Elio</span>
-      </p>
-      <p className="text-[10px] text-white/55">/u/{businessName.toLowerCase().replace(/\s+/g, "-")}</p>
     </div>
   );
 }
