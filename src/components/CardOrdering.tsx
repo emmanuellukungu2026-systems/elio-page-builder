@@ -10,28 +10,20 @@ import type { ReactNode } from "react";
 
 /**
  * "Order your card" section — three NFC card tiers:
- *  - Standard: black card with the business logo + Aethel logo, fixed design.
- *  - Pro: Aethel-branded card, customizable (accent, cover, layout of the page it opens).
- *  - Independent: fully custom on request, no Aethel mention.
+ *  - Standard: black card with the business logo + Aethel signature, fixed design.
+ *  - Pro & Independent: showcase illustration — two overlapping cards with
+ *    geometric accent shapes (like a print mockup). Pro carries the Aethel mark;
+ *    Independent is fully white-label.
  */
 
-type CardArt = "standard" | "pro" | "independent";
+/* ------------------------------------------------------------------ */
+/* Standard — the simple fixed black card                              */
+/* ------------------------------------------------------------------ */
 
-function MiniCard({
-  variant,
-  businessLogo,
-  businessName,
-  accent,
-}: {
-  variant: CardArt;
-  businessLogo?: string;
-  businessName: string;
-  accent: string;
-}) {
+function StandardCard({ businessName, businessLogo }: { businessName: string; businessLogo?: string }) {
   return (
     <div className="relative h-[120px] w-[190px] -rotate-[4deg] rounded-2xl bg-gradient-to-br from-[#111527] to-[#0b0e1a] p-4 shadow-[0_18px_40px_-18px_rgba(11,20,45,0.55)] ring-1 ring-white/10">
       <div className="flex items-center justify-between">
-        {/* Business logo (or monogram for the fully-custom tier) */}
         <div className="flex size-8 items-center justify-center overflow-hidden rounded-lg bg-white">
           {businessLogo ? (
             <img src={businessLogo} alt="" className="size-full object-cover" />
@@ -41,39 +33,148 @@ function MiniCard({
             </span>
           )}
         </div>
-
-        {variant === "standard" ? (
-          /* Standard: Elio waves chip */
-          <svg viewBox="0 0 24 24" className="size-5 text-white/70" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-            <path d="M6 8.5a7 7 0 0 1 0 7" />
-            <path d="M9.5 6.5a10 10 0 0 1 0 11" />
-            <path d="M13 4.5a13.5 13.5 0 0 1 0 15" />
-          </svg>
-        ) : variant === "pro" ? (
-          /* Pro: Aethel mark printed on the card */
-          <AethelMark className="size-7 rounded-md bg-white/95 p-0.5" />
-        ) : (
-          /* Independent: no branding, just the NFC symbol */
-          <Nfc className="size-5 text-white/60" />
-        )}
+        <svg
+          viewBox="0 0 24 24"
+          className="size-5 text-white/70"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          aria-hidden="true"
+        >
+          <path d="M6 8.5a7 7 0 0 1 0 7" />
+          <path d="M9.5 6.5a10 10 0 0 1 0 11" />
+          <path d="M13 4.5a13.5 13.5 0 0 1 0 15" />
+        </svg>
       </div>
-
       <p className="mt-5 font-display text-[13px] font-semibold leading-tight text-white">
-        {businessName} <span className="text-white/60">{variant === "independent" ? "" : "· Elio"}</span>
+        {businessName} <span className="text-white/60">· Elio</span>
       </p>
       <p className="text-[10px] text-white/55">/u/{businessName.toLowerCase().replace(/\s+/g, "-")}</p>
-
-      {/* Accent strip: neutral on the standard card, client's accent on Pro & Independent */}
-      <span
-        className={cn(
-          "absolute bottom-0 left-4 right-4 h-[3px] rounded-t-full",
-          variant === "standard" ? "bg-white/15" : "",
-        )}
-        style={variant === "standard" ? undefined : { background: accent }}
-      />
     </div>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/* Showcase — two overlapping cards, geometric print-mockup style      */
+/* ------------------------------------------------------------------ */
+
+function ContactlessWaves({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M6 8.5a7 7 0 0 1 0 7" />
+      <path d="M9.5 6.5a10 10 0 0 1 0 11" />
+      <path d="M13 4.5a13.5 13.5 0 0 1 0 15" />
+    </svg>
+  );
+}
+
+function ShowcaseFront({
+  accent,
+  name,
+  role,
+  phone,
+  email,
+  mark,
+}: {
+  accent: string;
+  name: string;
+  role: string;
+  phone: string;
+  email: string;
+  mark: ReactNode;
+}) {
+  return (
+    <div className="relative h-[124px] w-[200px] overflow-hidden rounded-xl bg-[#182742] shadow-[0_20px_44px_-18px_rgba(11,20,45,0.7)] ring-1 ring-white/10">
+      {/* Geometric accent shapes */}
+      <svg viewBox="0 0 200 124" className="absolute inset-0 size-full" aria-hidden="true">
+        <path d="M200 0v62L126 0Z" fill={accent} />
+        <path d="M200 72v52h-56Z" fill={accent} opacity="0.9" />
+        <path d="M0 124V84l58 40Z" fill={accent} />
+        <path d="M62 0h18L34 124H16Z" fill={accent} opacity="0.16" />
+      </svg>
+
+      <ContactlessWaves className="absolute left-4 top-4 size-5 text-white" />
+      <div className="absolute right-3 top-1/2 -translate-y-1/2">{mark}</div>
+
+      <div className="absolute left-4 top-[46px]">
+        <p className="font-display text-[13px] font-semibold leading-tight text-white">{name}</p>
+        <p className="text-[9px] font-medium" style={{ color: accent }}>
+          {role}
+        </p>
+      </div>
+
+      <div className="absolute bottom-3 left-4 space-y-0.5">
+        <p className="text-[8px] tracking-wide text-white/75">{phone}</p>
+        <p className="text-[8px] tracking-wide text-white/75">{email}</p>
+      </div>
+    </div>
+  );
+}
+
+function ShowcaseBack({ accent }: { accent: string }) {
+  return (
+    <div className="relative h-[124px] w-[200px] overflow-hidden rounded-xl bg-[#121d34] ring-1 ring-white/10">
+      <svg viewBox="0 0 200 124" className="absolute inset-0 size-full" aria-hidden="true">
+        <path d="M0 0h44L0 38Z" fill={accent} />
+        <path d="M200 124v-40l-52 40Z" fill={accent} opacity="0.85" />
+        <path d="M150 0h50v44Z" fill={accent} opacity="0.18" />
+      </svg>
+
+      {/* Social dots */}
+      <div className="absolute left-4 top-1/2 flex -translate-y-1/2 gap-1.5">
+        {[0, 1, 2, 3].map((i) => (
+          <span key={i} className="size-2 rounded-full bg-white/35" />
+        ))}
+      </div>
+
+      {/* NFC mark */}
+      <div className="absolute bottom-3 right-4 flex items-center gap-1 text-white">
+        <ContactlessWaves className="size-4" />
+        <span className="text-[9px] font-bold tracking-widest">NFC</span>
+      </div>
+    </div>
+  );
+}
+
+function ShowcaseCards({
+  accent,
+  name,
+  role,
+  phone,
+  email,
+  mark,
+}: {
+  accent: string;
+  name: string;
+  role: string;
+  phone: string;
+  email: string;
+  mark: ReactNode;
+}) {
+  return (
+    <div className="relative h-[184px] w-[240px]">
+      <div className="absolute left-0 top-9 rotate-[9deg] drop-shadow-[0_14px_24px_rgba(11,20,45,0.45)]">
+        <ShowcaseBack accent={accent} />
+      </div>
+      <div className="absolute left-9 top-1 -rotate-[7deg]">
+        <ShowcaseFront accent={accent} name={name} role={role} phone={phone} email={email} mark={mark} />
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Tier layout                                                         */
+/* ------------------------------------------------------------------ */
 
 function TierCard({
   icon: Icon,
@@ -157,8 +258,8 @@ export function CardOrdering({ className }: { className?: string }) {
     logo?: string;
     name: string;
   }[] = [
-    { key: "standard", icon: Nfc, accent: "#ffffff30", name: c.stdName },
-    { key: "pro", icon: Wand2, featured: true, accent: "#1e4fd8", logo: photos.portraits, name: c.proName },
+    { key: "standard", icon: Nfc, accent: "#ffffff30", logo: photos.portraits, name: c.stdName },
+    { key: "pro", icon: Wand2, featured: true, accent: "#c0854f", name: c.proName },
     { key: "independent", icon: Sparkles, accent: "#0e7490", name: c.indName },
   ];
 
@@ -191,12 +292,31 @@ export function CardOrdering({ className }: { className?: string }) {
                 cta={c.cta}
                 featured={tier.featured}
                 art={
-                  <MiniCard
-                    variant={tier.key}
-                    businessLogo={tier.logo}
-                    businessName={tier.name}
-                    accent={tier.accent}
-                  />
+                  tier.key === "standard" ? (
+                    <StandardCard businessName={tier.name} businessLogo={tier.logo} />
+                  ) : tier.key === "pro" ? (
+                    <ShowcaseCards
+                      accent={tier.accent}
+                      name={tier.name}
+                      role={t.hero.cardRole}
+                      phone="+243 990 000 000"
+                      email="bonjour@studiokivu.cd"
+                      mark={<AethelMark className="size-8 rounded-md bg-white/95 p-0.5" />}
+                    />
+                  ) : (
+                    <ShowcaseCards
+                      accent={tier.accent}
+                      name={tier.name}
+                      role={t.hero.cardRole}
+                      phone="+243 990 000 000"
+                      email="hello@novadesign.cd"
+                      mark={
+                        <span className="flex size-8 items-center justify-center rounded-full bg-white/95 font-display text-xs font-bold text-[#0e7490]">
+                          N
+                        </span>
+                      }
+                    />
+                  )
                 }
               />
             );
