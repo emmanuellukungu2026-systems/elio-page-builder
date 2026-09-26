@@ -3,21 +3,31 @@ import { ElioMark } from "@/components/ElioMark";
 import { useI18n } from "@/lib/i18n";
 import { photos } from "@/lib/photos";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import type { MotionValue } from "framer-motion";
 import { Check, MessageCircle, Nfc, Sparkles, Wand2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 /**
- * "Order your card" section — three NFC card tiers:
- *  - Standard: black card with the business logo + Aethel signature, fixed design.
- *  - Pro & Independent: showcase illustration — two overlapping cards with
- *    geometric accent shapes (like a print mockup). Pro carries the Aethel mark;
- *    Independent is fully white-label.
+ * "Order your card" section — a scroll-driven carousel of the three NFC card
+ * tiers: scrolling down advances the carousel, scrolling up goes back.
+ *  - Standard: black cards (logos front, QR back), fixed design.
+ *  - Pro: Aethel-branded geometric showcase, customizable.
+ *  - Independent: fully custom luxury card, no Aethel mention.
  */
 
 /* ------------------------------------------------------------------ */
-/* Standard — the simple fixed black card                              */
+/* Standard — two stacked black cards: logos front, QR back            */
 /* ------------------------------------------------------------------ */
 
 function StandardCard({ businessName, businessLogo }: { businessName: string; businessLogo?: string }) {
@@ -91,7 +101,7 @@ function StandardCard({ businessName, businessLogo }: { businessName: string; bu
 }
 
 /* ------------------------------------------------------------------ */
-/* Showcase — two overlapping cards, geometric print-mockup style      */
+/* Pro — two overlapping cards, geometric print-mockup style           */
 /* ------------------------------------------------------------------ */
 
 function ContactlessWaves({ className }: { className?: string }) {
@@ -307,6 +317,7 @@ function TierCard({
   art,
   featured,
   cta,
+  compact = false,
 }: {
   icon: LucideIcon;
   badge: string;
@@ -316,13 +327,10 @@ function TierCard({
   art: ReactNode;
   featured?: boolean;
   cta: string;
+  compact?: boolean;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, ease: [0.21, 0.6, 0.35, 1] }}
+    <div
       className={cn(
         "glass relative flex h-full flex-col rounded-3xl p-6",
         featured && "ring-2 ring-[#1e4fd8]/60",
@@ -341,10 +349,14 @@ function TierCard({
         <h3 className="font-display text-lg font-semibold">{title}</h3>
       </div>
 
-      <p className="mt-3 text-sm leading-6 text-muted-foreground">{desc}</p>
+      <p className={cn("mt-3 text-sm leading-6 text-muted-foreground", compact && "hidden sm:block")}>
+        {desc}
+      </p>
 
-      <div className="my-5 flex justify-center overflow-hidden py-2">
-        <div className="animate-floaty">{art}</div>
+      {/* Fixed-height art stage: the card is scaled down on small screens so
+          the pinned carousel always fits the viewport. */}
+      <div className="my-4 flex h-[190px] justify-center overflow-visible sm:h-[245px] lg:h-[300px]">
+        <div className="origin-top scale-[0.65] animate-floaty sm:scale-[0.8] lg:scale-100">{art}</div>
       </div>
 
       <ul className="mt-auto space-y-2.5 text-sm">
@@ -364,14 +376,57 @@ function TierCard({
       >
         <MessageCircle className="size-4" /> {cta}
       </a>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll-driven carousel                                              */
+/* ------------------------------------------------------------------ */
+
+/** One slide; scales/fades based on its distance from the carousel's center. */
+function CarouselSlide({
+  p,
+  index,
+  count,
+  children,
+}: {
+  p: MotionValue<number>;
+  index: number;
+  count: number;
+  children: ReactNode;
+}) {
+  const center = count > 1 ? index / (count - 1) : 0;
+  const reach = 0.34;
+  const scale = useTransform(p, [center - reach, center, center + reach], [0.88, 1, 0.88]);
+  const opacity = useTransform(p, [center - reach, center, center + reach], [0.4, 1, 0.4]);
+  return (
+    <motion.div style={{ scale, opacity }} className="flex w-full shrink-0 justify-center">
+      <div className="w-full max-w-sm px-1">{children}</div>
     </motion.div>
   );
 }
 
 export function CardOrdering({ className }: { className?: string }) {
   const { t } = useI18n();
-  const c = t.cardOrder;
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
+  const [active, setActive] = useState(0);
+  useMotionValueEvent(p, "change", (v) => {
+    setActive(Math.round(Math.max(0, Math.min(1, v)) * 2));
+  });
+
+  // Scroll → horizontal position (with a spring for smooth inertia).
+  const xNum = useSpring(useTransform(p, [0, 1], [0, -66.666]), {
+    stiffness: 120,
+    damping: 28,
+    mass: 0.6,
+  });
+  const x = useMotionTemplate`${xNum}%`;
+
+  const c = t.cardOrder;
   const tiers: {
     key: "standard" | "pro" | "independent";
     icon: LucideIcon;
@@ -385,56 +440,54 @@ export function CardOrdering({ className }: { className?: string }) {
     { key: "independent", icon: Sparkles, accent: "#0e7490", name: c.indName },
   ];
 
-  return (
-    <section id="cards" className={cn("relative px-4 py-24 sm:px-6", className)}>
-      <div className="mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
-          className="mx-auto max-w-2xl text-center"
-        >
+  const renderCard = (tier: (typeof tiers)[number], compact: boolean) => {
+    const dict = c[tier.key];
+    const art =
+      tier.key === "standard" ? (
+        <StandardCard businessName={tier.name} businessLogo={tier.logo} />
+      ) : tier.key === "pro" ? (
+        <ShowcaseCards
+          accent={tier.accent}
+          name={tier.name}
+          role={t.hero.cardRole}
+          phone="+243 990 000 000"
+          email="bonjour@studiokivu.cd"
+          mark={<AethelMark className="size-8 rounded-md bg-white/95 p-0.5" />}
+        />
+      ) : (
+        <IndependentCard company={tier.name} person="KATE MILLER" role="Product Manager" />
+      );
+    return (
+      <TierCard
+        icon={tier.icon}
+        badge={c.popular}
+        title={dict.title}
+        desc={dict.desc}
+        features={dict.features}
+        art={art}
+        cta={c.cta}
+        featured={tier.featured}
+        compact={compact}
+      />
+    );
+  };
+
+  // Reduced motion: static grid, no scroll hijacking.
+  if (reduce) {
+    return (
+      <section id="cards" className={cn("relative px-4 py-24 sm:px-6", className)}>
+        <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">{c.kicker}</p>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">{c.title}</h2>
           <p className="mt-4 leading-7 text-muted-foreground">{c.text}</p>
-        </motion.div>
-
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {tiers.map((tier) => {
-            const dict = c[tier.key];
-            return (
-              <TierCard
-                key={tier.key}
-                icon={tier.icon}
-                badge={c.popular}
-                title={dict.title}
-                desc={dict.desc}
-                features={dict.features}
-                cta={c.cta}
-                featured={tier.featured}
-                art={
-                  tier.key === "standard" ? (
-                    <StandardCard businessName={tier.name} businessLogo={tier.logo} />
-                  ) : tier.key === "pro" ? (
-                    <ShowcaseCards
-                      accent={tier.accent}
-                      name={tier.name}
-                      role={t.hero.cardRole}
-                      phone="+243 990 000 000"
-                      email="bonjour@studiokivu.cd"
-                      mark={<AethelMark className="size-8 rounded-md bg-white/95 p-0.5" />}
-                    />
-                  ) : (
-                    <IndependentCard company={tier.name} person="KATE MILLER" role="Product Manager" />
-                  )
-                }
-              />
-            );
-          })}
         </div>
-
-        {/* Footer note */}
+        <div className="mx-auto mt-12 grid max-w-6xl gap-5 md:grid-cols-3">
+          {tiers.map((tier) => (
+            <div key={tier.key} className="flex">
+              {renderCard(tier, false)}
+            </div>
+          ))}
+        </div>
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -445,6 +498,54 @@ export function CardOrdering({ className }: { className?: string }) {
           <ElioMark className="size-4" />
           {c.note}
         </motion.p>
+      </section>
+    );
+  }
+
+  return (
+    <section id="cards" className={cn("relative", className)}>
+      <div ref={ref} className="relative h-[280vh]">
+        <div className="sticky top-0 flex h-screen flex-col items-center overflow-hidden px-4 pt-20 sm:px-6">
+          {/* Header */}
+          <div className="max-w-2xl text-center">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-ember sm:text-sm">
+              {c.kicker}
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-bold tracking-tight sm:text-4xl">
+              {c.title}
+            </h2>
+            <p className="mt-2 hidden text-sm leading-6 text-muted-foreground sm:block">{c.text}</p>
+          </div>
+
+          {/* Carousel: scroll down = advance, scroll up = go back */}
+          <div className="mt-6 w-full max-w-sm flex-1 sm:max-w-md">
+            <motion.div style={{ x }} className="flex h-full items-center">
+              {tiers.map((tier, i) => (
+                <CarouselSlide key={tier.key} p={p} index={i} count={tiers.length}>
+                  {renderCard(tier, true)}
+                </CarouselSlide>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Progress dots + hint */}
+          <div className="flex flex-col items-center gap-3 pb-8">
+            <div className="flex gap-2">
+              {tiers.map((tier, i) => (
+                <span
+                  key={tier.key}
+                  className={cn(
+                    "size-2 rounded-full transition-colors duration-300",
+                    i === active ? "bg-ember" : "bg-white/20",
+                  )}
+                />
+              ))}
+            </div>
+            <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground/70">
+              ↓ {c.hint}
+            </span>
+          </div>
+        </div>
       </div>
     </section>
   );
