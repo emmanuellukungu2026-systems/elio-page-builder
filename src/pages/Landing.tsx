@@ -1,5 +1,5 @@
 import { Atmosphere } from "@/components/Atmosphere";
-import { CardToSite } from "@/components/CardToSite";
+import { CardOrdering } from "@/components/CardOrdering";
 import { NfcHeroVisual } from "@/components/NfcHeroVisual";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { Footer } from "@/components/Footer";
@@ -241,19 +241,8 @@ export default function Landing() {
         </Reveal>
       </section>
 
-      {/* ================= CARD → SITE (scroll animation) ================= */}
-      <section id="transform" className="relative px-4 pt-14 sm:px-6">
-        <Reveal className="mx-auto max-w-6xl">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">
-            {t.transform.kicker}
-          </p>
-          <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            {t.transform.title}
-          </h2>
-          <p className="mt-4 max-w-xl leading-7 text-muted-foreground">{t.transform.text}</p>
-        </Reveal>
-        <CardToSite className="mt-6" />
-      </section>
+      {/* ================= CARD ORDERING ================= */}
+      <CardOrdering />
 
       {/* ================= QR ================= */}
       <section className="relative px-4 py-24 sm:px-6">
