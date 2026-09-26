@@ -173,6 +173,93 @@ function ShowcaseCards({
 }
 
 /* ------------------------------------------------------------------ */
+/* Independent — single luxury card, dark silk waves + gold mark       */
+/* ------------------------------------------------------------------ */
+
+function GoldDelta({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <defs>
+        <linearGradient id="indGold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#e8c877" />
+          <stop offset="0.55" stopColor="#c9a24b" />
+          <stop offset="1" stopColor="#9a742a" />
+        </linearGradient>
+      </defs>
+      <path d="M12 2.5 21.5 21h-19Z" fill="url(#indGold)" />
+      <path d="M12 9.5 17.5 20h-11Z" fill="#161616" />
+    </svg>
+  );
+}
+
+function IndependentCard({ company, person, role }: { company: string; person: string; role: string }) {
+  const [line1, line2] = company.split(" ");
+  return (
+    <div className="relative h-[168px] w-[276px] overflow-hidden rounded-2xl bg-[#141414] shadow-[0_24px_50px_-20px_rgba(0,0,0,0.8)] ring-1 ring-white/10">
+      {/* Dark silk waves */}
+      <svg viewBox="0 0 276 168" className="absolute inset-0 size-full" aria-hidden="true">
+        <defs>
+          <linearGradient id="indBase" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#1d1d1d" />
+            <stop offset="0.5" stopColor="#0f0f0f" />
+            <stop offset="1" stopColor="#262626" />
+          </linearGradient>
+          <linearGradient id="indWave" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#3a3a3a" stopOpacity="0" />
+            <stop offset="0.35" stopColor="#4a4a4a" />
+            <stop offset="0.7" stopColor="#2c2c2c" />
+            <stop offset="1" stopColor="#3f3f3f" stopOpacity="0" />
+          </linearGradient>
+          <filter id="indSoft" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.1" />
+          </filter>
+        </defs>
+        <rect width="276" height="168" fill="url(#indBase)" />
+        <g filter="url(#indSoft)" fill="none" strokeLinecap="round">
+          <path d="M-20 28C50 4 110 58 170 30s80-16 130-2" stroke="url(#indWave)" strokeWidth="14" opacity="0.5" />
+          <path d="M-20 52C60 24 120 84 180 52s70-18 120-4" stroke="url(#indWave)" strokeWidth="10" opacity="0.4" />
+          <path d="M-20 78C40 58 130 104 190 74s60-12 110-6" stroke="url(#indWave)" strokeWidth="16" opacity="0.35" />
+          <path d="M-20 104C60 76 110 132 180 100s70-14 120-2" stroke="url(#indWave)" strokeWidth="9" opacity="0.45" />
+          <path d="M-20 126C50 104 120 152 186 124s70-10 114-4" stroke="url(#indWave)" strokeWidth="12" opacity="0.3" />
+          <path d="M-20 148C60 128 130 168 200 146s60-6 100-4" stroke="url(#indWave)" strokeWidth="8" opacity="0.35" />
+        </g>
+      </svg>
+
+      {/* Company: gold delta + two-line wordmark */}
+      <div className="absolute left-5 top-4 flex items-center gap-2">
+        <GoldDelta className="size-7" />
+        <div className="leading-tight">
+          <p className="text-[10px] font-semibold tracking-[0.14em] text-white">{line1}</p>
+          {line2 && <p className="text-[10px] font-semibold tracking-[0.14em] text-white">{line2}</p>}
+        </div>
+      </div>
+
+      {/* Contactless waves, gold */}
+      <svg
+        viewBox="0 0 24 24"
+        className="absolute right-5 top-4 size-6 text-[#d9b45e]"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        aria-hidden="true"
+      >
+        <path d="M6 8.5a7 7 0 0 1 0 7" />
+        <path d="M9.5 6.5a10 10 0 0 1 0 11" />
+        <path d="M13 4.5a13.5 13.5 0 0 1 0 15" />
+      </svg>
+
+      {/* Centered identity */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center">
+        <p className="font-display text-lg font-light tracking-[0.28em] text-white">{person}</p>
+        <span className="mx-auto mt-2 block h-px w-24 bg-[#c9a24b]/70" />
+        <p className="mt-2 text-[11px] font-light tracking-[0.08em] text-white/85">{role}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Tier layout                                                         */
 /* ------------------------------------------------------------------ */
 
@@ -304,18 +391,7 @@ export function CardOrdering({ className }: { className?: string }) {
                       mark={<AethelMark className="size-8 rounded-md bg-white/95 p-0.5" />}
                     />
                   ) : (
-                    <ShowcaseCards
-                      accent={tier.accent}
-                      name={tier.name}
-                      role={t.hero.cardRole}
-                      phone="+243 990 000 000"
-                      email="hello@novadesign.cd"
-                      mark={
-                        <span className="flex size-8 items-center justify-center rounded-full bg-white/95 font-display text-xs font-bold text-[#0e7490]">
-                          N
-                        </span>
-                      }
-                    />
+                    <IndependentCard company={tier.name} person="KATE MILLER" role="Product Manager" />
                   )
                 }
               />
