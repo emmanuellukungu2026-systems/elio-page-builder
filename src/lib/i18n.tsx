@@ -99,6 +99,15 @@ const en = {
     ],
     cta: "Get my NFC card",
   },
+  transform: {
+    kicker: "Card to website",
+    title: "Scroll — the card opens your site.",
+    text: "The NFC card is only the first move. Keep scrolling: the card comes apart layer by layer and the full portfolio page unfolds in the browser.",
+    step1: "The physical card",
+    step2: "The layers come apart",
+    step3: "Your portfolio, open in the browser",
+    hint: "Scroll to unfold",
+  },
   gallery: {
     kicker: "Made with Elio",
     title: "Real work, presented properly.",
@@ -609,6 +618,15 @@ const fr: Dict = {
     ],
     cta: "Obtenir ma carte NFC",
   },
+  transform: {
+    kicker: "De la carte au site",
+    title: "Faites défiler — la carte ouvre votre site.",
+    text: "La carte NFC n'est que le premier geste. Continuez à faire défiler : la carte se décompose couche par couche et la page portfolio complète se déplie dans le navigateur.",
+    step1: "La carte physique",
+    step2: "Les couches se séparent",
+    step3: "Votre portfolio, ouvert dans le navigateur",
+    hint: "Faites défiler pour déplier",
+  },
   gallery: {
     kicker: "Créé avec Elio",
     title: "Du vrai travail, présenté comme il se doit.",
@@ -1116,6 +1134,15 @@ const tr: Dict = {
       "Her şey tek tıkla açılır — kurulacak uygulama yok",
     ],
     cta: "NFC kartımı al",
+  },
+  transform: {
+    kicker: "Karttan siteye",
+    title: "Kaydırın — kart sitenizi açsın.",
+    text: "NFC kart sadece ilk adım. Kaydırmaya devam edin: kart katman katman ayrılır ve tam portföy sayfası tarayıcıda açılır.",
+    step1: "Fiziksel kart",
+    step2: "Katmanlar ayrılır",
+    step3: "Portföyünüz tarayıcıda açık",
+    hint: "Açmak için kaydırın",
   },
   gallery: {
     kicker: "Elio ile yapıldı",
