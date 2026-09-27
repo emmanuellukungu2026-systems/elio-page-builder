@@ -398,8 +398,19 @@ function CarouselSlide({
 }) {
   const center = count > 1 ? index / (count - 1) : 0;
   const reach = 0.34;
-  const scale = useTransform(p, [center - reach, center, center + reach], [0.88, 1, 0.88]);
-  const opacity = useTransform(p, [center - reach, center, center + reach], [0.4, 1, 0.4]);
+  // NOTE: use a transformer function instead of an input/output range here.
+  // framer-motion's scroll "accelerate" path reuses the input range as WAAPI
+  // keyframe offsets (which must be within [0,1]); our range extends to
+  // -0.34 / 1.34 and throws "Offsets must be null or in the range [0,1]".
+  // Function transformers bypass that path entirely.
+  const scale = useTransform(p, (v: number) => {
+    const d = Math.min(Math.abs(v - center) / reach, 1);
+    return 1 - d * 0.12;
+  });
+  const opacity = useTransform(p, (v: number) => {
+    const d = Math.min(Math.abs(v - center) / reach, 1);
+    return 1 - d * 0.6;
+  });
   return (
     <motion.div style={{ scale, opacity }} className="flex w-full shrink-0 justify-center">
       <div className="w-full max-w-sm px-1">{children}</div>
