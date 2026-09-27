@@ -18,10 +18,8 @@ import { photoStrip, photos } from "@/lib/photos";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
-  Briefcase,
   ChevronDown,
   FolderGit2,
-  Images,
   Lightbulb,
   MessageCircle,
   Nfc,
