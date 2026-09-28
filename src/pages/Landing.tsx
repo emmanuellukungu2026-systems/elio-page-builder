@@ -29,6 +29,7 @@ import {
   Store,
 } from "lucide-react";
 import { Link } from "react-router";
+import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { cn } from "@/lib/utils";
 
 export default function Landing() {
@@ -391,10 +392,21 @@ export default function Landing() {
               ))}
             </div>
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Button size="lg" className="btn-glow h-12 rounded-2xl px-8 text-base" asChild>
-                <Link to="/services">
-                  {t.aethelTeam.cta} <ArrowRight className="ml-2 size-4" />
-                </Link>
+              <Button
+                size="lg"
+                className="btn-glow h-12 rounded-2xl bg-emerald-600 px-8 text-base text-white hover:bg-emerald-500"
+                asChild
+              >
+                <a
+                  href={waLink(
+                    CONCIERGE_WHATSAPP,
+                    "Hello Aethel team 👋 I'd like to work with you / join the team — here's who I am and what I do:",
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <MessageCircle className="mr-2 size-4" /> {t.aethelTeam.cta}
+                </a>
               </Button>
               <AethelMark className="h-10 w-auto opacity-80" />
             </div>

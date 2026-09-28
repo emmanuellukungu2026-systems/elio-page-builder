@@ -311,23 +311,23 @@ const en = {
   },
   aethelTeam: {
     kicker: "Work with us",
-    title: "Work with the Aethel team",
-    text: "You'd rather have the team behind Elio build and maintain your page for you? Our concierge service designs, writes and publishes your portfolio — you just approve it.",
+    title: "Join the Aethel team — or work with it",
+    text: "Designer, developer, photographer, project partner? Propose a collaboration or ask to be part of the team. Every request lands straight on our WhatsApp and is evaluated by us personally.",
     items: [
       {
-        title: "Concierge build",
-        text: "Send us your photos and story — we design and publish your page with you, in minutes.",
+        title: "Propose a collaboration",
+        text: "A project, a service, an idea that fits Elio Pages? Message us on WhatsApp — we review every proposal and reply to you directly.",
       },
       {
-        title: "Priority support",
-        text: "A direct WhatsApp line to the team. Changes made, answers fast.",
+        title: "Join the team",
+        text: "Want to build pages, design cards or support clients with us? Introduce yourself on WhatsApp — we get back to you within days.",
       },
       {
-        title: "Custom cards & domains",
-        text: "Branded NFC cards, custom domains and white-label links for established businesses.",
+        title: "One channel: WhatsApp",
+        text: "No forms, no buried applications. Your message lands directly in the team's WhatsApp — that's where it gets evaluated and answered.",
       },
     ],
-    cta: "Start a conversation",
+    cta: "Message us on WhatsApp",
   },
   finalCta: {
     title: "Your business deserves a proper front door.",
@@ -934,23 +934,23 @@ const fr: Dict = {
   },
   aethelTeam: {
     kicker: "Travailler avec nous",
-    title: "Travaillez avec l'équipe Aethel",
-    text: "Vous préférez que l'équipe derrière Elio construise et entretienne votre page pour vous ? Notre service de conciergerie conçoit, rédige et publie votre portfolio — vous n'avez qu'à l'approuver.",
+    title: "Rejoignez l'équipe Aethel — ou travaillez avec elle",
+    text: "Designer, développeur, photographe, partenaire de projet ? Proposez une collaboration ou demandez à faire partie de l'équipe. Chaque demande arrive directement sur notre WhatsApp et est évaluée par nous-mêmes.",
     items: [
       {
-        title: "Création conciergerie",
-        text: "Envoyez-nous vos photos et votre histoire — nous concevons et publions votre page avec vous, en quelques minutes.",
+        title: "Proposer une collaboration",
+        text: "Un projet, un service, une idée qui collerait à Elio Pages ? Écrivez-nous sur WhatsApp — nous évaluons chaque proposition et vous répondons directement.",
       },
       {
-        title: "Support prioritaire",
-        text: "Une ligne WhatsApp directe avec l'équipe. Modifications faites, réponses rapides.",
+        title: "Rejoindre l'équipe",
+        text: "Vous voulez construire des pages, dessiner des cartes ou accompagner les clients avec nous ? Présentez-vous sur WhatsApp — réponse sous quelques jours.",
       },
       {
-        title: "Cartes & domaines sur mesure",
-        text: "Cartes NFC à votre marque, domaines personnalisés et liens white-label pour les entreprises établies.",
+        title: "Un seul canal : WhatsApp",
+        text: "Pas de formulaire, pas de candidature enterrée. Votre message arrive directement dans le WhatsApp de l'équipe — c'est là qu'il est évalué et traité.",
       },
     ],
-    cta: "Démarrer la conversation",
+    cta: "Nous écrire sur WhatsApp",
   },
   finalCta: {
     title: "Votre entreprise mérite une vraie vitrine.",
@@ -1553,25 +1553,25 @@ const tr: Dict = {
     nfcText: "Herhangi bir telefona tek dokunuş bu sayfayı açar. Kartı tam bu linkle önceden programlanmış şekilde sipariş edin.",
     nfcCopyLink: "Profil linkini kopyala",
   },
-  aethelTeam: {
+    aethelTeam: {
     kicker: "Bizimle çalışın",
-    title: "Aethel ekibiyle çalışın",
-    text: "Elio'nun arkasındaki ekip sayfanızı sizin için kurup yönetsin ister misiniz? Danışma hizmetimiz portföyünüzü tasarlar, yazar ve yayımlar — siz sadece onaylarsınız.",
+    title: "Aethel ekibine katılın — ya da onunla çalışın",
+    text: "Tasarımcı, geliştirici, fotoğrafçı, proje ortağı mısınız? Bir işbirliği önerin ya da ekibin parçası olmayı isteyin. Her talep doğrudan WhatsApp'ımıza düşer ve bizzat bizim tarafımızdan değerlendirilir.",
     items: [
       {
-        title: "Danışma ile kurulum",
-        text: "Fotoğraflarınızı ve hikayenizi gönderin — sayfanızı sizinle birlikte dakikalar içinde tasarlayıp yayımlarız.",
+        title: "İşbirliği önerin",
+        text: "Elio Pages'e uyan bir proje, hizmet veya fikir mi var? WhatsApp'tan yazın — her öneriyi değerlendirir ve size doğrudan döneriz.",
       },
       {
-        title: "Öncelikli destek",
-        text: "Ekip için doğrudan WhatsApp hattı. Değişiklikler yapılır, cevaplar hızlı gelir.",
+        title: "Ekibe katılın",
+        text: "Bizimle sayfa kurmak, kart tasarlamak veya müşterilere destek vermek ister misiniz? WhatsApp'tan kendinizi tanıtın — birkaç gün içinde dönüş yaparız.",
       },
       {
-        title: "Özel kart ve alan adları",
-        text: "Markanıza özel NFC kartları, kişisel alan adları ve kurulu işletmeler için white-label bağlantılar.",
+        title: "Tek kanal: WhatsApp",
+        text: "Form yok, köşede kalan başvuru yok. Mesajınız ekibin WhatsApp'ına doğrudan düşer — orada değerlendirilir ve yanıtlanır.",
       },
     ],
-    cta: "Sohbeti başlat",
+    cta: "WhatsApp'tan yazın",
   },
   finalCta: {
     title: "İşletmeniz düzgün bir cephe hak ediyor.",
