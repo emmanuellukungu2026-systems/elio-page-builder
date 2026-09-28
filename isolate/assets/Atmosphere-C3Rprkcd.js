@@ -1,1 +1,0 @@
-import{j as s}from"./framer-motion-DZx2odBJ.js";function a(){return s.jsxs("div",{className:"orbs","aria-hidden":"true",children:[s.jsx("div",{className:"orb orb-a"}),s.jsx("div",{className:"orb-b orb"}),s.jsx("div",{className:"orb orb-c"})]})}export{a as A};
