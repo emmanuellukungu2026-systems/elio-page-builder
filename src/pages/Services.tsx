@@ -1,5 +1,5 @@
 import { Atmosphere } from "@/components/Atmosphere";
-import { IndependentCard, ShowcaseCards, StandardCard } from "@/components/CardOrdering";
+import { CardFit, IndependentCard, ShowcaseCards, StandardCard } from "@/components/CardOrdering";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { Reveal } from "@/components/Reveal";
@@ -344,9 +344,13 @@ export default function Services() {
                                   : "border-border/70 hover:bg-accent hover:text-foreground",
                               )}
                             >
-                              <div className="flex h-24 items-center justify-center overflow-hidden">
-                                <div className="origin-top scale-[0.42]">{opt.art}</div>
-                              </div>
+                              <CardFit
+                                tier={opt.key}
+                                height={104}
+                                className="overflow-hidden rounded-lg bg-black/[0.04] px-2 py-2 dark:bg-white/[0.05]"
+                              >
+                                {opt.art}
+                              </CardFit>
                               <span
                                 className={cn(
                                   "text-xs font-medium",

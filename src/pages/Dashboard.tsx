@@ -1,5 +1,5 @@
 import { Atmosphere } from "@/components/Atmosphere";
-import { IndependentCard, ShowcaseCards, StandardCard } from "@/components/CardOrdering";
+import { CardFit, IndependentCard, ShowcaseCards, StandardCard } from "@/components/CardOrdering";
 import { AethelMark } from "@/components/AethelMark";
 import { ElioMark } from "@/components/ElioMark";
 import { Button } from "@/components/ui/button";
@@ -112,10 +112,14 @@ export default function Dashboard() {
         {latestOrder && (
           <section className="glass mt-8 overflow-hidden rounded-3xl">
             <div className="flex flex-col items-center gap-6 p-6 sm:flex-row sm:p-8">
-              <div className="relative mx-auto flex h-44 w-56 shrink-0 items-start justify-center sm:h-52 sm:w-72">
+              <div className="relative flex shrink-0 justify-center">
                 <div className="absolute inset-0 rounded-full bg-ember/10 blur-3xl" aria-hidden="true" />
-                {cardTier === "pro" ? (
-                  <div className="origin-top scale-[0.9] sm:scale-100">
+                <CardFit
+                  tier={cardTier}
+                  height={168}
+                  className="relative overflow-hidden rounded-2xl bg-black/[0.05] p-3 dark:bg-white/[0.06]"
+                >
+                  {cardTier === "pro" ? (
                     <ShowcaseCards
                       accent="#c0854f"
                       name={page?.displayName ?? latestOrder.name}
@@ -124,23 +128,19 @@ export default function Dashboard() {
                       email="bonjour@studiokivu.cd"
                       mark={<AethelMark className="size-8 rounded-md bg-white/95 p-0.5" />}
                     />
-                  </div>
-                ) : cardTier === "independent" ? (
-                  <div className="origin-top scale-[0.9] sm:scale-100">
+                  ) : cardTier === "independent" ? (
                     <IndependentCard
                       company="Nova Design"
                       person={(page?.displayName ?? latestOrder.name).toUpperCase()}
                       role={t.hero.cardRole}
                     />
-                  </div>
-                ) : (
-                  <div className="origin-top scale-[0.75] sm:scale-[0.85]">
+                  ) : (
                     <StandardCard
                       businessName={page?.displayName ?? latestOrder.name}
                       businessLogo={photos.portraits}
                     />
-                  </div>
-                )}
+                  )}
+                </CardFit>
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ember">

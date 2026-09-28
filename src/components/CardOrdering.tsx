@@ -304,6 +304,48 @@ export function IndependentCard({ company, person, role }: { company: string; pe
 }
 
 /* ------------------------------------------------------------------ */
+/* Uniform-fit preview (form picker + dashboard card panel)             */
+/* ------------------------------------------------------------------ */
+
+/** Natural render size of each card visual, used to scale previews uniformly. */
+export const CARD_SIZES = {
+  standard: { w: 230, h: 288 },
+  pro: { w: 240, h: 184 },
+  independent: { w: 276, h: 168 },
+} as const;
+
+export type CardTier = keyof typeof CARD_SIZES;
+
+/**
+ * Renders a card visual scaled so it is exactly `height` px tall — width
+ * follows the card's real aspect ratio, so nothing is stretched or clipped.
+ * The layout box equals the scaled size, so flex centering works cleanly.
+ */
+export function CardFit({
+  tier,
+  height,
+  children,
+  className,
+}: {
+  tier: CardTier;
+  height: number;
+  children: ReactNode;
+  className?: string;
+}) {
+  const { w, h } = CARD_SIZES[tier];
+  const s = height / h;
+  return (
+    <div className={cn("flex items-center justify-center", className)}>
+      <div style={{ width: Math.round(w * s), height: Math.round(h * s) }}>
+        <div style={{ width: w, height: h, transform: `scale(${s})`, transformOrigin: "top left" }}>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Tier layout                                                         */
 /* ------------------------------------------------------------------ */
 
