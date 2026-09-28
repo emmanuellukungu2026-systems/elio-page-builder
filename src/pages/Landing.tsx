@@ -1,4 +1,5 @@
 import { Atmosphere } from "@/components/Atmosphere";
+import { AethelMark } from "@/components/AethelMark";
 import { CardOrdering } from "@/components/CardOrdering";
 import { NfcHeroVisual } from "@/components/NfcHeroVisual";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
@@ -361,6 +362,44 @@ export default function Landing() {
             </Accordion>
           </Reveal>
         </div>
+      </section>
+
+      {/* ================= WORK WITH AETHEL TEAM ================= */}
+      <section id="aethel-team" className="relative px-4 py-24 sm:px-6">
+        <Reveal className="mx-auto max-w-6xl">
+          <div className="glass-strong relative overflow-hidden rounded-[2.5rem] px-6 py-12 sm:px-12 sm:py-16">
+            <div className="max-w-2xl">
+              <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">
+                {t.aethelTeam.kicker}
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+                {t.aethelTeam.title}
+              </h2>
+              <p className="mt-4 leading-7 text-muted-foreground">{t.aethelTeam.text}</p>
+            </div>
+            <div className="mt-10 grid gap-5 sm:grid-cols-3">
+              {t.aethelTeam.items.map((item, i) => (
+                <Reveal key={item.title} delay={i * 0.08}>
+                  <div className="glass h-full rounded-3xl p-6">
+                    <span className="font-display text-4xl font-bold text-ember/40">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="mt-3 font-display text-lg font-semibold">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.text}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Button size="lg" className="btn-glow h-12 rounded-2xl px-8 text-base" asChild>
+                <Link to="/services">
+                  {t.aethelTeam.cta} <ArrowRight className="ml-2 size-4" />
+                </Link>
+              </Button>
+              <AethelMark className="h-10 w-auto opacity-80" />
+            </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* ================= FINAL CTA ================= */}

@@ -5,6 +5,25 @@ import { Anonymous } from "@convex-dev/auth/providers/Anonymous";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { emailOtp } from "./auth/emailOtp";
 
+/**
+ * Email verification provider for the Password flow: a 6-digit OTP sent by
+ * email. Used both at sign-up (new accounts must verify their address before
+ * the session is issued) and for account recovery through the standard
+ * "email-verification" password flow.
+ */
+const passwordEmailVerification = {
+  ...emailOtp,
+  id: "email-verification-code",
+  maxAge: 60 * 15, // 15 minutes
+};
+
+/** Aethel Technologies owners — they skip email verification entirely. */
+const OWNER_EMAILS = [
+  "emmanuellukungu6@gmail.com",
+  "emmanuellukungu80@gmail.com",
+  "emmanuellukungu77@gmail.com",
+];
+
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
     emailOtp,
@@ -15,6 +34,22 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         if (password.length < 8) {
           throw new Error("Password must be at least 8 characters.");
         }
+      },
+      // Email verification at sign-up: the client calls signIn("password",
+      // { flow: "signUp", ... }) and, unless the account is already verified,
+      // the server answers with a "started" result after emailing a 6-digit
+      // code (via passwordEmailVerification). The client then re-calls
+      // signIn("password", { flow: "email-verification", email, code })
+      // which completes the session.
+      verify: passwordEmailVerification,
+      // Aethel owners are trusted: mark their account verified at creation so
+      // the verification hop is skipped and they land straight in /admin.
+      profile: (params, ctx) => {
+        const email = String(params.email ?? "").trim().toLowerCase();
+        return {
+          email,
+          ...(OWNER_EMAILS.includes(email) ? { emailVerified: true as const } : {}),
+        };
       },
     }),
   ],
