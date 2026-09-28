@@ -1,1 +1,0 @@
-import{j as r}from"./framer-motion-fZn74GpN.js";import{l as t}from"./logo-DP0RiOWa.js";import{a as e}from"./index-CWwM10ZH.js";const a="/assets/logo-inverted-D3bZFtUk.png";function l({className:o,invert:s=!1}){return r.jsx("img",{src:s?a:t,alt:"Elio",className:e("size-6 rounded-md",o)})}export{l as E};
