@@ -5,7 +5,6 @@ import { photos } from "@/lib/photos";
 import { cn } from "@/lib/utils";
 import {
   motion,
-  useMotionTemplate,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -384,7 +383,16 @@ function TierCard({
 /* Scroll-driven carousel                                              */
 /* ------------------------------------------------------------------ */
 
-/** One slide; scales/fades based on its distance from the carousel's center. */
+/**
+ * One slide, coverflow-style: every slide is anchored to the exact center of
+ * the carousel; its signed distance from the active position (in slide units)
+ * drives the horizontal offset, so the active card always lands perfectly
+ * centered while neighbours peek in from the sides.
+ *
+ * NOTE: use transformer functions instead of input/output ranges here —
+ * framer-motion's scroll "accelerate" path reuses array ranges as WAAPI
+ * keyframe offsets (which must be within [0,1]) and throws at mount.
+ */
 function CarouselSlide({
   p,
   index,
@@ -396,25 +404,26 @@ function CarouselSlide({
   count: number;
   children: ReactNode;
 }) {
-  const center = count > 1 ? index / (count - 1) : 0;
-  const reach = 0.34;
-  // NOTE: use a transformer function instead of an input/output range here.
-  // framer-motion's scroll "accelerate" path reuses the input range as WAAPI
-  // keyframe offsets (which must be within [0,1]); our range extends to
-  // -0.34 / 1.34 and throws "Offsets must be null or in the range [0,1]".
-  // Function transformers bypass that path entirely.
-  const scale = useTransform(p, (v: number) => {
-    const d = Math.min(Math.abs(v - center) / reach, 1);
-    return 1 - d * 0.12;
+  const last = count - 1;
+  const offset = useTransform(p, (v: number) => (last <= 0 ? 0 : index - v * last));
+  const abs = useTransform(offset, (o: number) => Math.min(Math.abs(o), 1));
+  const x = useTransform(offset, (o: number) => `${Math.max(-1.12, Math.min(1.12, o)) * 88}%`);
+  const scale = useTransform(abs, (a: number) => 1 - a * 0.14);
+  const opacity = useTransform(offset, (o: number) => {
+    const a = Math.abs(o);
+    return a <= 1 ? 1 - a * 0.55 : Math.max(0, 1 - (a - 1) * 4);
   });
-  const opacity = useTransform(p, (v: number) => {
-    const d = Math.min(Math.abs(v - center) / reach, 1);
-    return 1 - d * 0.6;
-  });
+  const zIndex = useTransform(abs, (a: number) => 10 - Math.round(a * 9));
+  const pointerEvents = useTransform(offset, (o: number) =>
+    Math.abs(o) > 0.5 ? "none" : "auto",
+  );
+
   return (
-    <motion.div style={{ scale, opacity }} className="flex w-full shrink-0 justify-center">
-      <div className="w-full max-w-sm px-1">{children}</div>
-    </motion.div>
+    <div className="absolute inset-0 flex items-center justify-center">
+      <motion.div style={{ x, scale, opacity, zIndex, pointerEvents }} className="h-full w-full">
+        {children}
+      </motion.div>
+    </div>
   );
 }
 
@@ -425,17 +434,12 @@ export function CardOrdering({ className }: { className?: string }) {
   const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   const [active, setActive] = useState(0);
-  useMotionValueEvent(p, "change", (v) => {
+  // Smoothed progress: the slides follow the scroll with fluid inertia, and
+  // the dots track the same smoothed value so they stay in sync with the card.
+  const sp = useSpring(p, { stiffness: 120, damping: 28, mass: 0.6 });
+  useMotionValueEvent(sp, "change", (v) => {
     setActive(Math.round(Math.max(0, Math.min(1, v)) * 2));
   });
-
-  // Scroll → horizontal position (with a spring for smooth inertia).
-  const xNum = useSpring(useTransform(p, [0, 1], [0, -66.666]), {
-    stiffness: 120,
-    damping: 28,
-    mass: 0.6,
-  });
-  const x = useMotionTemplate`${xNum}%`;
 
   const c = t.cardOrder;
   const tiers: {
@@ -528,15 +532,14 @@ export function CardOrdering({ className }: { className?: string }) {
             <p className="mt-2 hidden text-sm leading-6 text-muted-foreground sm:block">{c.text}</p>
           </div>
 
-          {/* Carousel: scroll down = advance, scroll up = go back */}
-          <div className="mt-6 w-full max-w-sm flex-1 sm:max-w-md">
-            <motion.div style={{ x }} className="flex h-full items-center">
-              {tiers.map((tier, i) => (
-                <CarouselSlide key={tier.key} p={p} index={i} count={tiers.length}>
-                  {renderCard(tier, true)}
-                </CarouselSlide>
-              ))}
-            </motion.div>
+          {/* Carousel: scroll down = advance, scroll up = go back. Slides are
+              anchored to the center; neighbours peek in from the sides. */}
+          <div className="relative mt-6 w-full max-w-sm flex-1 sm:max-w-md">
+            {tiers.map((tier, i) => (
+              <CarouselSlide key={tier.key} p={sp} index={i} count={tiers.length}>
+                {renderCard(tier, true)}
+              </CarouselSlide>
+            ))}
           </div>
 
           {/* Progress dots + hint */}
