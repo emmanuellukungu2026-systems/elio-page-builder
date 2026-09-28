@@ -29,7 +29,7 @@ import type { ReactNode } from "react";
 /* Standard — two stacked black cards: logos front, QR back            */
 /* ------------------------------------------------------------------ */
 
-function StandardCard({ businessName, businessLogo }: { businessName: string; businessLogo?: string }) {
+export function StandardCard({ businessName, businessLogo }: { businessName: string; businessLogo?: string }) {
   return (
     <div className="relative h-[288px] w-[230px]">
       {/* Front — business logo + Aethel logo side by side, three brand dots */}
@@ -189,7 +189,7 @@ function ShowcaseBack({ accent }: { accent: string }) {
   );
 }
 
-function ShowcaseCards({
+export function ShowcaseCards({
   accent,
   name,
   role,
@@ -236,7 +236,7 @@ function GoldDelta({ className }: { className?: string }) {
   );
 }
 
-function IndependentCard({ company, person, role }: { company: string; person: string; role: string }) {
+export function IndependentCard({ company, person, role }: { company: string; person: string; role: string }) {
   const [line1, line2] = company.split(" ");
   return (
     <div className="relative h-[168px] w-[276px] overflow-hidden rounded-2xl bg-[#141414] shadow-[0_24px_50px_-20px_rgba(0,0,0,0.8)] ring-1 ring-white/10">

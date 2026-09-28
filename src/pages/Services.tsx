@@ -1,4 +1,5 @@
 import { Atmosphere } from "@/components/Atmosphere";
+import { IndependentCard, ShowcaseCards, StandardCard } from "@/components/CardOrdering";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { Reveal } from "@/components/Reveal";
@@ -14,6 +15,7 @@ import { useI18n } from "@/lib/i18n";
 import { photoStrip } from "@/lib/photos";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation } from "convex/react";
+import { AethelMark } from "@/components/AethelMark";
 import { ArrowRight, Check, CreditCard, Download, FileText, ListChecks, Loader2, Lock, MessageCircle, Nfc, Send, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
@@ -31,6 +33,7 @@ export default function Services() {
   const [trade, setTrade] = useState("");
   const [details, setDetails] = useState("");
   const [withCard, setWithCard] = useState<boolean | null>(null); // null = pas encore choisi
+  const [cardTier, setCardTier] = useState<"standard" | "pro" | "independent">("standard");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [studioSent, setStudioSent] = useState(false);
@@ -77,6 +80,7 @@ export default function Services() {
         pack: "aethel-team",
         name: `${businessName} (${contactName || "no contact"})`,
         email: whatsapp || trade || "-",
+        cardTier: withCard ? cardTier : undefined,
         details: [
           withCard === null ? null : withCard ? "NFC card: YES" : "NFC card: NO",
           details.slice(0, 2000),
@@ -105,6 +109,7 @@ export default function Services() {
         pack: "whatsapp-order",
         name: `${businessName} (${contactName || "no contact"})`,
         email: whatsapp || trade || "-",
+        cardTier: withCard ? cardTier : undefined,
         details: details.slice(0, 2000),
       });
     } catch {
@@ -301,6 +306,60 @@ export default function Services() {
                         <Check className="size-4" /> {f.nfcWithout}
                       </button>
                     </div>
+
+                    {/* Card model picker — shown once “with card” is selected */}
+                    {withCard === true && (
+                      <div className="mt-3 space-y-2 border-t border-border/60 pt-3">
+                        <p className="text-xs font-semibold">{f.tierTitle}</p>
+                        <div className="grid gap-2 sm:grid-cols-3">
+                          {(
+                            [
+                              { key: "standard", label: f.tierStandard, art: <StandardCard businessName={businessName || "Elio"} /> },
+                              {
+                                key: "pro",
+                                label: f.tierPro,
+                                art: (
+                                  <ShowcaseCards
+                                    accent="#c0854f"
+                                    name={businessName || "Studio Kivu"}
+                                    role={t.hero.cardRole}
+                                    phone={whatsapp || "+243 990 000 000"}
+                                    email={whatsapp || "bonjour@studiokivu.cd"}
+                                    mark={<AethelMark className="size-8 rounded-md bg-white/95 p-0.5" />}
+                                  />
+                                ),
+                              },
+                              { key: "independent", label: f.tierIndependent, art: <IndependentCard company="Nova Design" person={businessName || "KATE MILLER"} role={t.hero.cardRole} /> },
+                            ] as const
+                          ).map((opt) => (
+                            <button
+                              key={opt.key}
+                              type="button"
+                              onClick={() => setCardTier(opt.key)}
+                              aria-pressed={cardTier === opt.key}
+                              className={cn(
+                                "flex flex-col items-center gap-2 rounded-xl border p-3 transition-colors",
+                                cardTier === opt.key
+                                  ? "border-primary bg-primary/10"
+                                  : "border-border/70 hover:bg-accent hover:text-foreground",
+                              )}
+                            >
+                              <div className="flex h-24 items-center justify-center overflow-hidden">
+                                <div className="origin-top scale-[0.42]">{opt.art}</div>
+                              </div>
+                              <span
+                                className={cn(
+                                  "text-xs font-medium",
+                                  cardTier === opt.key ? "text-primary" : "text-muted-foreground",
+                                )}
+                              >
+                                {opt.label}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 

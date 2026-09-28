@@ -1,4 +1,6 @@
 import { Atmosphere } from "@/components/Atmosphere";
+import { IndependentCard, ShowcaseCards, StandardCard } from "@/components/CardOrdering";
+import { AethelMark } from "@/components/AethelMark";
 import { ElioMark } from "@/components/ElioMark";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -16,7 +18,11 @@ import {
   Store,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
+
+/** The NFC card model chosen at order time (fallback: Standard). */
+type CardTier = "standard" | "pro" | "independent";
 import { api } from "@/convex/_generated/api";
+import { photos } from "@/lib/photos";
 
 /**
  * The client portal. Clients never build pages themselves — the Elio team does
@@ -28,7 +34,15 @@ export default function Dashboard() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const c = t.dashboard.client;
+  const card = t.dashboard.card;
   const page = useQuery(api.pages.getMyPage);
+  const orders = useQuery(api.orders.myOrders);
+
+  const latestOrder = orders?.[0];
+  // Tier from the most recent order that carried one; Standard is the default.
+  const chosenTier = orders?.find((o) => o.cardTier != null)?.cardTier;
+  const cardTier: CardTier =
+    chosenTier === "pro" || chosenTier === "independent" ? chosenTier : "standard";
 
   const trackHref = waLink(
     CONCIERGE_WHATSAPP,
@@ -92,6 +106,56 @@ export default function Dashboard() {
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </span>
           </Link>
+        )}
+
+        {/* Your NFC card — the exact model chosen during the order */}
+        {latestOrder && (
+          <section className="glass mt-8 overflow-hidden rounded-3xl">
+            <div className="flex flex-col items-center gap-6 p-6 sm:flex-row sm:p-8">
+              <div className="relative mx-auto flex h-44 w-56 shrink-0 items-start justify-center sm:h-52 sm:w-72">
+                <div className="absolute inset-0 rounded-full bg-ember/10 blur-3xl" aria-hidden="true" />
+                {cardTier === "pro" ? (
+                  <div className="origin-top scale-[0.9] sm:scale-100">
+                    <ShowcaseCards
+                      accent="#c0854f"
+                      name={page?.displayName ?? latestOrder.name}
+                      role={t.hero.cardRole}
+                      phone="+243 990 000 000"
+                      email="bonjour@studiokivu.cd"
+                      mark={<AethelMark className="size-8 rounded-md bg-white/95 p-0.5" />}
+                    />
+                  </div>
+                ) : cardTier === "independent" ? (
+                  <div className="origin-top scale-[0.9] sm:scale-100">
+                    <IndependentCard
+                      company="Nova Design"
+                      person={(page?.displayName ?? latestOrder.name).toUpperCase()}
+                      role={t.hero.cardRole}
+                    />
+                  </div>
+                ) : (
+                  <div className="origin-top scale-[0.75] sm:scale-[0.85]">
+                    <StandardCard
+                      businessName={page?.displayName ?? latestOrder.name}
+                      businessLogo={photos.portraits}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ember">
+                  {card.kicker}
+                </p>
+                <h2 className="mt-1.5 font-display text-xl font-bold tracking-tight sm:text-2xl">
+                  {card.title}
+                </h2>
+                <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">
+                  {card.tierLabel}: <span className="font-medium text-foreground">{card[cardTier]}</span>
+                </p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">{card.text}</p>
+              </div>
+            </div>
+          </section>
         )}
 
         {/* The two moves a client can make */}

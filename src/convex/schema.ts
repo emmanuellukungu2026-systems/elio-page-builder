@@ -105,6 +105,7 @@ const schema = defineSchema(
       name: v.string(),
       email: v.string(),
       details: v.string(),
+      cardTier: v.optional(v.string()), // standard | pro | independent (NFC card model chosen at order time)
       status: v.optional(v.string()),
     }).index("by_user", ["userId"]),
   },
