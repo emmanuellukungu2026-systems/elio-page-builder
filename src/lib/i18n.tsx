@@ -325,46 +325,6 @@ const en = {
     ],
     cta: "Start a conversation",
   },
-  aethelTeam: {
-    kicker: "Travailler avec nous",
-    title: "Travaillez avec l'équipe Aethel",
-    text: "Vous préférez que l'équipe derrière Elio construise et entretienne votre page pour vous ? Notre service de conciergerie conçoit, rédige et publie votre portfolio — vous n'avez qu'à l'approuver.",
-    items: [
-      {
-        title: "Création conciergerie",
-        text: "Envoyez-nous vos photos et votre histoire — nous concevons et publions votre page avec vous, en quelques minutes.",
-      },
-      {
-        title: "Support prioritaire",
-        text: "Une ligne WhatsApp directe avec l'équipe. Modifications faites, réponses rapides.",
-      },
-      {
-        title: "Cartes & domaines sur mesure",
-        text: "Cartes NFC à votre marque, domaines personnalisés et liens white-label pour les entreprises établies.",
-      },
-    ],
-    cta: "Démarrer la conversation",
-  },
-  aethelTeam: {
-    kicker: "Bizimle çalışın",
-    title: "Aethel ekibiyle çalışın",
-    text: "Elio'nun arkasındaki ekip sayfanızı sizin için kurup yönetsin ister misiniz? Danışma hizmetimiz portföyünüzü tasarlar, yazar ve yayımlar — siz sadece onaylarsınız.",
-    items: [
-      {
-        title: "Danışma ile kurulum",
-        text: "Fotoğraflarınızı ve hikayenizi gönderin — sayfanızı sizinle birlikte dakikalar içinde tasarlayıp yayımlarız.",
-      },
-      {
-        title: "Öncelikli destek",
-        text: "Ekip için doğrudan WhatsApp hattı. Değişiklikler yapılır, cevaplar hızlı gelir.",
-      },
-      {
-        title: "Özel kart ve alan adları",
-        text: "Markanıza özel NFC kartları, kişisel alan adları ve kurulu işletmeler için white-label bağlantılar.",
-      },
-    ],
-    cta: "Sohbeti başlat",
-  },
   finalCta: {
     title: "Your business deserves a proper front door.",
     text: "Create your Elio page today — free, polished and live in minutes.",
@@ -912,6 +872,26 @@ const fr: Dict = {
     nfcText: "Un geste sur n'importe quel téléphone ouvre cette page. Commandez la carte préprogrammée avec ce lien exact.",
     nfcCopyLink: "Copier le lien du profil",
   },
+  aethelTeam: {
+    kicker: "Travailler avec nous",
+    title: "Travaillez avec l'équipe Aethel",
+    text: "Vous préférez que l'équipe derrière Elio construise et entretienne votre page pour vous ? Notre service de conciergerie conçoit, rédige et publie votre portfolio — vous n'avez qu'à l'approuver.",
+    items: [
+      {
+        title: "Création conciergerie",
+        text: "Envoyez-nous vos photos et votre histoire — nous concevons et publions votre page avec vous, en quelques minutes.",
+      },
+      {
+        title: "Support prioritaire",
+        text: "Une ligne WhatsApp directe avec l'équipe. Modifications faites, réponses rapides.",
+      },
+      {
+        title: "Cartes & domaines sur mesure",
+        text: "Cartes NFC à votre marque, domaines personnalisés et liens white-label pour les entreprises établies.",
+      },
+    ],
+    cta: "Démarrer la conversation",
+  },
   finalCta: {
     title: "Votre entreprise mérite une vraie vitrine.",
     text: "Créez votre page Elio aujourd'hui — gratuit, soignée, en ligne en quelques minutes.",
@@ -1456,6 +1436,26 @@ const tr: Dict = {
     nfcTitle: "Fiziksel NFC kart",
     nfcText: "Herhangi bir telefona tek dokunuş bu sayfayı açar. Kartı tam bu linkle önceden programlanmış şekilde sipariş edin.",
     nfcCopyLink: "Profil linkini kopyala",
+  },
+  aethelTeam: {
+    kicker: "Bizimle çalışın",
+    title: "Aethel ekibiyle çalışın",
+    text: "Elio'nun arkasındaki ekip sayfanızı sizin için kurup yönetsin ister misiniz? Danışma hizmetimiz portföyünüzü tasarlar, yazar ve yayımlar — siz sadece onaylarsınız.",
+    items: [
+      {
+        title: "Danışma ile kurulum",
+        text: "Fotoğraflarınızı ve hikayenizi gönderin — sayfanızı sizinle birlikte dakikalar içinde tasarlayıp yayımlarız.",
+      },
+      {
+        title: "Öncelikli destek",
+        text: "Ekip için doğrudan WhatsApp hattı. Değişiklikler yapılır, cevaplar hızlı gelir.",
+      },
+      {
+        title: "Özel kart ve alan adları",
+        text: "Markanıza özel NFC kartları, kişisel alan adları ve kurulu işletmeler için white-label bağlantılar.",
+      },
+    ],
+    cta: "Sohbeti başlat",
   },
   finalCta: {
     title: "İşletmeniz düzgün bir cephe hak ediyor.",

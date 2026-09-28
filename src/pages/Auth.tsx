@@ -9,7 +9,6 @@ import { api } from "@/convex/_generated/api";
 import { useI18n } from "@/lib/i18n";
 import {
   ArrowRight,
-  CheckCircle2,
   KeyRound,
   Loader2,
   Lock,

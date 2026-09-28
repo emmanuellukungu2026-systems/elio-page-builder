@@ -44,7 +44,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       verify: passwordEmailVerification,
       // Aethel owners are trusted: mark their account verified at creation so
       // the verification hop is skipped and they land straight in /admin.
-      profile: (params, ctx) => {
+      profile: (params) => {
         const email = String(params.email ?? "").trim().toLowerCase();
         return {
           email,
