@@ -152,9 +152,9 @@ createRoot(document.getElementById("root")!).render(
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
-        </BrowserRouter>
         <CatMascot />
         <Toaster />
+        </BrowserRouter>
         </I18nProvider>
       </ConvexAuthProvider>
     </RootErrorBoundary>
