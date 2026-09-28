@@ -71,13 +71,18 @@ const schema = defineSchema(
       items: v.array(
         v.object({
           id: v.string(),
-          kind: v.string(), // project | portfolio | idea | service | price
+          kind: v.string(), // project | portfolio | article | idea | service | price
           title: v.string(),
           description: v.optional(v.string()),
+          body: v.optional(v.string()), // long-form content (articles, case studies)
           imageUrl: v.optional(v.string()),
           linkUrl: v.optional(v.string()),
           tags: v.optional(v.array(v.string())),
           date: v.optional(v.string()),
+          startDate: v.optional(v.string()), // project start
+          endDate: v.optional(v.string()), // project end
+          client: v.optional(v.string()), // client name / employer
+          role: v.optional(v.string()), // role held on the project
           status: v.optional(v.string()),
         }),
       ),

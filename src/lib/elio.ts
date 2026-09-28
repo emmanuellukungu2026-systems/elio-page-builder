@@ -53,6 +53,7 @@ export function styleById(id?: string | null) {
 export const SECTION_KINDS = [
   { kind: "project", label: "Project", icon: "FolderGit2" },
   { kind: "portfolio", label: "Photo", icon: "Images" },
+  { kind: "article", label: "Article", icon: "Newspaper" },
   { kind: "idea", label: "Upcoming", icon: "Lightbulb" },
   { kind: "service", label: "Service", icon: "Briefcase" },
   { kind: "price", label: "Offer", icon: "Tag" },
@@ -63,6 +64,7 @@ export type SectionKind = (typeof SECTION_KINDS)[number]["kind"];
 export const KIND_META: Record<string, { label: string; icon: string }> = {
   project: { label: "Project", icon: "FolderGit2" },
   portfolio: { label: "Photo", icon: "Images" },
+  article: { label: "Article", icon: "Newspaper" },
   idea: { label: "Upcoming", icon: "Lightbulb" },
   service: { label: "Service", icon: "Briefcase" },
   price: { label: "Offer", icon: "Tag" },

@@ -35,6 +35,7 @@ import {
   Images,
   Inbox,
   Lightbulb,
+  Newspaper,
   Loader2,
   MessageCircle,
   Plus,
@@ -79,6 +80,11 @@ type AdminPage = {
     linkUrl?: string;
     tags?: string[];
     date?: string;
+    startDate?: string;
+    endDate?: string;
+    client?: string;
+    role?: string;
+    body?: string;
     status?: string;
   }[];
 };
@@ -96,6 +102,7 @@ type AdminOrder = {
 const KIND_ICON: Record<string, typeof FolderGit2> = {
   project: FolderGit2,
   portfolio: Images,
+  article: Newspaper,
   idea: Lightbulb,
   service: Briefcase,
   price: Tag,
@@ -570,7 +577,6 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
   const { t } = useI18n();
   const a = t.admin;
   const s = t.dashboard.sections;
-  const i18 = t.dashboard.item;
   const pages = useQuery(api.admin.listAllPages);
   const page = (pages ?? []).find((p) => p._id === pageId) as AdminPage | undefined;
   const adminUpdatePage = useMutation(api.admin.adminUpdatePage);
@@ -939,12 +945,27 @@ function AdminItemCard({ item, pageId }: { item: AdminPage["items"][number]; pag
             <Field label={i18.date}>
               <Input defaultValue={item.date ?? ""} key={item.id + "-dt"} placeholder={i18.datePh} onBlur={(e) => update({ date: e.target.value })} />
             </Field>
+            <Field label={i18.startDate}>
+              <Input defaultValue={item.startDate ?? ""} key={item.id + "-sd"} placeholder={i18.startDatePh} onBlur={(e) => update({ startDate: e.target.value })} />
+            </Field>
+            <Field label={i18.endDate}>
+              <Input defaultValue={item.endDate ?? ""} key={item.id + "-ed"} placeholder={i18.endDatePh} onBlur={(e) => update({ endDate: e.target.value })} />
+            </Field>
+            <Field label={i18.client}>
+              <Input defaultValue={item.client ?? ""} key={item.id + "-cl"} placeholder={i18.clientPh} onBlur={(e) => update({ client: e.target.value })} />
+            </Field>
+            <Field label={i18.role}>
+              <Input defaultValue={item.role ?? ""} key={item.id + "-ro"} placeholder={i18.rolePh} onBlur={(e) => update({ role: e.target.value })} />
+            </Field>
             <Field label={i18.status}>
               <Input defaultValue={item.status ?? ""} key={item.id + "-s"} placeholder={i18.statusPh} onBlur={(e) => update({ status: e.target.value })} />
             </Field>
           </div>
           <Field label={i18.tags}>
             <Input defaultValue={(item.tags ?? []).join(", ")} key={item.id + "-tg"} placeholder={i18.tagsPh} onBlur={(e) => update({ tags: splitTags(e.target.value) })} />
+          </Field>
+          <Field label={i18.body}>
+            <Textarea defaultValue={item.body ?? ""} key={item.id + "-b"} rows={6} placeholder={i18.bodyPh} onBlur={(e) => update({ body: e.target.value })} />
           </Field>
         </div>
       )}

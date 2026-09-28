@@ -1,8 +1,10 @@
 import { useI18n } from "@/lib/i18n";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 const TOUR_KEY = "elio-tour-done";
+const TOUR_KEY_PAGE = "elio-tour-page-done";
 const STEPS = 5;
 /** Page anchors per step: the bubble points at a real section when it exists. */
 const ANCHORS: (string | null)[] = ["#how", "/directory", "/services", "/dashboard", "#faq"];
@@ -120,6 +122,12 @@ function CatFace({ happy = false }: { happy?: boolean }) {
 
 export function CatMascot() {
   const { t } = useI18n();
+  const location = useLocation();
+  // On public portfolio pages (/u/...) the mascot becomes the portfolio guide:
+  // the steps walk through the panels and "Voir" scrolls to the panel.
+  const isPortfolio = location.pathname.startsWith("/u/");
+  const storageKey = isPortfolio ? TOUR_KEY_PAGE : TOUR_KEY;
+  const guideSteps = t.portfolio.guide;
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0); // 0 = welcome bubble, 1..5 = tour steps
   const [justFinished, setJustFinished] = useState(false);
@@ -128,7 +136,7 @@ export function CatMascot() {
   useEffect(() => {
     let done = false;
     try {
-      done = localStorage.getItem(TOUR_KEY) === "1";
+      done = localStorage.getItem(storageKey) === "1";
     } catch {
       /* ignore */
     }
@@ -136,7 +144,7 @@ export function CatMascot() {
     // Small delay so the landing hero settles before the mascot greets.
     const timer = setTimeout(() => setOpen(true), 1600);
     return () => clearTimeout(timer);
-  }, []);
+  }, [storageKey]);
 
   // Gentle nudge every ~12s while idle on the welcome bubble.
   useEffect(() => {
@@ -149,7 +157,7 @@ export function CatMascot() {
     setOpen(false);
     setJustFinished(true);
     try {
-      localStorage.setItem(TOUR_KEY, "1");
+      localStorage.setItem(storageKey, "1");
     } catch {
       /* ignore */
     }
@@ -159,7 +167,7 @@ export function CatMascot() {
   const skip = () => {
     setOpen(false);
     try {
-      localStorage.setItem(TOUR_KEY, "1");
+      localStorage.setItem(storageKey, "1");
     } catch {
       /* ignore */
     }
@@ -175,9 +183,21 @@ export function CatMascot() {
   const goAnchor = (anchor: string) => {
     setOpen(false);
     try {
-      localStorage.setItem(TOUR_KEY, "1");
+      localStorage.setItem(storageKey, "1");
     } catch {
       /* ignore */
+    }
+    if (isPortfolio && anchor.startsWith("#pro-")) {
+      const idx = Number(anchor.slice(4)); // panel index 0..4
+      // Desktop: scroll to the section. Mobile: scroll the snap container.
+      const section = document.getElementById(anchor);
+      const scroller = document.querySelector<HTMLElement>(".snap-x.snap-mandatory");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      } else if (scroller) {
+        scroller.scrollTo({ left: idx * scroller.clientWidth, behavior: "smooth" });
+      }
+      return;
     }
     if (anchor.startsWith("#")) {
       document.getElementById(anchor.slice(1))?.scrollIntoView({ behavior: "smooth" });
@@ -186,8 +206,12 @@ export function CatMascot() {
     }
   };
 
-  const stepData = step > 0 ? t.mascot.steps[step - 1] : null;
-  const anchor = step > 0 ? ANCHORS[step - 1] : null;
+  // Guide step text: portfolio panels on /u/* pages, landing tour otherwise.
+  const stepText = isPortfolio ? guideSteps[step - 1] : t.mascot.steps[step - 1]?.text;
+  const stepTitle = isPortfolio ? null : t.mascot.steps[step - 1]?.title;
+  // Portfolio anchors are desktop section ids (#pro-0..4); on mobile the
+  // horizontal snap container is scrolled panel-by-panel instead.
+  const anchor = step > 0 ? (isPortfolio ? `#pro-${step - 1}` : ANCHORS[step - 1]) : null;
 
   return (
     <div className="pointer-events-none fixed bottom-4 left-4 z-[60] flex flex-col items-start gap-2 sm:bottom-6 sm:left-6">
@@ -202,7 +226,9 @@ export function CatMascot() {
             className="pointer-events-auto w-[19rem] max-w-[calc(100vw-2rem)] glass-strong rounded-3xl rounded-bl-md p-4 shadow-xl"
           >
             {step === 0 ? (
-              <p className="text-sm leading-6 text-foreground/90">{t.mascot.welcome}</p>
+              <p className="text-sm leading-6 text-foreground/90">
+                {isPortfolio ? t.mascot.welcomePage : t.mascot.welcome}
+              </p>
             ) : (
               <AnimatePresence mode="wait">
                 <motion.div
@@ -214,10 +240,11 @@ export function CatMascot() {
                 >
                   <p className="flex items-center justify-between font-display text-sm font-bold">
                     <span>
-                      {step}/{STEPS} · {stepData?.title}
+                      {step}/{STEPS}
+                      {stepTitle ? ` · ${stepTitle}` : ""}
                     </span>
                   </p>
-                  <p className="mt-1.5 text-[13px] leading-6 text-muted-foreground">{stepData?.text}</p>
+                  <p className="mt-1.5 text-[13px] leading-6 text-muted-foreground">{stepText}</p>
                 </motion.div>
               </AnimatePresence>
             )}
