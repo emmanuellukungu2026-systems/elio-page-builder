@@ -8,12 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
 import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
+import { cn } from "@/lib/utils";
 import { downloadBriefPdf, type BriefData } from "@/lib/brief-pdf";
 import { useI18n } from "@/lib/i18n";
 import { photoStrip } from "@/lib/photos";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation } from "convex/react";
-import { ArrowRight, Check, Download, FileText, ListChecks, Loader2, Lock, MessageCircle, Send, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, CreditCard, Download, FileText, ListChecks, Loader2, Lock, MessageCircle, Nfc, Send, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
@@ -29,6 +30,7 @@ export default function Services() {
   const [whatsapp, setWhatsapp] = useState("");
   const [trade, setTrade] = useState("");
   const [details, setDetails] = useState("");
+  const [withCard, setWithCard] = useState<boolean | null>(null); // null = pas encore choisi
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [studioSent, setStudioSent] = useState(false);
@@ -44,6 +46,9 @@ export default function Services() {
     items: [],
   };
 
+  const cardLine =
+    withCard === null ? null : withCard ? `*NFC card:* YES — ship a physical card` : `*NFC card:* NO — page only`;
+
   const waMessage = [
     "*Elio Pages — Order*",
     "",
@@ -52,11 +57,12 @@ export default function Services() {
     whatsapp ? `*WhatsApp:* ${whatsapp}` : "",
     trade ? `*Trade:* ${trade}` : "",
     "",
+    cardLine,
     `*Details:* ${details || "—"}`,
     "",
     "_This message is my order — please build my Elio page from it._",
   ]
-    .filter((l) => l !== "")
+    .filter((l) => l !== "" && l !== null)
     .join("\n");
 
   /** Land the brief straight into the Aethel team's studio (/admin orders). */
@@ -71,7 +77,12 @@ export default function Services() {
         pack: "aethel-team",
         name: `${businessName} (${contactName || "no contact"})`,
         email: whatsapp || trade || "-",
-        details: details.slice(0, 2000),
+        details: [
+          withCard === null ? null : withCard ? "NFC card: YES" : "NFC card: NO",
+          details.slice(0, 2000),
+        ]
+          .filter(Boolean)
+          .join("\n"),
       });
       setStudioSent(true);
     } catch {
@@ -254,6 +265,43 @@ export default function Services() {
                       required
                     />
                   </div>
+
+                  {/* NFC card: with / without — the page works either way */}
+                  <div className="space-y-2 rounded-2xl border border-border/60 p-4">
+                    <div className="flex items-center gap-2">
+                      <Nfc className="size-4 text-primary" />
+                      <Label className="font-semibold">{f.nfcTitle}</Label>
+                    </div>
+                    <p className="text-xs leading-5 text-muted-foreground">{f.nfcHelp}</p>
+                    <div className="mt-1 grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setWithCard(true)}
+                        aria-pressed={withCard === true}
+                        className={cn(
+                          "flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors",
+                          withCard === true
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border/70 text-muted-foreground hover:bg-accent hover:text-foreground",
+                        )}
+                      >
+                        <CreditCard className="size-4" /> {f.nfcWith}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setWithCard(false)}
+                        aria-pressed={withCard === false}
+                        className={cn(
+                          "flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors",
+                          withCard === false
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border/70 text-muted-foreground hover:bg-accent hover:text-foreground",
+                        )}
+                      >
+                        <Check className="size-4" /> {f.nfcWithout}
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <Button
@@ -324,7 +372,7 @@ export default function Services() {
       {/* Photo strip — proof of finished pages, below the order panel so the form stays first on mobile */}
       <section className="relative px-4 pb-10 sm:px-6">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-          {[photoStrip[1], photoStrip[2], photoStrip[5], photoStrip[7]].map((src, i) => (
+          {[photoStrip[1], photoStrip[2], photoStrip[5], photoStrip[7]].map((src) => (
             <div
               key={src}
               className="group relative overflow-hidden rounded-2xl border border-border/50"

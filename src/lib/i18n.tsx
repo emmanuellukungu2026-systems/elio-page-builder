@@ -101,7 +101,7 @@ const en = {
   },
   cardOrder: {
     kicker: "Order your card",
-    title: "Commandez votre carte dès maintenant",
+    title: "Order your card today",
     text: "Three ways to carry your Elio page in your pocket — pick the card that fits your business and order it on WhatsApp today.",
     popular: "Popular",
     cta: "Order on WhatsApp",
@@ -121,7 +121,7 @@ const en = {
       ],
     },
     pro: {
-      title: "Professionnel",
+      title: "Professional",
       desc: "The Aethel-branded card, customized for you: accent color, cover photo and page layout tuned to your brand.",
       features: [
         "Aethel logo, your identity",
@@ -131,7 +131,7 @@ const en = {
       ],
     },
     independent: {
-      title: "Indépendant",
+      title: "Independent",
       desc: "A fully custom card, built exactly to your request — your design, your rules, with no Aethel mention anywhere.",
       features: [
         "Design 100% of your own",
@@ -188,6 +188,10 @@ const en = {
       submitShort: "Send on WhatsApp",
       sendTeam: "Send to the Aethel team for approval",
       privacy: "Your brief goes straight to our team on WhatsApp — that message is your order.",
+      nfcTitle: "NFC card",
+      nfcHelp: "A physical NFC card shipped to you — optional, the page works without it.",
+      nfcWith: "With NFC card",
+      nfcWithout: "Page only (no card)",
     },
     pdf: {
       download: "Download the brief as PDF",
@@ -740,6 +744,10 @@ const fr: Dict = {
       submitShort: "Envoyer sur WhatsApp",
       sendTeam: "Envoyer à l'équipe Aethel pour approbation",
       privacy: "Votre brief part directement à notre équipe sur WhatsApp — ce message est votre commande.",
+      nfcTitle: "Carte NFC",
+      nfcHelp: "Une carte NFC physique qui vous sera expédiée — optionnelle, la page fonctionne aussi sans.",
+      nfcWith: "Avec la carte NFC",
+      nfcWithout: "Page seule (sans carte)",
     },
     pdf: {
       download: "Télécharger le brief en PDF",
@@ -1290,6 +1298,10 @@ const tr: Dict = {
       submitShort: "WhatsApp ile gönder",
       sendTeam: "Onay için Aethel ekibine gönder",
       privacy: "Brief doğrudan WhatsApp üzerinden ekibimize gider — bu mesaj siparişinizdir.",
+      nfcTitle: "NFC kartı",
+      nfcHelp: "Size gönderilecek fiziksel bir NFC kart — isteğe bağlı, sayfa onsuz da çalışır.",
+      nfcWith: "NFC kartlı",
+      nfcWithout: "Sadece sayfa (kartsız)",
     },
     pdf: {
       download: "Brief'i PDF olarak indir",
