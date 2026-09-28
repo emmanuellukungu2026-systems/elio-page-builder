@@ -387,20 +387,18 @@ function TierCard({
         <span className="flex size-10 items-center justify-center rounded-2xl bg-ember/15 text-ember">
           <Icon className="size-5" />
         </span>
-        <h3 className="font-display text-lg font-semibold">{title}</h3>
+        <h3 className="font-display text-base font-semibold sm:text-lg">{title}</h3>
       </div>
 
       <p className={cn("mt-3 text-sm leading-6 text-muted-foreground", compact && "hidden sm:block")}>
         {desc}
-      </p>
-
-      {/* Fixed-height art stage: the card is scaled down on small screens so
-          the pinned carousel always fits the viewport. */}
-      <div className="my-4 flex h-[190px] justify-center overflow-visible sm:h-[245px] lg:h-[300px]">
-        <div className="origin-top scale-[0.65] animate-floaty sm:scale-[0.8] lg:scale-100">{art}</div>
+      </p>      {/* Fixed-height art stage: the card is scaled down so the pinned
+          carousel card always fits the viewport, mobile included. */}
+      <div className="my-3 flex h-[160px] justify-center overflow-visible sm:h-[220px] lg:h-[260px]">
+        <div className="origin-top scale-[0.55] animate-floaty sm:scale-[0.72] lg:scale-[0.86]">{art}</div>
       </div>
 
-      <ul className="mt-auto space-y-2.5 text-sm">
+      <ul className="mt-auto space-y-2 text-sm sm:space-y-2.5">
         {features.map((f) => (
           <li key={f} className="flex items-start gap-2.5 text-foreground/85">
             <Check className="mt-0.5 size-4 shrink-0 text-emerald-500" />
@@ -413,7 +411,7 @@ function TierCard({
         href="https://wa.me/243000000000"
         target="_blank"
         rel="noreferrer"
-        className="btn-glow mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-emerald-600 text-sm font-semibold text-white transition-colors hover:bg-emerald-500"
+        className="btn-glow mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-2xl bg-emerald-600 text-[13px] font-semibold text-white transition-colors hover:bg-emerald-500"
       >
         <MessageCircle className="size-4" /> {cta}
       </a>
@@ -562,7 +560,7 @@ export function CardOrdering({ className }: { className?: string }) {
   return (
     <section id="cards" className={cn("relative", className)}>
       <div ref={ref} className="relative h-[280vh]">
-        <div className="sticky top-0 flex h-screen flex-col items-center overflow-hidden px-4 pt-20 sm:px-6">
+        <div className="sticky top-0 flex h-screen flex-col items-center overflow-hidden px-4 pt-16 sm:px-6 sm:pt-20">
           {/* Header */}
           <div className="max-w-2xl text-center">
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-ember sm:text-sm">
@@ -576,7 +574,7 @@ export function CardOrdering({ className }: { className?: string }) {
 
           {/* Carousel: scroll down = advance, scroll up = go back. Slides are
               anchored to the center; neighbours peek in from the sides. */}
-          <div className="relative mt-6 w-full max-w-sm flex-1 sm:max-w-md">
+          <div className="relative mt-6 min-h-0 w-full max-w-sm flex-1 sm:max-w-md">
             {tiers.map((tier, i) => (
               <CarouselSlide key={tier.key} p={sp} index={i} count={tiers.length}>
                 {renderCard(tier, true)}
@@ -585,7 +583,7 @@ export function CardOrdering({ className }: { className?: string }) {
           </div>
 
           {/* Progress dots + hint */}
-          <div className="flex flex-col items-center gap-3 pb-8">
+          <div className="flex flex-col items-center gap-3 pb-6 sm:pb-8">
             <div className="flex gap-2">
               {tiers.map((tier, i) => (
                 <span
