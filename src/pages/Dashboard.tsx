@@ -283,7 +283,9 @@ export default function Dashboard() {
                     <Palette className="size-3.5" /> {mp.template}:{" "}
                     {(page.template ?? "pro") === "standard"
                       ? t.admin.templateStandard
-                      : t.admin.templatePro}
+                      : page.template === "cover"
+                        ? t.admin.templateCover
+                        : t.admin.templatePro}
                   </span>
                 </div>
               </section>

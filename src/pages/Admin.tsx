@@ -196,7 +196,7 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
-  const [newTemplate, setNewTemplate] = useState<"standard" | "pro">("pro");
+  const [newTemplate, setNewTemplate] = useState<"standard" | "pro" | "cover">("pro");
   const [creating, setCreating] = useState(false);
   const adminCreatePage = useMutation(api.admin.adminCreatePage);
   const usernameCheck = useQuery(
@@ -347,8 +347,8 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
           </div>
           <div className="mt-4 space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">{a.template}</Label>
-            <div className="flex gap-2">
-              {(["standard", "pro"] as const).map((tpl) => (
+            <div className="flex flex-wrap gap-2">
+              {(["standard", "pro", "cover"] as const).map((tpl) => (
                 <button
                   key={tpl}
                   type="button"
@@ -360,7 +360,11 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
                       : "border-border/60 text-muted-foreground hover:bg-white/[0.04]",
                   )}
                 >
-                  {tpl === "standard" ? a.templateStandard : a.templatePro}
+                  {({
+                    standard: a.templateStandard,
+                    pro: a.templatePro,
+                    cover: a.templateCover,
+                  })[tpl]}
                 </button>
               ))}
             </div>
@@ -670,12 +674,13 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
           </Studio>
 
           <Studio title={a.look} desc={a.lookDesc}>
-            {/* Template picker — Standard (link-in-bio) vs Professional (full) */}
+            {/* Template picker — Standard (link-in-bio), Professional (full), Cover (giant headline) */}
             <Field label={a.template}>
-              <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid gap-2 sm:grid-cols-3">
                 {([
                   { id: "standard", label: a.templateStandard, desc: a.templateStandardDesc },
                   { id: "pro", label: a.templatePro, desc: a.templateProDesc },
+                  { id: "cover", label: a.templateCover, desc: a.templateCoverDesc },
                 ] as const).map((tpl) => (
                   <button
                     key={tpl.id}

@@ -1,4 +1,5 @@
 import { Atmosphere } from "@/components/Atmosphere";
+import { CoverProfile } from "@/components/CoverProfile";
 import { ElioMark } from "@/components/ElioMark";
 import { PageLoading } from "@/components/PageLoading";
 import { ProProfile } from "@/components/ProProfile";
@@ -14,6 +15,8 @@ import { Link, useParams } from "react-router";
  *  - "standard": one-screen link-in-bio (StandardProfile).
  *  - "pro": full portfolio — accent hero, projects/articles/services,
  *    horizontal snap panels on mobile, comments (ProProfile).
+ *  - "cover": giant-headline panel lit by the client's accent, work below
+ *    (CoverProfile).
  */
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
@@ -45,6 +48,11 @@ export default function Profile() {
   // Standard template: one-screen link-in-bio page.
   if ((page.template ?? "pro") === "standard") {
     return <StandardProfile page={page} />;
+  }
+
+  // Cover template: giant headline over an accent-lit panel.
+  if (page.template === "cover") {
+    return <CoverProfile page={page} />;
   }
 
   // Pro template: full portfolio (accent hero, horizontal panels on mobile).

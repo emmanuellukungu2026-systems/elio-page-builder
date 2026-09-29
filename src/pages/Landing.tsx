@@ -55,79 +55,105 @@ export default function Landing() {
       <Nav />
 
       {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden px-4 pt-32 pb-20 sm:px-6 sm:pt-36 sm:pb-24">
-        <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
-              className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-white/[0.03] px-3 py-1.5 text-xs text-muted-foreground"
-            >
-              <Sparkles className="size-3.5 text-ember" />
-              {t.hero.badge}
-            </motion.div>
+      <section className="relative px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-20">
+        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[1.75rem] sm:rounded-[2.75rem]">
+          {/* Blue → magenta bloom filling the panel */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background: [
+                "linear-gradient(180deg, rgba(6,10,26,0.45) 0%, rgba(6,10,26,0.18) 45%, rgba(6,10,26,0.5) 100%)",
+                "radial-gradient(900px 560px at 88% 12%, rgba(224, 72, 140, 0.45), transparent 62%)",
+                "radial-gradient(760px 620px at 4% 95%, rgba(79, 125, 255, 0.5), transparent 60%)",
+                "linear-gradient(145deg, #0a1130 0%, #131c52 48%, #23103f 100%)",
+              ].join(", "),
+            }}
+          />
+          <div className="relative px-5 py-14 sm:px-10 sm:py-16 lg:px-14">
+            <div className="grid items-center gap-12 lg:grid-cols-[1.25fr_0.75fr]">
+              <div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs text-white/85"
+                >
+                  <Sparkles className="size-3.5 text-white" />
+                  {t.hero.badge}
+                </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-              className="mt-6 font-display text-4xl font-bold leading-[1.06] tracking-tight sm:text-5xl lg:text-6xl"
-            >
-              {t.hero.titleA}
-              <br />
-              {t.hero.titleB}
-            </motion.h1>
+                <motion.h1
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
+                  className="mt-6 font-display text-[clamp(2.25rem,5vw,4.25rem)] font-bold leading-[1.03] tracking-tight text-white"
+                >
+                  {t.hero.titleA}
+                  <br />
+                  {t.hero.titleB}
+                </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
-              className="mt-6 max-w-lg text-lg leading-8 text-muted-foreground"
-            >
-              {t.hero.subtitle}
-            </motion.p>
+                <motion.p
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
+                  className="mt-6 max-w-lg text-lg leading-8 text-white/75"
+                >
+                  {t.hero.subtitle}
+                </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3, ease: [0.21, 0.6, 0.35, 1] }}
-              className="mt-9 flex flex-wrap items-center gap-3"
-            >
-              <Button size="lg" className="btn-glow h-12 rounded-xl px-7 text-base" asChild>
-                <Link to={pageHref}>
-                  {myPage ? t.hero.ctaVerify : t.hero.cta} <ArrowRight className="size-4" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="btn-outline-glass h-12 rounded-xl border-border/70 px-7 text-base"
-                asChild
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3, ease: [0.21, 0.6, 0.35, 1] }}
+                  className="mt-9 flex flex-wrap items-center gap-3"
+                >
+                  <Button
+                    size="lg"
+                    className="h-12 rounded-xl bg-white px-7 text-base font-semibold text-[#0b1020] hover:bg-white/90"
+                    asChild
+                  >
+                    <Link to={pageHref}>
+                      {myPage ? t.hero.ctaVerify : t.hero.cta} <ArrowRight className="size-4" />
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-12 rounded-xl border-white/30 bg-white/10 px-7 text-base text-white hover:bg-white/20 hover:text-white"
+                    asChild
+                  >
+                    <a href="/directory">{t.hero.secondary}</a>
+                  </Button>
+                </motion.div>
+              </div>
+
+              {/* NFC-ad moment: card tapping the phone */}
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.35, ease: [0.21, 0.6, 0.35, 1] }}
+                className="relative mx-auto w-full max-w-md"
               >
-                <a href="/directory">{t.hero.secondary}</a>
-              </Button>
-            </motion.div>
+                <NfcHeroVisual />
+              </motion.div>
+            </div>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="mt-5 text-sm text-muted-foreground/70"
-            >
-              {t.hero.note}
-            </motion.p>
+            {/* Meta row — the bottom of the panel */}
+            <div className="mt-12 flex flex-col gap-3 border-t border-white/15 pt-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
+              <span>{t.hero.note}</span>
+              <span className="hidden sm:block">—</span>
+              <a
+                href={waLink(CONCIERGE_WHATSAPP, "Hello Aethel team 👋 I'd like my own Elio page.")}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-white"
+              >
+                {t.aethelTeam.cta}
+              </a>
+            </div>
           </div>
-
-          {/* NFC-ad moment: card tapping the phone */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.21, 0.6, 0.35, 1] }}
-            className="relative mx-auto w-full max-w-md"
-          >
-            <NfcHeroVisual />
-          </motion.div>
         </div>
       </section>
 

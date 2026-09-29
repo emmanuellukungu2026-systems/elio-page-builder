@@ -268,7 +268,7 @@ export const updatePage = mutation({
     coverUrl: v.optional(v.string()),
     accent: v.optional(v.string()),
     style: v.optional(v.string()),
-    template: v.optional(v.string()), // standard | pro
+    template: v.optional(v.string()), // standard | pro | cover
     isPublished: v.optional(v.boolean()),
   },
   handler: async (ctx, { pageId, isPublished, ...patch }) => {
