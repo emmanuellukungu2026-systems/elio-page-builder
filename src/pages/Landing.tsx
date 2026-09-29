@@ -19,7 +19,6 @@ import { photoStrip, photos } from "@/lib/photos";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
-  ChevronDown,
   FolderGit2,
   Lightbulb,
   MessageCircle,
@@ -57,39 +56,39 @@ export default function Landing() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
-              className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-white/[0.03] px-3 py-1.5 text-xs text-muted-foreground backdrop-blur"
+              className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-white/[0.03] px-3 py-1.5 text-xs text-muted-foreground"
             >
               <Sparkles className="size-3.5 text-ember" />
               {t.hero.badge}
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-              className="mt-6 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl"
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
+              className="mt-6 font-display text-4xl font-bold leading-[1.06] tracking-tight sm:text-5xl lg:text-6xl"
             >
               {t.hero.titleA}
               <br />
-              <span className="text-gradient">{t.hero.titleB}</span>
+              {t.hero.titleB}
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
               className="mt-6 max-w-lg text-lg leading-8 text-muted-foreground"
             >
               {t.hero.subtitle}
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: [0.21, 0.6, 0.35, 1] }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.21, 0.6, 0.35, 1] }}
               className="mt-9 flex flex-wrap items-center gap-3"
             >
-              <Button size="lg" className="btn-glow h-12 rounded-2xl px-7 text-base" asChild>
+              <Button size="lg" className="btn-glow h-12 rounded-xl px-7 text-base" asChild>
                 <Link to="/auth?returnTo=%2Fdashboard">
                   {t.hero.cta} <ArrowRight className="size-4" />
                 </Link>
@@ -97,7 +96,7 @@ export default function Landing() {
               <Button
                 size="lg"
                 variant="outline"
-                className="btn-outline-glass h-12 rounded-2xl border-border/70 px-7 text-base backdrop-blur"
+                className="btn-outline-glass h-12 rounded-xl border-border/70 px-7 text-base"
                 asChild
               >
                 <a href="/directory">{t.hero.secondary}</a>
@@ -116,31 +115,14 @@ export default function Landing() {
 
           {/* NFC-ad moment: card tapping the phone */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.35, ease: [0.21, 0.6, 0.35, 1] }}
+            transition={{ duration: 0.7, delay: 0.35, ease: [0.21, 0.6, 0.35, 1] }}
             className="relative mx-auto w-full max-w-md"
           >
-            <div className="animate-floaty">
-              <NfcHeroVisual />
-            </div>
-            <div
-              className="pointer-events-none absolute -left-20 top-6 -z-20 hidden h-48 w-48 overflow-hidden rounded-3xl border border-border/50 opacity-60 sm:block"
-              aria-hidden="true"
-            >
-              <img src={photos.studio} alt="" className="size-full object-cover" />
-            </div>
+            <NfcHeroVisual />
           </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 1 }}
-          className="mt-20 flex justify-center text-muted-foreground/60"
-        >
-          <ChevronDown className="size-5 animate-bounce" />
-        </motion.div>
       </section>
 
       {/* ================= HOW ================= */}
@@ -153,8 +135,8 @@ export default function Landing() {
         </Reveal>
         <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-3">
           {t.how.items.map((s, i) => (
-            <Reveal key={s.title} delay={i * 0.1}>
-              <div className="glass h-full rounded-3xl p-6 transition-transform duration-300 hover:-translate-y-1">
+            <Reveal key={s.title} delay={i * 0.08}>
+              <div className="h-full border-t border-border/70 pt-5">
                 <span className="font-display text-sm font-semibold text-ember">0{i + 1}</span>
                 <h3 className="mt-3 font-display text-lg font-semibold">{s.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">{s.text}</p>
@@ -178,11 +160,11 @@ export default function Landing() {
         <div className="mx-auto mt-12 grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {featureCards.map((c, i) => (
             <Reveal key={c.key} delay={i * 0.06}>
-              <div className="glass h-full rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06]">
-                <div className="flex size-11 items-center justify-center rounded-2xl bg-ember/15 text-ember">
+              <div className="glass h-full rounded-2xl p-6 transition-colors duration-200 hover:bg-white/[0.05]">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-ember/15 text-ember">
                   <c.icon className="size-5" />
                 </div>
-                <h3 className="mt-5 font-display text-lg font-semibold">
+                <h3 className="mt-4 font-display text-lg font-semibold">
                   {t.features[c.key].title}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -207,26 +189,24 @@ export default function Landing() {
         </Reveal>
         <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {photoStrip.map((src, i) => (
-            <Reveal key={src} delay={i * 0.05}>
-              <figure
-                className={cn(
-                  "group relative overflow-hidden rounded-3xl border border-border/50",
-                  i % 4 === 1 || i % 4 === 2 ? "lg:mt-8" : "",
-                )}
-              >
-                <img
-                  src={src}
-                  alt=""
-                  loading="lazy"
-                  className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#070d1f]/55 via-transparent to-transparent" />
-              </figure>
+            <Reveal key={src} delay={i * 0.05}>                <figure
+                  className={cn(
+                    "group relative overflow-hidden rounded-2xl border border-border/50",
+                    i % 4 === 1 || i % 4 === 2 ? "lg:mt-8" : "",
+                  )}
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    loading="lazy"
+                    className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </figure>
             </Reveal>
           ))}
         </div>
         <Reveal className="mx-auto mt-10 max-w-6xl">
-          <div className="glass relative overflow-hidden rounded-3xl">
+          <div className="glass relative overflow-hidden rounded-2xl">
             <img
               src={photos.team}
               alt=""
@@ -285,7 +265,7 @@ export default function Landing() {
       {/* ================= DIRECTORY CTA ================= */}
       <section className="relative px-4 py-24 sm:px-6">
         <Reveal className="mx-auto max-w-4xl">
-          <div className="glass-strong relative overflow-hidden rounded-[2.5rem] p-8 sm:p-12">
+          <div className="glass relative overflow-hidden rounded-2xl p-6 sm:p-10">
             <img
               src={photos.craft}
               alt=""
@@ -317,24 +297,19 @@ export default function Landing() {
 
       {/* ================= CONCIERGE TEASER ================= */}
       <section className="relative px-4 py-10 sm:px-6">
-        <Reveal className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
-          {t.services.steps.map((s, i) => (
-            <Reveal key={s.title} delay={i * 0.08}>
-              <div className="glass h-full rounded-3xl p-6">
-                <span className="font-display text-sm font-semibold text-ember">{i + 1}</span>
-                <h3 className="mt-3 font-display text-lg font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">{s.text}</p>
-              </div>
-            </Reveal>
+        <Reveal className="mx-auto grid max-w-6xl gap-x-10 gap-y-6 md:grid-cols-3">
+          {t.services.steps.map((s) => (
+            <div key={s.title} className="border-t border-border/70 pt-5">
+              <span className="font-display text-sm font-semibold text-ember">{s.title}</span>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{s.text}</p>
+            </div>
           ))}
         </Reveal>
-        <Reveal className="mx-auto mt-6 max-w-6xl">
-          <div className="glass rounded-3xl p-6 text-center">
-            <p className="text-sm text-muted-foreground">{t.services.subtitle}</p>
-            <Button variant="outline" className="btn-outline-glass mt-4 rounded-2xl" asChild>
-              <Link to="/services">{t.nav.services}</Link>
-            </Button>
-          </div>
+        <Reveal className="mx-auto mt-10 max-w-6xl text-center">
+          <p className="text-sm text-muted-foreground">{t.services.subtitle}</p>
+          <Button variant="outline" className="btn-outline-glass mt-4 rounded-xl" asChild>
+            <Link to="/services">{t.nav.services}</Link>
+          </Button>
         </Reveal>
       </section>
 
@@ -349,7 +324,7 @@ export default function Landing() {
             <p className="mt-4 max-w-sm leading-7 text-muted-foreground">{t.faq.sub}</p>
           </Reveal>
           <Reveal delay={0.1}>
-            <Accordion type="single" collapsible className="glass rounded-3xl px-6">
+            <Accordion type="single" collapsible className="glass rounded-2xl px-6">
               {t.faq.items.map((f, i) => (
                 <AccordionItem key={f.q} value={`item-${i}`} className="border-border/60">
                   <AccordionTrigger className="text-left text-sm font-medium sm:text-base">
@@ -368,7 +343,7 @@ export default function Landing() {
       {/* ================= WORK WITH AETHEL TEAM ================= */}
       <section id="aethel-team" className="relative px-4 py-24 sm:px-6">
         <Reveal className="mx-auto max-w-6xl">
-          <div className="glass-strong relative overflow-hidden rounded-[2.5rem] px-6 py-12 sm:px-12 sm:py-16">
+          <div className="glass relative overflow-hidden rounded-2xl px-6 py-12 sm:px-10 sm:py-14">
             <div className="max-w-2xl">
               <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">
                 {t.aethelTeam.kicker}
@@ -378,23 +353,18 @@ export default function Landing() {
               </h2>
               <p className="mt-4 leading-7 text-muted-foreground">{t.aethelTeam.text}</p>
             </div>
-            <div className="mt-10 grid gap-5 sm:grid-cols-3">
-              {t.aethelTeam.items.map((item, i) => (
-                <Reveal key={item.title} delay={i * 0.08}>
-                  <div className="glass h-full rounded-3xl p-6">
-                    <span className="font-display text-4xl font-bold text-ember/40">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <h3 className="mt-3 font-display text-lg font-semibold">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.text}</p>
-                  </div>
-                </Reveal>
+            <div className="mt-10 grid gap-8 sm:grid-cols-3">
+              {t.aethelTeam.items.map((item) => (
+                <div key={item.title} className="border-t border-border/70 pt-5">
+                  <h3 className="font-display text-base font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.text}</p>
+                </div>
               ))}
             </div>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <Button
                 size="lg"
-                className="btn-glow h-12 rounded-2xl bg-emerald-600 px-8 text-base text-white hover:bg-emerald-500"
+                className="btn-glow h-12 rounded-xl bg-emerald-600 px-8 text-base text-white hover:bg-emerald-500"
                 asChild
               >
                 <a
@@ -417,13 +387,13 @@ export default function Landing() {
       {/* ================= FINAL CTA ================= */}
       <section className="relative px-4 pb-8 pt-10 sm:px-6">
         <Reveal className="mx-auto max-w-4xl">
-          <div className="glass-strong relative overflow-hidden rounded-[2.5rem] px-6 py-16 text-center sm:px-12">
-            <h2 className="relative font-display text-4xl font-bold tracking-tight sm:text-5xl">
+          <div className="glass relative overflow-hidden rounded-2xl px-6 py-14 text-center sm:px-12">
+            <h2 className="relative font-display text-3xl font-bold tracking-tight sm:text-4xl">
               {t.finalCta.title}
             </h2>
             <p className="relative mx-auto mt-4 max-w-md text-muted-foreground">{t.finalCta.text}</p>
             <div className="relative mt-8 flex justify-center">
-              <Button size="lg" className="btn-glow h-12 rounded-2xl px-8 text-base" asChild>
+              <Button size="lg" className="btn-glow h-12 rounded-xl px-8 text-base" asChild>
                 <Link to="/auth?returnTo=%2Fdashboard">
                   {t.finalCta.cta} <ArrowRight className="size-4" />
                 </Link>

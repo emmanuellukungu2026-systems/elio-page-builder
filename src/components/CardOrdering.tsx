@@ -1,25 +1,17 @@
 import { AethelMark } from "@/components/AethelMark";
 import { ElioMark } from "@/components/ElioMark";
+import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { useI18n } from "@/lib/i18n";
 import { photos } from "@/lib/photos";
 import { cn } from "@/lib/utils";
-import {
-  motion,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import type { MotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import { Check, MessageCircle, Nfc, Sparkles, Wand2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 /**
- * "Order your card" section — a scroll-driven carousel of the three NFC card
- * tiers: scrolling down advances the carousel, scrolling up goes back.
+ * "Order your card" section — the three NFC card tiers shown side by side,
+ * no scroll hijacking.
  *  - Standard: black cards (logos front, QR back), fixed design.
  *  - Pro: Aethel-branded geometric showcase, customizable.
  *  - Independent: fully custom luxury card, no Aethel mention.
@@ -358,7 +350,6 @@ function TierCard({
   art,
   featured,
   cta,
-  compact = false,
 }: {
   icon: LucideIcon;
   badge: string;
@@ -368,7 +359,6 @@ function TierCard({
   art: ReactNode;
   featured?: boolean;
   cta: string;
-  compact?: boolean;
 }) {
   return (
     <div
@@ -390,12 +380,12 @@ function TierCard({
         <h3 className="font-display text-base font-semibold sm:text-lg">{title}</h3>
       </div>
 
-      <p className={cn("mt-3 text-sm leading-6 text-muted-foreground", compact && "hidden sm:block")}>
+      <p className="mt-3 text-sm leading-6 text-muted-foreground">
         {desc}
-      </p>      {/* Fixed-height art stage: the card is scaled down so the pinned
-          carousel card always fits the viewport, mobile included. */}
+      </p>
+      {/* Fixed-height art stage: the card visual is scaled down to fit. */}
       <div className="my-3 flex h-[160px] justify-center overflow-visible sm:h-[220px] lg:h-[260px]">
-        <div className="origin-top scale-[0.55] animate-floaty sm:scale-[0.72] lg:scale-[0.86]">{art}</div>
+        <div className="origin-top scale-[0.55] sm:scale-[0.72] lg:scale-[0.86]">{art}</div>
       </div>
 
       <ul className="mt-auto space-y-2 text-sm sm:space-y-2.5">
@@ -408,10 +398,10 @@ function TierCard({
       </ul>
 
       <a
-        href="https://wa.me/243000000000"
+        href={waLink(CONCIERGE_WHATSAPP, `Hello Aethel team 👋 I'd like to order a card — tier: ${title}`)}
         target="_blank"
         rel="noreferrer"
-        className="btn-glow mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-2xl bg-emerald-600 text-[13px] font-semibold text-white transition-colors hover:bg-emerald-500"
+        className="btn-glow mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-600 text-[13px] font-semibold text-white transition-colors hover:bg-emerald-500"
       >
         <MessageCircle className="size-4" /> {cta}
       </a>
@@ -420,66 +410,11 @@ function TierCard({
 }
 
 /* ------------------------------------------------------------------ */
-/* Scroll-driven carousel                                              */
+/* Section layout — plain grid, no scroll hijacking                    */
 /* ------------------------------------------------------------------ */
-
-/**
- * One slide, coverflow-style: every slide is anchored to the exact center of
- * the carousel; its signed distance from the active position (in slide units)
- * drives the horizontal offset, so the active card always lands perfectly
- * centered while neighbours peek in from the sides.
- *
- * NOTE: use transformer functions instead of input/output ranges here —
- * framer-motion's scroll "accelerate" path reuses array ranges as WAAPI
- * keyframe offsets (which must be within [0,1]) and throws at mount.
- */
-function CarouselSlide({
-  p,
-  index,
-  count,
-  children,
-}: {
-  p: MotionValue<number>;
-  index: number;
-  count: number;
-  children: ReactNode;
-}) {
-  const last = count - 1;
-  const offset = useTransform(p, (v: number) => (last <= 0 ? 0 : index - v * last));
-  const abs = useTransform(offset, (o: number) => Math.min(Math.abs(o), 1));
-  const x = useTransform(offset, (o: number) => `${Math.max(-1.12, Math.min(1.12, o)) * 88}%`);
-  const scale = useTransform(abs, (a: number) => 1 - a * 0.14);
-  const opacity = useTransform(offset, (o: number) => {
-    const a = Math.abs(o);
-    return a <= 1 ? 1 - a * 0.55 : Math.max(0, 1 - (a - 1) * 4);
-  });
-  const zIndex = useTransform(abs, (a: number) => 10 - Math.round(a * 9));
-  const pointerEvents = useTransform(offset, (o: number) =>
-    Math.abs(o) > 0.5 ? "none" : "auto",
-  );
-
-  return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <motion.div style={{ x, scale, opacity, zIndex, pointerEvents }} className="h-full w-full">
-        {children}
-      </motion.div>
-    </div>
-  );
-}
 
 export function CardOrdering({ className }: { className?: string }) {
   const { t } = useI18n();
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end end"] });
-
-  const [active, setActive] = useState(0);
-  // Smoothed progress: the slides follow the scroll with fluid inertia, and
-  // the dots track the same smoothed value so they stay in sync with the card.
-  const sp = useSpring(p, { stiffness: 120, damping: 28, mass: 0.6 });
-  useMotionValueEvent(sp, "change", (v) => {
-    setActive(Math.round(Math.max(0, Math.min(1, v)) * 2));
-  });
 
   const c = t.cardOrder;
   const tiers: {
@@ -495,7 +430,7 @@ export function CardOrdering({ className }: { className?: string }) {
     { key: "independent", icon: Sparkles, accent: "#0e7490", name: c.indName },
   ];
 
-  const renderCard = (tier: (typeof tiers)[number], compact: boolean) => {
+  const renderCard = (tier: (typeof tiers)[number]) => {
     const dict = c[tier.key];
     const art =
       tier.key === "standard" ? (
@@ -522,85 +457,34 @@ export function CardOrdering({ className }: { className?: string }) {
         art={art}
         cta={c.cta}
         featured={tier.featured}
-        compact={compact}
       />
     );
   };
 
-  // Reduced motion: static grid, no scroll hijacking.
-  if (reduce) {
-    return (
-      <section id="cards" className={cn("relative px-4 py-24 sm:px-6", className)}>
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">{c.kicker}</p>
-          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">{c.title}</h2>
-          <p className="mt-4 leading-7 text-muted-foreground">{c.text}</p>
-        </div>
-        <div className="mx-auto mt-12 grid max-w-6xl gap-5 md:grid-cols-3">
-          {tiers.map((tier) => (
-            <div key={tier.key} className="flex">
-              {renderCard(tier, false)}
-            </div>
-          ))}
-        </div>
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mx-auto mt-8 flex max-w-2xl items-center justify-center gap-2 text-center text-xs text-muted-foreground"
-        >
-          <ElioMark className="size-4" />
-          {c.note}
-        </motion.p>
-      </section>
-    );
-  }
-
   return (
-    <section id="cards" className={cn("relative", className)}>
-      <div ref={ref} className="relative h-[280vh]">
-        <div className="sticky top-0 flex h-screen flex-col items-center overflow-hidden px-4 pt-16 sm:px-6 sm:pt-20">
-          {/* Header */}
-          <div className="max-w-2xl text-center">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-ember sm:text-sm">
-              {c.kicker}
-            </p>
-            <h2 className="mt-2 font-display text-2xl font-bold tracking-tight sm:text-4xl">
-              {c.title}
-            </h2>
-            <p className="mt-2 hidden text-sm leading-6 text-muted-foreground sm:block">{c.text}</p>
+    <section id="cards" className={cn("relative px-4 py-24 sm:px-6", className)}>
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.5 }}
+        className="mx-auto max-w-2xl text-center"
+      >
+        <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">{c.kicker}</p>
+        <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">{c.title}</h2>
+        <p className="mt-4 leading-7 text-muted-foreground">{c.text}</p>
+      </motion.div>
+      <div className="mx-auto mt-12 grid max-w-6xl gap-5 md:grid-cols-3">
+        {tiers.map((tier) => (
+          <div key={tier.key} className="flex">
+            {renderCard(tier)}
           </div>
-
-          {/* Carousel: scroll down = advance, scroll up = go back. Slides are
-              anchored to the center; neighbours peek in from the sides. */}
-          <div className="relative mt-6 min-h-0 w-full max-w-sm flex-1 sm:max-w-md">
-            {tiers.map((tier, i) => (
-              <CarouselSlide key={tier.key} p={sp} index={i} count={tiers.length}>
-                {renderCard(tier, true)}
-              </CarouselSlide>
-            ))}
-          </div>
-
-          {/* Progress dots + hint */}
-          <div className="flex flex-col items-center gap-3 pb-6 sm:pb-8">
-            <div className="flex gap-2">
-              {tiers.map((tier, i) => (
-                <span
-                  key={tier.key}
-                  className={cn(
-                    "size-2 rounded-full transition-colors duration-300",
-                    i === active ? "bg-ember" : "bg-white/20",
-                  )}
-                />
-              ))}
-            </div>
-            <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground/70">
-              ↓ {c.hint}
-            </span>
-          </div>
-        </div>
+        ))}
       </div>
+      <p className="mx-auto mt-8 flex max-w-2xl items-center justify-center gap-2 text-center text-xs text-muted-foreground">
+        <ElioMark className="size-4" />
+        {c.note}
+      </p>
     </section>
   );
 }

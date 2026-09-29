@@ -107,21 +107,21 @@ export default function Directory() {
             <p className="mt-8 text-xs text-muted-foreground">
               {filtered.length} {t.directory.pages}
             </p>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3">
               {filtered.map((p, i) => (
                 <motion.div
                   key={p.username}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: Math.min(i * 0.05, 0.4) }}
+                  transition={{ duration: 0.35, delay: Math.min(i * 0.03, 0.25) }}
                 >
                   <Link
                     to={`/u/${p.username}`}
-                    className="glass group block h-full overflow-hidden rounded-3xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06]"
+                    className="glass group block h-full overflow-hidden rounded-2xl transition-colors duration-200 hover:bg-white/[0.06]"
                   >
                     {/* Cover */}
                     <div
-                      className="relative h-36 overflow-hidden"
+                      className="relative h-24 overflow-hidden sm:h-32"
                       style={{
                         background:
                           p.coverUrl && p.coverKind
@@ -133,7 +133,7 @@ export default function Directory() {
                         <img
                           src={p.coverKind}
                           alt=""
-                          className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="size-full object-cover"
                         />
                       ) : (
                         <div
@@ -150,31 +150,31 @@ export default function Directory() {
                           onError={(e) => {
                             e.currentTarget.style.display = "none";
                           }}
-                          className="absolute bottom-3 left-4 size-14 rounded-full object-cover object-[50%_32%] shadow-lg ring-2 ring-background"
+                          className="absolute bottom-2.5 left-3 size-10 rounded-full object-cover object-[50%_32%] ring-2 ring-background sm:bottom-3 sm:left-4 sm:size-14"
                         />
                       )}
                     </div>
 
-                    <div className="p-5">
+                    <div className="p-3 sm:p-5">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <h2 className="truncate font-display text-lg font-semibold">
+                          <h2 className="truncate font-display text-sm font-semibold sm:text-lg">
                             {p.displayName}
                           </h2>
-                          <p className="truncate text-sm text-muted-foreground">
+                          <p className="mt-0.5 truncate text-xs text-muted-foreground sm:mt-0 sm:text-sm">
                             {[p.trade, p.location].filter(Boolean).join(" · ") || p.username}
                           </p>
                         </div>
-                        <span className="flex size-8 shrink-0 items-center justify-center rounded-xl border border-border/60 text-muted-foreground transition-all group-hover:scale-105 group-hover:text-foreground">
+                        <span className="hidden size-8 shrink-0 items-center justify-center rounded-xl border border-border/60 text-muted-foreground transition-colors group-hover:text-foreground sm:flex">
                           <ArrowUpRight className="size-4" />
                         </span>
                       </div>
                       {p.headline && (
-                        <p className="mt-2.5 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                        <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-muted-foreground sm:mt-2.5 sm:text-sm sm:leading-6">
                           {p.headline}
                         </p>
                       )}
-                      <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground sm:mt-3 sm:text-xs">
                         <Images className="size-3.5" />
                         {p.itemCount} {t.directory.pages}
                       </p>

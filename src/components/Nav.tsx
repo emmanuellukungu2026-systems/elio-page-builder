@@ -113,14 +113,14 @@ export function Nav() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button size="sm" className="btn-glow rounded-xl" onClick={() => navigate("/dashboard")}>
+              <Button size="sm" className="btn-glow rounded-lg" onClick={() => navigate("/dashboard")}>
                 {t.nav.myElio}
               </Button>
               {isOwner && (
                 <Button
                   size="sm"
                   variant="outline"
-                  className="hidden rounded-xl border-border/70 sm:inline-flex"
+                  className="hidden rounded-lg border-border/70 sm:inline-flex"
                   onClick={() => navigate("/admin")}
                 >
                   Studio
@@ -132,14 +132,14 @@ export function Nav() {
               <Button
                 size="sm"
                 variant="ghost"
-                className="hidden rounded-xl sm:inline-flex"
+                className="hidden rounded-lg sm:inline-flex"
                 onClick={() => navigate("/auth?returnTo=%2Fdashboard")}
               >
                 {t.nav.signIn}
               </Button>
               <Button
                 size="sm"
-                className="btn-glow hidden rounded-xl sm:inline-flex"
+                className="btn-glow hidden rounded-lg sm:inline-flex"
                 onClick={() => navigate("/auth?returnTo=%2Fdashboard")}
               >
                 {t.nav.create}
