@@ -37,6 +37,7 @@ const en = {
     subtitle:
       "One clean page with your work, your story and how to reach you. Share the link or the QR code and let the work do the talking.",
     cta: "Build your page",
+    ctaVerify: "Check your page",
     secondary: "Browse the directory",
     note: "Free · No coding needed · Live in minutes",
     cardRole: "Design & build studio",
@@ -333,6 +334,7 @@ const en = {
     title: "Give your business a real front door.",
     text: "Create your Elio page today. Free, clean, live in minutes.",
     cta: "Create your page",
+    ctaVerify: "Check your page",
   },
   footer: {
     blurb:
@@ -343,6 +345,7 @@ const en = {
     faq: "FAQ",
     start: "Start",
     create: "Create your page",
+    verify: "Check your page",
     myPage: "My page",
     aethel: "Aethel Technologies",
     about: "About",
@@ -677,6 +680,7 @@ const fr: Dict = {
     subtitle:
       "Une page claire avec votre travail, votre histoire et vos contacts. Partagez le lien ou le QR code, et laissez parler votre travail.",
     cta: "Créer ma page",
+    ctaVerify: "Vérifier ma page",
     secondary: "Parcourir l'annuaire",
     note: "Gratuit · Sans code · En ligne en quelques minutes",
     cardRole: "Studio de design & fabrication",
@@ -973,6 +977,7 @@ const fr: Dict = {
     title: "Donnez à votre entreprise une vraie vitrine.",
     text: "Créez votre page Elio aujourd'hui. Gratuit, soigné, en ligne en quelques minutes.",
     cta: "Créer ma page",
+    ctaVerify: "Vérifier ma page",
   },
   footer: {
     blurb:
@@ -983,6 +988,7 @@ const fr: Dict = {
     faq: "FAQ",
     start: "Commencer",
     create: "Créer ma page",
+    verify: "Vérifier ma page",
     myPage: "Ma page",
     aethel: "Aethel Technologies",
     about: "À propos",
@@ -1315,6 +1321,7 @@ const tr: Dict = {
     subtitle:
       "İşlerinizi, hikayenizi ve iletişim bilgilerinizi bir arada tutan net bir sayfa. Linki veya QR kodu paylaşın, gerisini işiniz konuşsun.",
     cta: "Sayfanı oluştur",
+    ctaVerify: "Sayfamı kontrol et",
     secondary: "Rehbere göz at",
     note: "Ücretsiz · Kod gerekmez · Dakikalar içinde yayında",
     cardRole: "Tasarım ve üretim atölyesi",
@@ -1611,6 +1618,7 @@ const tr: Dict = {
     title: "İşletmenize gerçek bir vitrin kazandırın.",
     text: "Elio sayfanızı bugün oluşturun. Ücretsiz, derli toplu, dakikalar içinde yayında.",
     cta: "Sayfanı oluştur",
+    ctaVerify: "Sayfamı kontrol et",
   },
   footer: {
     blurb:
@@ -1621,6 +1629,7 @@ const tr: Dict = {
     faq: "SSS",
     start: "Başla",
     create: "Sayfanı oluştur",
+    verify: "Sayfamı kontrol et",
     myPage: "Sayfam",
     aethel: "Aethel Technologies",
     about: "Hakkında",

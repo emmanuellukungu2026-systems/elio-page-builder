@@ -14,8 +14,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { api } from "@/convex/_generated/api";
 import { useI18n } from "@/lib/i18n";
 import { photoStrip, photos } from "@/lib/photos";
+import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -33,6 +35,10 @@ import { cn } from "@/lib/utils";
 
 export default function Landing() {
   const { t } = useI18n();
+  // Signed-in visitors who already have a page get "Check your page" instead
+  // of "Create your page" — it opens their live page.
+  const myPage = useQuery(api.pages.getMyPage);
+  const pageHref = myPage ? `/u/${myPage.username}` : "/auth?returnTo=%2Fdashboard";
 
   const featureCards = [
     { icon: Store, key: "profile" as const },
@@ -89,8 +95,8 @@ export default function Landing() {
               className="mt-9 flex flex-wrap items-center gap-3"
             >
               <Button size="lg" className="btn-glow h-12 rounded-xl px-7 text-base" asChild>
-                <Link to="/auth?returnTo=%2Fdashboard">
-                  {t.hero.cta} <ArrowRight className="size-4" />
+                <Link to={pageHref}>
+                  {myPage ? t.hero.ctaVerify : t.hero.cta} <ArrowRight className="size-4" />
                 </Link>
               </Button>
               <Button
@@ -394,8 +400,8 @@ export default function Landing() {
             <p className="relative mx-auto mt-4 max-w-md text-muted-foreground">{t.finalCta.text}</p>
             <div className="relative mt-8 flex justify-center">
               <Button size="lg" className="btn-glow h-12 rounded-xl px-8 text-base" asChild>
-                <Link to="/auth?returnTo=%2Fdashboard">
-                  {t.finalCta.cta} <ArrowRight className="size-4" />
+                <Link to={pageHref}>
+                  {myPage ? t.finalCta.ctaVerify : t.finalCta.cta} <ArrowRight className="size-4" />
                 </Link>
               </Button>
             </div>

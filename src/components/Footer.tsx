@@ -1,13 +1,17 @@
 import logo from "@/assets/logo.png";
 import { AethelMark } from "@/components/AethelMark";
 import { Button } from "@/components/ui/button";
+import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
 import { useI18n } from "@/lib/i18n";
+import { useQuery } from "convex/react";
 import { Link } from "react-router";
 
 export function Footer() {
   const { t } = useI18n();
   const { isAuthenticated } = useAuth();
+  // Already have a page? The "Create your page" link becomes "Check your page".
+  const myPage = useQuery(api.pages.getMyPage);
   return (
     <footer className="relative z-10 mt-24 border-t border-border/60">
       {!isAuthenticated && (
@@ -67,10 +71,10 @@ export function Footer() {
             <ul className="mt-3 space-y-2 text-sm">
               <li>
                 <Link
-                  to="/auth?returnTo=%2Fdashboard"
+                  to={myPage ? `/u/${myPage.username}` : "/auth?returnTo=%2Fdashboard"}
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  {t.footer.create}
+                  {myPage ? t.footer.verify : t.footer.create}
                 </Link>
               </li>
               <li>
