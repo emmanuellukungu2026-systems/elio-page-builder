@@ -72,13 +72,20 @@ export default function Landing() {
           style={adPanelStyle}
         >
           {/* Ad framing — ribbon swirls */}
-          {/* Mobile backdrop — the card moment sits behind the words, poster style */}
+          {/* Mobile backdrop — business shot behind the words, poster style */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden lg:hidden" aria-hidden="true">
-            <div className="absolute left-1/2 top-1/2 w-[26rem] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-80">
-              <NfcHeroVisual />
-            </div>
-            <div className="absolute inset-0 bg-[#0b2a6b]/45" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#06143a]/80 via-[#06143a]/65 to-[#071a4d]/95" />
+            <motion.img
+              src={photos.studio}
+              alt=""
+              initial={{ scale: 1.08 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 8, ease: "linear" }}
+              className="size-full object-cover object-center"
+            />
+            {/* Blue duotone wash, same treatment as the rest of the poster art */}
+            <div className="absolute inset-0 bg-[#1e4fd8] mix-blend-color" />
+            <div className="absolute inset-0 bg-[#0b2a6b]/35" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#06143a]/85 via-[#06143a]/70 to-[#071a4d]/95" />
           </div>
 
           <AdSwirl className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-white/25" />
