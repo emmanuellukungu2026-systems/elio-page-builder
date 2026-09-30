@@ -71,11 +71,7 @@ export default function Landing() {
           className="relative flex min-h-[100svh] flex-col overflow-hidden"
           style={adPanelStyle}
         >
-          {/* Ad framing — dashed border, ribbon swirls */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-4 rounded-[1.5rem] border border-dashed border-white/25 sm:inset-6 sm:rounded-[2rem] lg:inset-8"
-          />
+          {/* Ad framing — ribbon swirls */}
           <AdSwirl className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-white/25" />
           <AdSwirl className="pointer-events-none absolute -bottom-20 -left-16 h-56 w-56 -rotate-90 text-white/15" />
           <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 pb-12 pt-28 sm:px-10 sm:pb-14 sm:pt-32 lg:px-14">
@@ -153,7 +149,6 @@ export default function Landing() {
                   {/* Blue duotone wash, like the reference ads */}
                   <div className="absolute inset-0 bg-[#1e4fd8] mix-blend-color" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#06143a]/85 via-transparent to-[#06143a]/30" />
-                  <div className="pointer-events-none absolute inset-3 rounded-[1.35rem] border border-dashed border-white/30" />
                 </div>
                 {/* The card-tap composition sits on the poster */}
                 <div className="absolute inset-x-0 bottom-4 flex justify-center">
@@ -166,7 +161,7 @@ export default function Landing() {
           </div>
 
           {/* Contact bar — the strip of details at the foot of the poster */}
-          <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-3 border-t border-dashed border-white/30 px-5 pb-6 pt-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:pb-8 sm:text-sm lg:px-14">
+          <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-3 border-t border-white/15 px-5 pb-6 pt-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:pb-8 sm:text-sm lg:px-14">
             <span>{t.hero.note}</span>
             <span className="hidden text-white/40 sm:block">—</span>
             <a
