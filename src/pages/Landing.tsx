@@ -2,7 +2,7 @@ import { AdSwirl } from "@/components/AdSwirl";
 import { Atmosphere } from "@/components/Atmosphere";
 import { AethelMark } from "@/components/AethelMark";
 import { CardOrdering } from "@/components/CardOrdering";
-import { HeroCarousel } from "@/components/HeroCarousel";
+import { NfcHeroVisual } from "@/components/NfcHeroVisual";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
@@ -72,6 +72,15 @@ export default function Landing() {
           style={adPanelStyle}
         >
           {/* Ad framing — ribbon swirls */}
+          {/* Mobile backdrop — the card moment sits behind the words, poster style */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden lg:hidden" aria-hidden="true">
+            <div className="absolute left-1/2 top-1/2 w-[26rem] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-80">
+              <NfcHeroVisual />
+            </div>
+            <div className="absolute inset-0 bg-[#0b2a6b]/45" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#06143a]/80 via-[#06143a]/65 to-[#071a4d]/95" />
+          </div>
+
           <AdSwirl className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-white/25" />
           <AdSwirl className="pointer-events-none absolute -bottom-20 -left-16 h-56 w-56 -rotate-90 text-white/15" />
           <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 pb-12 pt-28 sm:px-10 sm:pb-14 sm:pt-32 lg:px-14">
@@ -133,14 +142,14 @@ export default function Landing() {
                 </motion.div>
               </div>
 
-              {/* Poster carousel — the card-tap moment, then the client faces */}
+              {/* Desktop only — on mobile the card visual is the backdrop */}
               <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.35, ease: [0.21, 0.6, 0.35, 1] }}
-                className="relative mx-auto w-full max-w-md"
+                className="relative mx-auto hidden w-full max-w-md lg:block"
               >
-                <HeroCarousel />
+                <NfcHeroVisual />
               </motion.div>
             </div>
           </div>
