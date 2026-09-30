@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-inverted.png";
 import { photos } from "@/lib/photos";
 import { useI18n } from "@/lib/i18n";
 import { Nfc, MessageCircle, Link2, MapPin } from "lucide-react";
@@ -70,7 +70,7 @@ export function NfcHeroVisual({ className }: { className?: string }) {
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#111527] to-[#0b0e1a] p-4 shadow-[0_18px_40px_-18px_rgba(11,20,45,0.55)] ring-1 ring-white/10">
           {/* Card artwork: chip + wordmark */}
           <div className="flex items-center justify-between">
-            <div className="flex size-7 items-center justify-center overflow-hidden rounded-lg bg-white">
+            <div className="flex size-7 items-center justify-center overflow-hidden rounded-lg bg-white/10">
               <img src={logo} alt="" className="size-full object-cover" />
             </div>
             {/* contactless waves */}

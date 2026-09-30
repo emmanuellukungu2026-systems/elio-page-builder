@@ -1,6 +1,7 @@
 import { AdSwirl } from "@/components/AdSwirl";
 import { Atmosphere } from "@/components/Atmosphere";
 import { AethelMark } from "@/components/AethelMark";
+import { ElioMark } from "@/components/ElioMark";
 import { CardOrdering } from "@/components/CardOrdering";
 import { NfcHeroVisual } from "@/components/NfcHeroVisual";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
@@ -65,9 +66,9 @@ export default function Landing() {
       <Nav />
 
       {/* ================= HERO ================= */}
-      <section className="relative px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-20">
+      <section className="relative px-4 pb-6 pt-24 sm:px-6 sm:pb-8 sm:pt-28">
         <div
-          className="relative mx-auto max-w-6xl overflow-hidden rounded-[1.75rem] sm:rounded-[2.75rem]"
+          className="relative mx-auto flex min-h-[calc(100svh-7.5rem)] max-w-6xl flex-col overflow-hidden rounded-[1.75rem] sm:rounded-[2.75rem]"
           style={adPanelStyle}
         >
           {/* Ad framing — dashed border, corner rings, ribbon swirls */}
@@ -75,9 +76,20 @@ export default function Landing() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-3 rounded-[1.4rem] border border-dashed border-white/25 sm:inset-5 sm:rounded-[2.4rem]"
           />
+          {/* Poster brand lockup — the Elio logo inverted for the blue surface */}
+          <Link
+            to="/"
+            aria-label="Elio Pages"
+            className="absolute left-6 top-6 inline-flex items-center gap-2.5 sm:left-10 sm:top-9"
+          >
+            <ElioMark invert className="size-8 rounded-md" />
+            <span className="font-display text-sm font-semibold text-white sm:text-base">
+              Elio Pages
+            </span>
+          </Link>
           <div
             aria-hidden="true"
-            className="absolute left-7 top-7 flex gap-2.5 sm:left-12 sm:top-11"
+            className="absolute right-6 top-7 flex gap-2.5 sm:right-10 sm:top-10"
           >
             <span className="size-3 rounded-full border border-white/55" />
             <span className="size-3 rounded-full border border-white/55" />
@@ -85,7 +97,7 @@ export default function Landing() {
           </div>
           <AdSwirl className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-white/25" />
           <AdSwirl className="pointer-events-none absolute -bottom-20 -left-16 h-56 w-56 -rotate-90 text-white/15" />
-          <div className="relative px-5 pb-14 pt-20 sm:px-10 sm:pb-16 sm:pt-24 lg:px-14">
+          <div className="relative flex flex-1 flex-col justify-center px-5 pb-12 pt-24 sm:px-10 sm:pb-14 sm:pt-28 lg:px-14">
             <div className="grid items-center gap-12 lg:grid-cols-[1.25fr_0.75fr]">
               <div>
                 <motion.div
@@ -170,20 +182,20 @@ export default function Landing() {
                 </div>
               </motion.div>
             </div>
+          </div>
 
-            {/* Meta row — the bottom of the panel */}
-            <div className="mt-12 flex flex-col gap-3 border-t border-dashed border-white/30 pt-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
-              <span>{t.hero.note}</span>
-              <span className="hidden text-white/40 sm:block">—</span>
-              <a
-                href={waLink(CONCIERGE_WHATSAPP, "Hello Aethel team 👋 I'd like my own Elio page.")}
-                target="_blank"
-                rel="noreferrer"
-                className="transition-colors hover:text-white"
-              >
-                {t.aethelTeam.cta}
-              </a>
-            </div>
+          {/* Contact bar — the strip of details at the foot of the poster */}
+          <div className="relative mx-5 mb-6 flex flex-col gap-3 border-t border-dashed border-white/30 pt-5 text-xs text-white/70 sm:mx-10 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:text-sm lg:mx-14">
+            <span>{t.hero.note}</span>
+            <span className="hidden text-white/40 sm:block">—</span>
+            <a
+              href={waLink(CONCIERGE_WHATSAPP, "Hello Aethel team 👋 I'd like my own Elio page.")}
+              target="_blank"
+              rel="noreferrer"
+              className="transition-colors hover:text-white"
+            >
+              {t.aethelTeam.cta}
+            </a>
           </div>
         </div>
       </section>
