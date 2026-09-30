@@ -1,3 +1,4 @@
+import { AdSwirl } from "@/components/AdSwirl";
 import { Atmosphere } from "@/components/Atmosphere";
 import { AethelMark } from "@/components/AethelMark";
 import { CardOrdering } from "@/components/CardOrdering";
@@ -33,6 +34,15 @@ import { Link } from "react-router";
 import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { cn } from "@/lib/utils";
 
+/* Deep-blue poster panel shared by the hero and the closing CTA. */
+const adPanelStyle = {
+  background: [
+    "radial-gradient(820px 560px at 16% 26%, rgba(66, 126, 255, 0.5), transparent 64%)",
+    "radial-gradient(640px 460px at 92% 88%, rgba(11, 42, 107, 0.85), transparent 62%)",
+    "linear-gradient(150deg, #06143a 0%, #0d2f80 50%, #071a4d 100%)",
+  ].join(", "),
+};
+
 export default function Landing() {
   const { t } = useI18n();
   // Signed-in visitors who already have a page get "Check your page" instead
@@ -56,42 +66,35 @@ export default function Landing() {
 
       {/* ================= HERO ================= */}
       <section className="relative px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-20">
-        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[1.75rem] border border-border/60 bg-card sm:rounded-[2.75rem]">
-          {/* Daylight panel — white washed with brand blue and a warm amber corner */}
+        <div
+          className="relative mx-auto max-w-6xl overflow-hidden rounded-[1.75rem] sm:rounded-[2.75rem]"
+          style={adPanelStyle}
+        >
+          {/* Ad framing — dashed border, corner rings, ribbon swirls */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 dark:hidden"
-            style={{
-              background: [
-                "radial-gradient(760px 460px at 88% 10%, rgba(30, 79, 216, 0.1), transparent 62%)",
-                "radial-gradient(680px 500px at 4% 96%, rgba(243, 167, 44, 0.14), transparent 60%)",
-                "linear-gradient(150deg, #ffffff 0%, #f7f9fd 52%, #eef2fb 100%)",
-              ].join(", "),
-            }}
+            className="pointer-events-none absolute inset-3 rounded-[1.4rem] border border-dashed border-white/25 sm:inset-5 sm:rounded-[2.4rem]"
           />
-          {/* Night keeps the blue → magenta bloom */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 hidden dark:block"
-            style={{
-              background: [
-                "linear-gradient(180deg, rgba(6,10,26,0.45) 0%, rgba(6,10,26,0.18) 45%, rgba(6,10,26,0.5) 100%)",
-                "radial-gradient(900px 560px at 88% 12%, rgba(224, 72, 140, 0.45), transparent 62%)",
-                "radial-gradient(760px 620px at 4% 95%, rgba(79, 125, 255, 0.5), transparent 60%)",
-                "linear-gradient(145deg, #0a1130 0%, #131c52 48%, #23103f 100%)",
-              ].join(", "),
-            }}
-          />
-          <div className="relative px-5 py-14 sm:px-10 sm:py-16 lg:px-14">
+            className="absolute left-7 top-7 flex gap-2.5 sm:left-12 sm:top-11"
+          >
+            <span className="size-3 rounded-full border border-white/55" />
+            <span className="size-3 rounded-full border border-white/55" />
+            <span className="size-3 rounded-full border border-white/55" />
+          </div>
+          <AdSwirl className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-white/25" />
+          <AdSwirl className="pointer-events-none absolute -bottom-20 -left-16 h-56 w-56 -rotate-90 text-white/15" />
+          <div className="relative px-5 pb-14 pt-20 sm:px-10 sm:pb-16 sm:pt-24 lg:px-14">
             <div className="grid items-center gap-12 lg:grid-cols-[1.25fr_0.75fr]">
               <div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-sm"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs text-white/85 backdrop-blur"
                 >
-                  <Sparkles className="size-3.5 text-primary" />
+                  <Sparkles className="size-3.5 text-[#7db4ff]" />
                   {t.hero.badge}
                 </motion.div>
 
@@ -99,18 +102,18 @@ export default function Landing() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mt-6 font-display text-[clamp(2.25rem,5vw,4.25rem)] font-extrabold leading-[1.03] tracking-tight text-foreground"
+                  className="mt-6 font-display text-[clamp(2.25rem,5vw,4.25rem)] font-extrabold leading-[1.03] tracking-tight text-white"
                 >
-                  {t.hero.titleA}
+                  <span className="text-[#7db4ff]">{t.hero.titleA}</span>
                   <br />
-                  <span className="text-primary">{t.hero.titleB}</span>
+                  {t.hero.titleB}
                 </motion.h1>
 
                 <motion.p
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mt-6 max-w-lg text-lg leading-8 text-muted-foreground"
+                  className="mt-6 max-w-lg text-lg leading-8 text-white/75"
                 >
                   {t.hero.subtitle}
                 </motion.p>
@@ -123,7 +126,7 @@ export default function Landing() {
                 >
                   <Button
                     size="lg"
-                    className="btn-glow h-12 rounded-xl px-7 text-base font-semibold"
+                    className="h-12 rounded-full bg-white px-7 text-base font-semibold text-[#0b1020] shadow-lg hover:bg-white/90"
                     asChild
                   >
                     <Link to={pageHref}>
@@ -133,7 +136,7 @@ export default function Landing() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-12 rounded-xl px-7 text-base"
+                    className="h-12 rounded-full border-white/40 bg-white/10 px-7 text-base text-white hover:border-white/60 hover:bg-white/20 hover:text-white"
                     asChild
                   >
                     <a href="/directory">{t.hero.secondary}</a>
@@ -141,26 +144,42 @@ export default function Landing() {
                 </motion.div>
               </div>
 
-              {/* NFC-ad moment: card tapping the phone */}
+              {/* Poster photo — duotone blue with the card-tap composition on top */}
               <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.35, ease: [0.21, 0.6, 0.35, 1] }}
                 className="relative mx-auto w-full max-w-md"
               >
-                <NfcHeroVisual />
+                <div className="relative isolate overflow-hidden rounded-[1.75rem] border border-white/20 shadow-[0_30px_70px_-30px_rgba(3,10,40,0.9)]">
+                  <img
+                    src={photos.portraits}
+                    alt=""
+                    className="aspect-[4/5] w-full object-cover object-top"
+                  />
+                  {/* Blue duotone wash, like the reference ads */}
+                  <div className="absolute inset-0 bg-[#1e4fd8] mix-blend-color" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#06143a]/85 via-transparent to-[#06143a]/30" />
+                  <div className="pointer-events-none absolute inset-3 rounded-[1.35rem] border border-dashed border-white/30" />
+                </div>
+                {/* The card-tap composition sits on the poster */}
+                <div className="absolute inset-x-0 bottom-4 flex justify-center">
+                  <div className="w-[17rem]">
+                    <NfcHeroVisual />
+                  </div>
+                </div>
               </motion.div>
             </div>
 
             {/* Meta row — the bottom of the panel */}
-            <div className="mt-12 flex flex-col gap-3 border-t border-border/70 pt-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:text-sm">
+            <div className="mt-12 flex flex-col gap-3 border-t border-dashed border-white/30 pt-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
               <span>{t.hero.note}</span>
-              <span className="hidden sm:block">—</span>
+              <span className="hidden text-white/40 sm:block">—</span>
               <a
                 href={waLink(CONCIERGE_WHATSAPP, "Hello Aethel team 👋 I'd like my own Elio page.")}
                 target="_blank"
                 rel="noreferrer"
-                className="transition-colors hover:text-foreground"
+                className="transition-colors hover:text-white"
               >
                 {t.aethelTeam.cta}
               </a>
@@ -431,13 +450,26 @@ export default function Landing() {
       {/* ================= FINAL CTA ================= */}
       <section className="relative px-4 pb-8 pt-10 sm:px-6">
         <Reveal className="mx-auto max-w-4xl">
-          <div className="glass relative overflow-hidden rounded-2xl px-6 py-14 text-center sm:px-12">
-            <h2 className="relative font-display text-3xl font-bold tracking-tight sm:text-4xl">
+          <div
+            className="relative overflow-hidden rounded-2xl px-6 py-14 text-center sm:px-12"
+            style={adPanelStyle}
+          >
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-3 rounded-[1.25rem] border border-dashed border-white/25"
+            />
+            <AdSwirl className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 text-white/25" />
+            <AdSwirl className="pointer-events-none absolute -bottom-16 -left-10 h-44 w-44 -rotate-90 text-white/15" />
+            <h2 className="relative font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
               {t.finalCta.title}
             </h2>
-            <p className="relative mx-auto mt-4 max-w-md text-muted-foreground">{t.finalCta.text}</p>
+            <p className="relative mx-auto mt-4 max-w-md text-white/75">{t.finalCta.text}</p>
             <div className="relative mt-8 flex justify-center">
-              <Button size="lg" className="btn-glow h-12 rounded-xl px-8 text-base" asChild>
+              <Button
+                size="lg"
+                className="h-12 rounded-full bg-white px-8 text-base font-semibold text-[#0b1020] shadow-lg hover:bg-white/90"
+                asChild
+              >
                 <Link to={pageHref}>
                   {myPage ? t.finalCta.ctaVerify : t.finalCta.cta} <ArrowRight className="size-4" />
                 </Link>

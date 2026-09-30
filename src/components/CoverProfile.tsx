@@ -1,3 +1,4 @@
+import { AdSwirl } from "@/components/AdSwirl";
 import { ProfileComments } from "@/components/ProfileComments";
 import type { Doc } from "@/convex/_generated/dataModel";
 import { waLink } from "@/lib/elio";
@@ -119,6 +120,13 @@ export function CoverProfile({ page }: { page: CoverPage }) {
           />
           {/* Night: the accent glow over deep navy */}
           <div aria-hidden="true" className="absolute inset-0 hidden dark:block" style={panelStyle} />
+          {/* Ad framing — dashed border + ribbon swirls, like the reference posters */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-3 rounded-[1.35rem] border border-dashed border-foreground/20 sm:inset-5 sm:rounded-[2.15rem]"
+          />
+          <AdSwirl className="pointer-events-none absolute -right-14 -top-16 h-52 w-52 text-foreground/10 dark:text-white/15" />
+          <AdSwirl className="pointer-events-none absolute -bottom-16 -left-12 h-44 w-44 -rotate-90 text-foreground/10 dark:text-white/10" />
           {/* ===== Top bar ===== */}
           <div className="relative flex items-center justify-between gap-4">
             <Link to={`/u/${page.username}`} className="flex min-w-0 items-center gap-2.5">
