@@ -2,6 +2,7 @@ import { AdSwirl } from "@/components/AdSwirl";
 import { Atmosphere } from "@/components/Atmosphere";
 import { AethelMark } from "@/components/AethelMark";
 import { CardOrdering } from "@/components/CardOrdering";
+import { CodeBackdrop } from "@/components/CodeBackdrop";
 import { NfcHeroVisual } from "@/components/NfcHeroVisual";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { Footer } from "@/components/Footer";
@@ -72,20 +73,11 @@ export default function Landing() {
           style={adPanelStyle}
         >
           {/* Ad framing — ribbon swirls */}
-          {/* Mobile backdrop — business shot behind the words, poster style */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden lg:hidden" aria-hidden="true">
-            <motion.img
-              src={photos.studio}
-              alt=""
-              initial={{ scale: 1.08 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 8, ease: "linear" }}
-              className="size-full object-cover object-center"
-            />
-            {/* Blue duotone wash, same treatment as the rest of the poster art */}
-            <div className="absolute inset-0 bg-[#1e4fd8] mix-blend-color" />
+          {/* Mobile backdrop — the code editor sits behind the words, poster style */}
+          <div className="absolute inset-0 overflow-hidden lg:hidden">
+            <CodeBackdrop className="size-full" />
             <div className="absolute inset-0 bg-[#0b2a6b]/35" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#06143a]/85 via-[#06143a]/70 to-[#071a4d]/95" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#06143a]/80 via-[#06143a]/65 to-[#071a4d]/95" />
           </div>
 
           <AdSwirl className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-white/25" />
