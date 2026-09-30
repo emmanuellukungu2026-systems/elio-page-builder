@@ -1,4 +1,5 @@
 import logo from "@/assets/logo.png";
+import logoInverted from "@/assets/logo-inverted.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LangSwitcher } from "@/components/LangSwitcher";
 import { Button } from "@/components/ui/button";
@@ -17,8 +18,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-/** Solid top bar — always opaque, slightly denser once scrolling. */
-export function Nav() {
+/**
+ * Top bar. By default it is a solid glass bar; with `overlay` it merges into a
+ * dark poster (the landing hero) — bare white type over the artwork, and the
+ * white glass bar only fades in once the page has scrolled.
+ */
+export function Nav({ overlay = false }: { overlay?: boolean }) {
   const { t } = useI18n();
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
@@ -29,6 +34,9 @@ export function Nav() {
     isAuthenticated && !!user?.email && OWNER_EMAILS.includes(user.email.trim().toLowerCase());
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 24));
+
+  // Over a dark poster: transparent bar with light type. Scrolled: white glass.
+  const onHero = overlay && !scrolled;
 
   const links = [
     { label: t.nav.features, href: "/#features" },
@@ -43,19 +51,24 @@ export function Nav() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.21, 0.6, 0.35, 1] }}
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled ? "py-2" : "py-4",
-      )}
+          "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+          onHero ? "py-5" : scrolled ? "py-2" : "py-4",
+        )}
     >
       <div
         className={cn(
-          "glass mx-3 flex max-w-6xl items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-300 sm:px-5 lg:mx-auto",
-          scrolled && "glass-strong",
+          "mx-auto flex max-w-6xl items-center justify-between transition-all duration-300",
+          onHero
+            ? "w-full bg-transparent px-5 py-2 sm:px-10 lg:px-14"
+            : cn(
+                "glass mx-3 rounded-2xl px-4 py-2.5 sm:px-5 lg:mx-auto",
+                scrolled && "glass-strong",
+              ),
         )}
       >
         <Link to="/" className="group flex items-center gap-2.5" aria-label="Elio Pages">
           <img
-            src={logo}
+            src={onHero ? logoInverted : logo}
             alt="Elio Pages"
             className="size-8 rounded-md transition-transform duration-300 group-hover:scale-110"
           />
@@ -66,7 +79,12 @@ export function Nav() {
             <a
               key={l.href}
               href={l.href}
-              className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              className={cn(
+                "rounded-lg px-3 py-1.5 text-sm transition-colors",
+                onHero
+                  ? "text-white/80 hover:bg-white/10 hover:text-white"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground",
+              )}
             >
               {l.label}
             </a>
@@ -74,8 +92,16 @@ export function Nav() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LangSwitcher />
-          <ThemeToggle />
+          <div
+            className={cn(
+              "flex items-center gap-2",
+              onHero &&
+                "[&_button]:border-white/30 [&_button]:text-white [&_button:hover]:bg-white/10",
+            )}
+          >
+            <LangSwitcher />
+            <ThemeToggle />
+          </div>
 
           {isLoading ? null : isAuthenticated ? (
             <>
@@ -84,9 +110,19 @@ export function Nav() {
                   <button
                     type="button"
                     title={user?.email}
-                    className="hidden max-w-[13rem] items-center gap-2 rounded-xl border border-border/60 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground md:inline-flex"
+                    className={cn(
+                      "hidden max-w-[13rem] items-center gap-2 rounded-xl border px-3 py-1.5 text-sm transition-colors md:inline-flex",
+                      onHero
+                        ? "border-white/30 text-white/85 hover:bg-white/10"
+                        : "border-border/60 text-muted-foreground hover:bg-accent hover:text-foreground",
+                    )}
                   >
-                    <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/15 font-display text-[10px] font-bold text-primary">
+                    <span
+                      className={cn(
+                        "flex size-5 shrink-0 items-center justify-center rounded-full font-display text-[10px] font-bold",
+                        onHero ? "bg-white/15 text-white" : "bg-primary/15 text-primary",
+                      )}
+                    >
                       {(user?.email ?? "?").slice(0, 1).toUpperCase()}
                     </span>
                     <span className="truncate">{user?.email ?? user?.loginId}</span>
@@ -113,14 +149,26 @@ export function Nav() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button size="sm" className="btn-glow rounded-lg" onClick={() => navigate("/dashboard")}>
+              <Button
+                size="sm"
+                className={cn(
+                  "rounded-lg",
+                  onHero ? "bg-white text-[#0b1020] hover:bg-white/90" : "btn-glow",
+                )}
+                onClick={() => navigate("/dashboard")}
+              >
                 {t.nav.myElio}
               </Button>
               {isOwner && (
                 <Button
                   size="sm"
                   variant="outline"
-                  className="hidden rounded-lg border-border/70 sm:inline-flex"
+                  className={cn(
+                    "hidden rounded-lg sm:inline-flex",
+                    onHero
+                      ? "border-white/40 text-white hover:bg-white/10"
+                      : "border-border/70",
+                  )}
                   onClick={() => navigate("/admin")}
                 >
                   Studio
@@ -132,14 +180,20 @@ export function Nav() {
               <Button
                 size="sm"
                 variant="ghost"
-                className="hidden rounded-lg sm:inline-flex"
+                className={cn(
+                  "hidden rounded-lg sm:inline-flex",
+                  onHero && "text-white hover:bg-white/10 hover:text-white",
+                )}
                 onClick={() => navigate("/auth?returnTo=%2Fdashboard")}
               >
                 {t.nav.signIn}
               </Button>
               <Button
                 size="sm"
-                className="btn-glow hidden rounded-lg sm:inline-flex"
+                className={cn(
+                  "hidden rounded-lg sm:inline-flex",
+                  onHero ? "bg-white text-[#0b1020] hover:bg-white/90" : "btn-glow",
+                )}
                 onClick={() => navigate("/auth?returnTo=%2Fdashboard")}
               >
                 {t.nav.create}
@@ -148,7 +202,10 @@ export function Nav() {
           )}
 
           <button
-            className="ml-1 inline-flex rounded-lg p-2 text-muted-foreground hover:bg-accent md:hidden"
+            className={cn(
+              "ml-1 inline-flex rounded-lg p-2 md:hidden",
+              onHero ? "text-white hover:bg-white/10" : "text-muted-foreground hover:bg-accent",
+            )}
             aria-label="Toggle menu"
             onClick={() => setMenuOpen(!menuOpen)}
           >

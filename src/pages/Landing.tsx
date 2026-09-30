@@ -1,7 +1,6 @@
 import { AdSwirl } from "@/components/AdSwirl";
 import { Atmosphere } from "@/components/Atmosphere";
 import { AethelMark } from "@/components/AethelMark";
-import { ElioMark } from "@/components/ElioMark";
 import { CardOrdering } from "@/components/CardOrdering";
 import { NfcHeroVisual } from "@/components/NfcHeroVisual";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
@@ -63,41 +62,23 @@ export default function Landing() {
   return (
     <div className="relative min-h-screen">
       <Atmosphere />
-      <Nav />
 
-      {/* ================= HERO ================= */}
-      <section className="relative px-4 pb-6 pt-24 sm:px-6 sm:pb-8 sm:pt-28">
+      {/* ================= HERO — the nav is merged into the poster ================= */}
+      <section className="relative">
+        {/* Transparent over the poster; the white bar fades in on scroll. */}
+        <Nav overlay />
         <div
-          className="relative mx-auto flex min-h-[calc(100svh-7.5rem)] max-w-6xl flex-col overflow-hidden rounded-[1.75rem] sm:rounded-[2.75rem]"
+          className="relative flex min-h-[100svh] flex-col overflow-hidden"
           style={adPanelStyle}
         >
-          {/* Ad framing — dashed border, corner rings, ribbon swirls */}
+          {/* Ad framing — dashed border, ribbon swirls */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-3 rounded-[1.4rem] border border-dashed border-white/25 sm:inset-5 sm:rounded-[2.4rem]"
+            className="pointer-events-none absolute inset-4 rounded-[1.5rem] border border-dashed border-white/25 sm:inset-6 sm:rounded-[2rem] lg:inset-8"
           />
-          {/* Poster brand lockup — the Elio logo inverted for the blue surface */}
-          <Link
-            to="/"
-            aria-label="Elio Pages"
-            className="absolute left-6 top-6 inline-flex items-center gap-2.5 sm:left-10 sm:top-9"
-          >
-            <ElioMark invert className="size-8 rounded-md" />
-            <span className="font-display text-sm font-semibold text-white sm:text-base">
-              Elio Pages
-            </span>
-          </Link>
-          <div
-            aria-hidden="true"
-            className="absolute right-6 top-7 flex gap-2.5 sm:right-10 sm:top-10"
-          >
-            <span className="size-3 rounded-full border border-white/55" />
-            <span className="size-3 rounded-full border border-white/55" />
-            <span className="size-3 rounded-full border border-white/55" />
-          </div>
           <AdSwirl className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-white/25" />
           <AdSwirl className="pointer-events-none absolute -bottom-20 -left-16 h-56 w-56 -rotate-90 text-white/15" />
-          <div className="relative flex flex-1 flex-col justify-center px-5 pb-12 pt-24 sm:px-10 sm:pb-14 sm:pt-28 lg:px-14">
+          <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 pb-12 pt-28 sm:px-10 sm:pb-14 sm:pt-32 lg:px-14">
             <div className="grid items-center gap-12 lg:grid-cols-[1.25fr_0.75fr]">
               <div>
                 <motion.div
@@ -185,7 +166,7 @@ export default function Landing() {
           </div>
 
           {/* Contact bar — the strip of details at the foot of the poster */}
-          <div className="relative mx-5 mb-6 flex flex-col gap-3 border-t border-dashed border-white/30 pt-5 text-xs text-white/70 sm:mx-10 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:text-sm lg:mx-14">
+          <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-3 border-t border-dashed border-white/30 px-5 pb-6 pt-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:pb-8 sm:text-sm lg:px-14">
             <span>{t.hero.note}</span>
             <span className="hidden text-white/40 sm:block">—</span>
             <a
