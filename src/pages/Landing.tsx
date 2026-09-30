@@ -2,7 +2,7 @@ import { AdSwirl } from "@/components/AdSwirl";
 import { Atmosphere } from "@/components/Atmosphere";
 import { AethelMark } from "@/components/AethelMark";
 import { CardOrdering } from "@/components/CardOrdering";
-import { NfcHeroVisual } from "@/components/NfcHeroVisual";
+import { HeroCarousel } from "@/components/HeroCarousel";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
@@ -133,29 +133,14 @@ export default function Landing() {
                 </motion.div>
               </div>
 
-              {/* Poster photo — duotone blue with the card-tap composition on top */}
+              {/* Poster carousel — the card-tap moment, then the client faces */}
               <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.35, ease: [0.21, 0.6, 0.35, 1] }}
                 className="relative mx-auto w-full max-w-md"
               >
-                <div className="relative isolate overflow-hidden rounded-[1.75rem] border border-white/20 shadow-[0_30px_70px_-30px_rgba(3,10,40,0.9)]">
-                  <img
-                    src={photos.portraits}
-                    alt=""
-                    className="aspect-[4/5] w-full object-cover object-top"
-                  />
-                  {/* Blue duotone wash, like the reference ads */}
-                  <div className="absolute inset-0 bg-[#1e4fd8] mix-blend-color" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#06143a]/85 via-transparent to-[#06143a]/30" />
-                </div>
-                {/* The card-tap composition sits on the poster */}
-                <div className="absolute inset-x-0 bottom-4 flex justify-center">
-                  <div className="w-[17rem]">
-                    <NfcHeroVisual />
-                  </div>
-                </div>
+                <HeroCarousel />
               </motion.div>
             </div>
           </div>

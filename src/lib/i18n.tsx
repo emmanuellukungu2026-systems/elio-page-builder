@@ -42,6 +42,7 @@ const en = {
     note: "Free · No coding needed · Live in minutes",
     cardRole: "Design & build studio",
     cardCta: "Start a conversation",
+    slide: "Slide",
   },
   how: {
     kicker: "Built for business",
@@ -687,6 +688,7 @@ const fr: Dict = {
     note: "Gratuit · Sans code · En ligne en quelques minutes",
     cardRole: "Studio de design & fabrication",
     cardCta: "Démarrer la conversation",
+    slide: "Diapositive",
   },
   how: {
     kicker: "Pensé pour les pros",
@@ -1330,6 +1332,7 @@ const tr: Dict = {
     note: "Ücretsiz · Kod gerekmez · Dakikalar içinde yayında",
     cardRole: "Tasarım ve üretim atölyesi",
     cardCta: "Sohbeti başlat",
+    slide: "Slayt",
   },
   how: {
     kicker: "İş dünyası için",
