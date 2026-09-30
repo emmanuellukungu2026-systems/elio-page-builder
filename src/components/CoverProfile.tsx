@@ -76,8 +76,8 @@ export function CoverProfile({ page }: { page: CoverPage }) {
     article: w.articles,
   };
 
-  /* The panel itself: client accent blooming over deep navy — reads the same
-     in light and dark mode, so the white display type always holds. */
+  /* Daylight washes live inline (white + accent tints); this is the night
+     version only: accent blooming over deep navy behind the display type. */
   const panelStyle: CSSProperties = {
     background: [
       // Readability scrim — keeps the white type crisp over any accent
@@ -102,9 +102,23 @@ export function CoverProfile({ page }: { page: CoverPage }) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.21, 0.6, 0.35, 1] }}
-          className="relative flex min-h-[84vh] flex-col justify-between overflow-hidden rounded-[1.75rem] border border-white/15 px-5 py-6 sm:rounded-[2.5rem] sm:px-10 sm:py-8"
-          style={panelStyle}
+          className="relative flex min-h-[84vh] flex-col justify-between overflow-hidden rounded-[1.75rem] border border-border/60 bg-card px-5 py-6 sm:rounded-[2.5rem] sm:px-10 sm:py-8"
+          style={{ "--cover-name": accent } as CSSProperties}
         >
+          {/* Daylight: white washed with the client's accent */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 dark:hidden"
+            style={{
+              background: [
+                `radial-gradient(820px 500px at 88% 8%, ${accent}1f, transparent 62%)`,
+                `radial-gradient(700px 520px at 4% 96%, ${accent}14, transparent 58%)`,
+                "linear-gradient(155deg, #ffffff 0%, #f7f9fd 55%, #eef3fb 100%)",
+              ].join(", "),
+            }}
+          />
+          {/* Night: the accent glow over deep navy */}
+          <div aria-hidden="true" className="absolute inset-0 hidden dark:block" style={panelStyle} />
           {/* ===== Top bar ===== */}
           <div className="relative flex items-center justify-between gap-4">
             <Link to={`/u/${page.username}`} className="flex min-w-0 items-center gap-2.5">
@@ -113,31 +127,31 @@ export function CoverProfile({ page }: { page: CoverPage }) {
                   src={page.logoUrl}
                   alt={page.displayName}
                   onError={() => setLogoBroken(true)}
-                  className="size-9 shrink-0 rounded-full object-cover ring-2 ring-white/40"
+                  className="size-9 shrink-0 rounded-full object-cover ring-2 ring-border"
                 />
               ) : (
                 <span
-                  className="flex size-9 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold text-white ring-2 ring-white/30"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold text-white ring-2 ring-border"
                   style={{ background: accent }}
                 >
                   {initials}
                 </span>
               )}
-              <span className="truncate font-display text-sm font-semibold text-white sm:text-base">
+              <span className="truncate font-display text-sm font-semibold text-foreground sm:text-base">
                 {page.displayName}
               </span>
             </Link>
 
-            <nav className="hidden items-center gap-7 text-sm text-white/70 sm:flex">
-              <a href="#cover-top" className="transition-colors hover:text-white">
+            <nav className="hidden items-center gap-7 text-sm text-muted-foreground sm:flex">
+              <a href="#cover-top" className="transition-colors hover:text-foreground">
                 {w.home}
               </a>
               {items.length > 0 && (
-                <a href="#cover-work" className="transition-colors hover:text-white">
+                <a href="#cover-work" className="transition-colors hover:text-foreground">
                   {w.projects}
                 </a>
               )}
-              <a href="#cover-contact" className="transition-colors hover:text-white">
+              <a href="#cover-contact" className="transition-colors hover:text-foreground">
                 {w.contact}
               </a>
             </nav>
@@ -147,7 +161,7 @@ export function CoverProfile({ page }: { page: CoverPage }) {
                 href={waLink(page.whatsapp, waMessage)}
                 target="_blank"
                 rel="noreferrer"
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-colors hover:bg-white/25 sm:hidden"
+                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors hover:bg-primary/15 sm:hidden"
                 aria-label={w.contact}
               >
                 <MessageCircle className="size-4" />
@@ -161,12 +175,12 @@ export function CoverProfile({ page }: { page: CoverPage }) {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-              className="font-display text-white"
+              className="font-display"
             >
-              <span className="block text-[clamp(1.375rem,4vw,2.75rem)] font-semibold leading-tight text-white/85">
+              <span className="block text-[clamp(1.375rem,4vw,2.75rem)] font-semibold leading-tight text-foreground/80">
                 {kicker}
               </span>
-              <span className="mt-1 block break-words text-[clamp(2.75rem,9vw,7rem)] font-bold leading-[0.92] tracking-tight [overflow-wrap:anywhere]">
+              <span className="mt-1 block break-words text-[clamp(2.75rem,9vw,7rem)] font-extrabold leading-[0.92] tracking-tight text-[var(--cover-name)] [overflow-wrap:anywhere] dark:text-foreground">
                 {page.displayName}
               </span>
             </motion.h1>
@@ -175,10 +189,10 @@ export function CoverProfile({ page }: { page: CoverPage }) {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
-              className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/75 sm:text-base"
+              className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground sm:text-base"
             >
               {page.trade && (
-                <span className="uppercase tracking-[0.18em] text-white/60">{page.trade}</span>
+                <span className="font-semibold uppercase tracking-[0.18em] text-foreground/70">{page.trade}</span>
               )}
               {page.location && (
                 <span className="inline-flex items-center gap-1.5">
@@ -192,15 +206,30 @@ export function CoverProfile({ page }: { page: CoverPage }) {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.35 }}
-                className="mt-5 max-w-2xl text-sm leading-7 text-white/75 sm:text-base"
+                className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base"
               >
                 {page.bio}
               </motion.p>
             )}
+
+            {page.whatsapp && (
+              <motion.a
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.45 }}
+                href={waLink(page.whatsapp, waMessage)}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-7 inline-flex h-11 items-center gap-2 rounded-full px-6 text-sm font-semibold text-white shadow-md transition-transform active:scale-[0.98]"
+                style={{ background: accent }}
+              >
+                <MessageCircle className="size-4" /> {w.contact}
+              </motion.a>
+            )}
           </div>
 
           {/* ===== Meta row — the bottom of the panel ===== */}
-          <div className="relative flex flex-col gap-2 border-t border-white/15 pt-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
+          <div className="relative flex flex-col gap-2 border-t border-border/70 pt-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:text-sm">
             <span className="font-mono">/u/{page.username}</span>
             <span className="hidden sm:block">—</span>
             <span className="truncate">{meta.join(" · ") || "\u00a0"}</span>

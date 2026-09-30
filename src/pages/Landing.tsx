@@ -56,11 +56,23 @@ export default function Landing() {
 
       {/* ================= HERO ================= */}
       <section className="relative px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-20">
-        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[1.75rem] sm:rounded-[2.75rem]">
-          {/* Blue → magenta bloom filling the panel */}
+        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[1.75rem] border border-border/60 bg-card sm:rounded-[2.75rem]">
+          {/* Daylight panel — white washed with brand blue and a warm amber corner */}
           <div
             aria-hidden="true"
-            className="absolute inset-0"
+            className="absolute inset-0 dark:hidden"
+            style={{
+              background: [
+                "radial-gradient(760px 460px at 88% 10%, rgba(30, 79, 216, 0.1), transparent 62%)",
+                "radial-gradient(680px 500px at 4% 96%, rgba(243, 167, 44, 0.14), transparent 60%)",
+                "linear-gradient(150deg, #ffffff 0%, #f7f9fd 52%, #eef2fb 100%)",
+              ].join(", "),
+            }}
+          />
+          {/* Night keeps the blue → magenta bloom */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 hidden dark:block"
             style={{
               background: [
                 "linear-gradient(180deg, rgba(6,10,26,0.45) 0%, rgba(6,10,26,0.18) 45%, rgba(6,10,26,0.5) 100%)",
@@ -77,9 +89,9 @@ export default function Landing() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs text-white/85"
+                  className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card px-3 py-1.5 text-xs text-muted-foreground shadow-sm"
                 >
-                  <Sparkles className="size-3.5 text-white" />
+                  <Sparkles className="size-3.5 text-primary" />
                   {t.hero.badge}
                 </motion.div>
 
@@ -87,18 +99,18 @@ export default function Landing() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mt-6 font-display text-[clamp(2.25rem,5vw,4.25rem)] font-bold leading-[1.03] tracking-tight text-white"
+                  className="mt-6 font-display text-[clamp(2.25rem,5vw,4.25rem)] font-extrabold leading-[1.03] tracking-tight text-foreground"
                 >
                   {t.hero.titleA}
                   <br />
-                  {t.hero.titleB}
+                  <span className="text-primary">{t.hero.titleB}</span>
                 </motion.h1>
 
                 <motion.p
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mt-6 max-w-lg text-lg leading-8 text-white/75"
+                  className="mt-6 max-w-lg text-lg leading-8 text-muted-foreground"
                 >
                   {t.hero.subtitle}
                 </motion.p>
@@ -111,7 +123,7 @@ export default function Landing() {
                 >
                   <Button
                     size="lg"
-                    className="h-12 rounded-xl bg-white px-7 text-base font-semibold text-[#0b1020] hover:bg-white/90"
+                    className="btn-glow h-12 rounded-xl px-7 text-base font-semibold"
                     asChild
                   >
                     <Link to={pageHref}>
@@ -121,7 +133,7 @@ export default function Landing() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-12 rounded-xl border-white/30 bg-white/10 px-7 text-base text-white hover:bg-white/20 hover:text-white"
+                    className="h-12 rounded-xl px-7 text-base"
                     asChild
                   >
                     <a href="/directory">{t.hero.secondary}</a>
@@ -141,14 +153,14 @@ export default function Landing() {
             </div>
 
             {/* Meta row — the bottom of the panel */}
-            <div className="mt-12 flex flex-col gap-3 border-t border-white/15 pt-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
+            <div className="mt-12 flex flex-col gap-3 border-t border-border/70 pt-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:text-sm">
               <span>{t.hero.note}</span>
               <span className="hidden sm:block">—</span>
               <a
                 href={waLink(CONCIERGE_WHATSAPP, "Hello Aethel team 👋 I'd like my own Elio page.")}
                 target="_blank"
                 rel="noreferrer"
-                className="transition-colors hover:text-white"
+                className="transition-colors hover:text-foreground"
               >
                 {t.aethelTeam.cta}
               </a>
@@ -192,7 +204,7 @@ export default function Landing() {
         <div className="mx-auto mt-12 grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {featureCards.map((c, i) => (
             <Reveal key={c.key} delay={i * 0.06}>
-              <div className="glass h-full rounded-2xl p-6 transition-colors duration-200 hover:bg-white/[0.05]">
+              <div className="glass h-full rounded-2xl p-6">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-ember/15 text-ember">
                   <c.icon className="size-5" />
                 </div>
