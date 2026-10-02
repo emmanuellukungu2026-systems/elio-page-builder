@@ -76,8 +76,8 @@ export default function Landing() {
           {/* Mobile backdrop — the code editor sits behind the words, poster style */}
           <div className="absolute inset-0 overflow-hidden lg:hidden">
             <CodeBackdrop className="size-full" />
-            <div className="absolute inset-0 bg-[#0b2a6b]/35" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#06143a]/80 via-[#06143a]/65 to-[#071a4d]/95" />
+            <div className="absolute inset-0 bg-[#0b2a6b]/25" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#06143a]/80 via-[#06143a]/55 to-[#071a4d]/93" />
           </div>
 
           <AdSwirl className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-white/25" />
