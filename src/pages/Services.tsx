@@ -125,7 +125,7 @@ export default function Services() {
       <Atmosphere />
       <Nav />
 
-      <main className="mx-auto max-w-6xl px-4 pt-28 pb-20 sm:px-6">
+      <main id="main" className="mx-auto max-w-6xl px-4 pt-28 pb-20 sm:px-6">
         <Reveal className="max-w-2xl">
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">
             {t.services.kicker}

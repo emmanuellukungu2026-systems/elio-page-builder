@@ -18,7 +18,8 @@ type CatalogPage = NonNullable<
 export default function Directory() {
   const { t } = useI18n();
   const raw = useQuery(api.pages.listPublishedPages);
-  const pages: CatalogPage[] = raw ?? [];
+  // Stable reference so the memos below don't recompute on every render.
+  const pages: CatalogPage[] = useMemo(() => raw ?? [], [raw]);
   const [query, setQuery] = useState("");
   const [trade, setTrade] = useState("");
 
@@ -44,7 +45,7 @@ export default function Directory() {
       <Atmosphere />
       <Nav />
 
-      <main className="mx-auto max-w-6xl px-4 pt-36 pb-24 sm:px-6">
+      <main id="main" className="mx-auto max-w-6xl px-4 pt-36 pb-24 sm:px-6">
         <div className="max-w-2xl">
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">
             {t.directory.kicker}
@@ -63,12 +64,15 @@ export default function Directory() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t.directory.searchPh}
+              aria-label={t.directory.searchPh}
+              type="search"
               className="rounded-xl pl-9"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
             <button
               onClick={() => setTrade("")}
+              aria-pressed={trade === ""}
               className={
                 trade === ""
                   ? "rounded-full bg-ember px-3 py-1.5 text-xs font-medium text-primary-foreground"
@@ -81,6 +85,7 @@ export default function Directory() {
               <button
                 key={tr}
                 onClick={() => setTrade(trade === tr ? "" : tr)}
+                aria-pressed={trade === tr}
                 className={
                   trade === tr
                     ? "rounded-full bg-ember px-3 py-1.5 text-xs font-medium text-primary-foreground"
@@ -104,10 +109,29 @@ export default function Directory() {
           </div>
         ) : (
           <>
-            <p className="mt-8 text-xs text-muted-foreground">
-              {filtered.length} {filtered.length === 1 ? t.directory.page : t.directory.pages}
-            </p>
-            <div className="mt-4 grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3">
+            {filtered.length === 0 ? (
+              <div className="glass mt-12 flex flex-col items-center rounded-2xl p-14 text-center">
+                <Search className="size-10 text-muted-foreground" />
+                <p className="mt-4 max-w-sm text-sm text-muted-foreground">
+                  {t.directory.noResults}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setQuery("");
+                    setTrade("");
+                  }}
+                  className="mt-4 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  {t.directory.clear}
+                </button>
+              </div>
+            ) : (
+              <>
+                <p className="mt-8 text-xs text-muted-foreground">
+                  {filtered.length} {filtered.length === 1 ? t.directory.page : t.directory.pages}
+                </p>
+                <div className="mt-4 grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3">
               {filtered.map((p, i) => (
                 <motion.div
                   key={p.username}
@@ -182,7 +206,9 @@ export default function Directory() {
                   </Link>
                 </motion.div>
               ))}
-            </div>
+                </div>
+              </>
+            )}
           </>
         )}
       </main>

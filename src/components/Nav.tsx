@@ -65,6 +65,12 @@ export function Nav({ overlay = false }: { overlay?: boolean }) {
           onHero ? "py-5" : scrolled ? "py-2" : "py-4",
         )}
     >
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-10 focus:rounded-lg focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-lg"
+      >
+        {t.nav.skip}
+      </a>
       <div
         className={cn(
           "mx-auto flex max-w-6xl items-center justify-between transition-all duration-300",

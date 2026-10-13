@@ -60,6 +60,7 @@ export default function Landing() {
         {/* Transparent over the poster; the white bar fades in on scroll. */}
         <Nav overlay />
         <div
+          id="main"
           className="relative flex min-h-[100svh] flex-col overflow-hidden"
           style={adPanelStyle}
         >

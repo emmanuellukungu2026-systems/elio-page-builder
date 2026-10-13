@@ -25,6 +25,7 @@ const en = {
     accountCta: "Sign in for your account",
     menu: "Open menu",
     closeMenu: "Close menu",
+    skip: "Skip to content",
   },
   theme: {
     toggle: "Toggle dark mode",
@@ -521,6 +522,8 @@ const en = {
     page: "page",
     projects: "projects",
     project: "project",
+    noResults: "No pages match your search. Try another name, trade or city.",
+    clear: "Clear search",
   },
   profile: {
     back: "Back to directory",
@@ -702,6 +705,7 @@ const fr: Dict = {
     accountCta: "Connectez-vous pour votre compte",
     menu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",
+    skip: "Aller au contenu",
   },
   theme: {
     toggle: "Basculer le mode sombre",
@@ -1198,6 +1202,8 @@ const fr: Dict = {
     page: "page",
     projects: "projets",
     project: "projet",
+    noResults: "Aucune page ne correspond à votre recherche. Essayez un autre nom, métier ou ville.",
+    clear: "Effacer la recherche",
   },
   profile: {
     back: "Retour à l'annuaire",
@@ -1377,6 +1383,7 @@ const tr: Dict = {
     accountCta: "Hesabınız için giriş yapın",
     menu: "Menüyü aç",
     closeMenu: "Menüyü kapat",
+    skip: "İçeriğe geç",
   },
   theme: {
     toggle: "Karanlık modu değiştir",
@@ -1410,7 +1417,7 @@ const tr: Dict = {
         text: "Fotoğraflı, tarihli, sonuçlu ve linkli projeler. Müşteri sormadan cevabını bulur.",
       },
       {
-        title: "Aramayı alın",
+        title: "Aramaları alın",
         text: "WhatsApp, e-posta ve sosyal medya her projenin altında. Size ulaşmak tek dokunuş.",
       },
     ],
@@ -1873,6 +1880,8 @@ const tr: Dict = {
     page: "sayfa",
     projects: "proje",
     project: "proje",
+    noResults: "Aramanızla eşleşen sayfa yok. Başka bir ad, meslek veya şehir deneyin.",
+    clear: "Aramayı temizle",
   },
   profile: {
     back: "Rehbere dön",

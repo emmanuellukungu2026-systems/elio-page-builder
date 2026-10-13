@@ -176,6 +176,11 @@
     background: rgba(79, 125, 255, 0.3);
     color: var(--foreground);
   }
+  /* Keyboard focus must always be visible, whatever the component. */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
