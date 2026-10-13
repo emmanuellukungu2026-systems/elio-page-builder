@@ -363,7 +363,7 @@ function TierCard({
   return (
     <div
       className={cn(
-        "glass relative flex h-full flex-col rounded-3xl p-6",
+        "glass relative flex h-full flex-col rounded-3xl p-6 text-left",
         featured && "ring-2 ring-[#1e4fd8]/60",
       )}
     >

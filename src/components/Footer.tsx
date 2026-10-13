@@ -14,7 +14,7 @@ export function Footer() {
   // Already have a page? The "Create your page" link becomes "Check your page".
   const myPage = useQuery(api.pages.getMyPage);
   return (
-    <footer className="relative z-10 mt-24 border-t border-border/60">
+    <footer className="center-mobile relative z-10 mt-24 border-t border-border/60">
       {!isAuthenticated && (
         <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
           <div className="glass-strong flex flex-col items-center justify-between gap-4 rounded-2xl p-6 sm:flex-row sm:p-7">
@@ -30,7 +30,7 @@ export function Footer() {
       )}
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center justify-center gap-2.5 sm:justify-start">
             <img src={logo} alt="Elio Pages" className="size-7 rounded-md" />
             <span className="font-display text-lg font-semibold tracking-tight">
               Elio <span className="text-muted-foreground">Pages</span>
@@ -89,7 +89,7 @@ export function Footer() {
             <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               {t.footer.aethel}
             </h4>
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-3 flex items-center justify-center gap-2 sm:justify-start">
               <AethelMark className="size-7 rounded-lg" />
               <span className="font-display text-sm font-semibold">Aethel Technologies</span>
             </div>

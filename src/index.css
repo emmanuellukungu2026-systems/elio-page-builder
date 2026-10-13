@@ -5,8 +5,8 @@
 
 /* DO NOT CHANGE */
 @theme inline {
-  --font-display: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: Verdana, Geneva, Tahoma, sans-serif;
+  --font-sans: Verdana, Geneva, Tahoma, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -46,8 +46,8 @@
 
 /* CHANGE VALUES FOR THEME */
 :root {
-  --font-display: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: Verdana, Geneva, Tahoma, sans-serif;
+  --font-sans: Verdana, Geneva, Tahoma, sans-serif;
 
   /* Light theme — cool daylight neutrals with royal blue accent */
   --radius: 0.625rem;
@@ -292,4 +292,13 @@
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* ============ Mobile: centered content ============ */
+/* Marketing pages centre their text on phones (desktop keeps the editorial
+   left alignment). Applied by adding `center-mobile` to a page root. */
+@media (max-width: 639px) {
+  .center-mobile {
+    text-align: center;
+  }
 }

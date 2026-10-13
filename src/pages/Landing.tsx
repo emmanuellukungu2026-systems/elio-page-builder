@@ -52,7 +52,7 @@ export default function Landing() {
   ] as const;
 
   return (
-    <div className="relative min-h-screen">
+    <div className="center-mobile relative min-h-screen">
       <Atmosphere />
 
       {/* ================= HERO — the nav is merged into the poster ================= */}
@@ -91,7 +91,7 @@ export default function Landing() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mt-6 max-w-[14ch] font-display text-[clamp(2.1rem,4.6vw,4rem)] font-bold leading-[1.06] tracking-tight text-white"
+                  className="mx-auto mt-6 max-w-[14ch] font-display text-[clamp(2.1rem,4.6vw,4rem)] font-bold leading-[1.06] tracking-tight text-white sm:mx-0"
                 >
                   <span className="text-[#7db4ff]">{t.hero.titleA}</span>
                   <br />
@@ -102,7 +102,7 @@ export default function Landing() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mt-6 max-w-lg text-lg leading-8 text-white/75"
+                  className="mx-auto mt-6 max-w-lg text-lg leading-8 text-white/75 sm:mx-0"
                 >
                   {t.hero.subtitle}
                 </motion.p>
@@ -111,7 +111,7 @@ export default function Landing() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mt-9 flex flex-wrap items-center gap-3"
+                  className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:justify-start"
                 >
                   <Button
                     size="lg"
@@ -200,7 +200,7 @@ export default function Landing() {
           {featureKeys.map((key, i) => (
             <Reveal key={key} delay={i * 0.05}>
               <div className="border-t border-border/70 py-5">
-                <div className="flex items-baseline justify-between gap-4">
+                <div className="flex items-baseline justify-center gap-2 sm:justify-between sm:gap-4">
                   <h3 className="font-display text-base font-semibold">
                     {t.features[key].title}
                   </h3>
@@ -226,7 +226,7 @@ export default function Landing() {
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
             {t.gallery.title}
           </h2>
-          <p className="mt-4 max-w-xl leading-7 text-muted-foreground">{t.gallery.text}</p>
+          <p className="mx-auto mt-4 max-w-xl leading-7 text-muted-foreground sm:mx-0">{t.gallery.text}</p>
         </Reveal>
         <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {photoStrip.map((src, i) => (
@@ -255,7 +255,7 @@ export default function Landing() {
               className="absolute inset-0 size-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/80 to-background/40" />
-            <p className="relative max-w-md px-6 py-10 font-display text-lg font-semibold leading-relaxed sm:px-10 sm:py-14 sm:text-xl">
+            <p className="relative mx-auto max-w-md px-6 py-10 font-display text-lg font-semibold leading-relaxed sm:mx-0 sm:px-10 sm:py-14 sm:text-xl">
               {t.gallery.band}
             </p>
           </div>
@@ -275,10 +275,10 @@ export default function Landing() {
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
               {t.qr.title}
             </h2>
-            <p className="mt-4 max-w-md leading-7 text-muted-foreground">{t.qr.text}</p>
+            <p className="mx-auto mt-4 max-w-md leading-7 text-muted-foreground sm:mx-0">{t.qr.text}</p>
             <ul className="mt-6 space-y-3 text-sm">
               {t.qr.bullets.map((b) => (
-                <li key={b} className="flex items-center gap-3 text-foreground/85">
+                <li key={b} className="flex items-center justify-center gap-3 text-foreground/85 sm:justify-start">
                   <span className="flex size-5 items-center justify-center rounded-full bg-ember/15">
                     <Nfc className="size-3 text-ember" />
                   </span>
@@ -322,7 +322,7 @@ export default function Landing() {
                 <h2 className="mt-3 font-display text-3xl font-bold tracking-tight">
                   {t.directoryCta.title}
                 </h2>
-                <p className="mt-3 max-w-lg leading-7 text-muted-foreground">
+                <p className="mx-auto mt-3 max-w-lg leading-7 text-muted-foreground sm:mx-0">
                   {t.directoryCta.text}
                 </p>
               </div>
@@ -364,13 +364,13 @@ export default function Landing() {
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
               {t.faq.title}
             </h2>
-            <p className="mt-4 max-w-sm leading-7 text-muted-foreground">{t.faq.sub}</p>
+            <p className="mx-auto mt-4 max-w-sm leading-7 text-muted-foreground sm:mx-0">{t.faq.sub}</p>
           </Reveal>
           <Reveal delay={0.1}>
             <Accordion type="single" collapsible className="glass rounded-2xl px-6">
               {t.faq.items.map((f, i) => (
                 <AccordionItem key={f.q} value={`item-${i}`} className="border-border/60">
-                  <AccordionTrigger className="text-left text-sm font-medium sm:text-base">
+                  <AccordionTrigger className="justify-center gap-2 text-center text-sm font-medium sm:justify-between sm:gap-4 sm:text-left sm:text-base">
                     {f.q}
                   </AccordionTrigger>
                   <AccordionContent className="text-sm leading-6 text-muted-foreground">
@@ -396,7 +396,7 @@ export default function Landing() {
             <AethelMark className="mt-8 hidden h-10 w-auto opacity-90 lg:block" />
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="max-w-xl leading-7 text-muted-foreground">{t.about.text}</p>
+            <p className="mx-auto max-w-xl leading-7 text-muted-foreground sm:mx-0">{t.about.text}</p>
             <div className="mt-8 grid gap-x-10 sm:grid-cols-3">
               {t.about.items.map((item) => (
                 <div key={item.title} className="border-t border-border/70 pt-5">
@@ -430,7 +430,7 @@ export default function Landing() {
                 </div>
               ))}
             </div>
-            <div className="mt-10 flex flex-wrap items-center gap-4">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
               <Button
                 size="lg"
                 className="btn-glow h-12 rounded-xl bg-emerald-600 px-8 text-base text-white hover:bg-emerald-500"

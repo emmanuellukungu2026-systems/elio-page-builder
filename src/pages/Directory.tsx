@@ -41,7 +41,7 @@ export default function Directory() {
   }, [pages, query, trade]);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="center-mobile relative min-h-screen">
       <Atmosphere />
       <Nav />
 
@@ -66,10 +66,10 @@ export default function Directory() {
               placeholder={t.directory.searchPh}
               aria-label={t.directory.searchPh}
               type="search"
-              className="rounded-xl pl-9"
+              className="rounded-xl pl-9 text-left"
             />
           </div>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap justify-center gap-1.5 sm:justify-start">
             <button
               onClick={() => setTrade("")}
               aria-pressed={trade === ""}
