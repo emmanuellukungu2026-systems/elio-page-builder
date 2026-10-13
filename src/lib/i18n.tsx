@@ -23,6 +23,8 @@ const en = {
     create: "Create your page",
     signOut: "Sign out",
     accountCta: "Sign in for your account",
+    menu: "Open menu",
+    closeMenu: "Close menu",
   },
   theme: {
     toggle: "Toggle dark mode",
@@ -143,9 +145,9 @@ const en = {
     },
   },
   gallery: {
-    kicker: "Made with Elio",
-    title: "Real work, shown properly.",
-    text: "Pages Elio builds for real businesses. Every photo in its place, every project with room to breathe.",
+    kicker: "The standard",
+    title: "Your work, shown properly.",
+    text: "Every page is built around the work itself: photos in their place, projects with room to breathe, nothing in the way.",
     band: "Your work deserves better than a camera roll.",
   },
   directoryCta: {
@@ -159,6 +161,8 @@ const en = {
     title: "Your brief is your order.",
     subtitle:
       "Fill in your details once and the form turns into a complete order brief. Send it to us on WhatsApp (attach the PDF if you like) and we build and publish your page. Free.",
+    freeBadge: "100% free",
+    freeNote: "100% free — the WhatsApp message is the order.",
     steps: [
       {
         title: "Send your brief",
@@ -189,6 +193,8 @@ const en = {
       submitShort: "Send on WhatsApp",
       sendTeam: "Send to the Aethel team",
       privacy: "Your brief lands straight in our WhatsApp. That message is your order.",
+      errRequired: "Please fill in the business name and the details.",
+      errStudio: "Could not reach the studio — please use WhatsApp instead.",
       nfcTitle: "NFC card",
       nfcHelp: "A physical card shipped to you. Optional; the page works fine without it.",
       nfcWith: "With NFC card",
@@ -332,6 +338,25 @@ const en = {
     ],
     cta: "Message us on WhatsApp",
   },
+  about: {
+    kicker: "About Aethel",
+    title: "A technology company that keeps things simple.",
+    text: "Aethel Technologies is a small team building useful digital tools for businesses and individuals. Elio Pages is what we build and run today: a free portfolio page for every trade, with a concierge that does the building for you. We care about work that is clear, secure and reliable — software you can hand to a client without a manual.",
+    items: [
+      {
+        title: "Useful first",
+        text: "Every feature has to earn its place. If it doesn't help a business get found or get hired, it doesn't ship.",
+      },
+      {
+        title: "Accessible by default",
+        text: "Free to use, mobile-first, no coding and no jargon. The concierge builds the page for you, so anyone can have one.",
+      },
+      {
+        title: "Built to be trusted",
+        text: "Your page and your data stay yours. No lock-in, no commissions, nothing hidden in the small print.",
+      },
+    ],
+  },
   finalCta: {
     title: "Give your business a real front door.",
     text: "Create your Elio page today. Free, clean, live in minutes.",
@@ -353,7 +378,7 @@ const en = {
     about: "About",
     contact: "Contact",
     privacy: "Privacy",
-    rights: "Elio Pages — a free service by Aethel Technologies.",
+    rights: "All rights reserved.",
   },
   dashboard: {
     client: {
@@ -493,6 +518,9 @@ const en = {
     empty: "No business matches your search yet.",
     emptyCta: "Be the first. Create your page",
     pages: "pages",
+    page: "page",
+    projects: "projects",
+    project: "project",
   },
   profile: {
     back: "Back to directory",
@@ -630,6 +658,10 @@ const en = {
     back: "Back",
     skip: "Skip tour",
     done: "Done",
+    open: "Open the tour",
+    close: "Close the tour",
+    view: "View",
+    thanks: "Tour complete — enjoy Elio Pages.",
     steps: [
       {
         title: "One page, one link",
@@ -668,6 +700,8 @@ const fr: Dict = {
     create: "Créer ma page",
     signOut: "Se déconnecter",
     accountCta: "Connectez-vous pour votre compte",
+    menu: "Ouvrir le menu",
+    closeMenu: "Fermer le menu",
   },
   theme: {
     toggle: "Basculer le mode sombre",
@@ -762,7 +796,7 @@ const fr: Dict = {
       features: [
         "Votre logo sur la carte",
         "Le blason Aethel Technologies",
-        "Un design unique, prête à commander",
+        "Un design unique, prêt à commander",
         "Ouvre votre page Elio en un geste",
       ],
     },
@@ -788,9 +822,9 @@ const fr: Dict = {
     },
   },
   gallery: {
-    kicker: "Créé avec Elio",
-    title: "Du vrai travail, bien présenté.",
-    text: "Des pages qu'Elio construit pour de vraies entreprises. Chaque photo à sa place, chaque projet bien mis en valeur.",
+    kicker: "Le standard",
+    title: "Votre travail, bien présenté.",
+    text: "Chaque page est construite autour du travail lui-même : chaque photo à sa place, chaque projet avec de l'espace, sans rien qui détourne.",
     band: "Votre travail mérite mieux qu'une pellicule de téléphone.",
   },
   directoryCta: {
@@ -804,6 +838,8 @@ const fr: Dict = {
     title: "Votre brief vaut commande.",
     subtitle:
       "Remplissez vos informations une fois : le formulaire devient un brief de commande complet. Envoyez-le sur WhatsApp (joignez le PDF si vous voulez) et on crée et publie votre page. Gratuit.",
+    freeBadge: "100 % gratuit",
+    freeNote: "100 % gratuit — le message WhatsApp est la commande.",
     steps: [
       {
         title: "Envoyez votre brief",
@@ -834,6 +870,8 @@ const fr: Dict = {
       submitShort: "Envoyer sur WhatsApp",
       sendTeam: "Envoyer à l'équipe Aethel",
       privacy: "Votre brief arrive directement sur notre WhatsApp. Ce message, c'est votre commande.",
+      errRequired: "Renseignez le nom de l'entreprise et les détails.",
+      errStudio: "Impossible de joindre le studio — passez plutôt par WhatsApp.",
       nfcTitle: "Carte NFC",
       nfcHelp: "Une carte physique expédiée chez vous. Optionnelle ; la page marche très bien sans.",
       nfcWith: "Avec la carte NFC",
@@ -977,6 +1015,25 @@ const fr: Dict = {
     ],
     cta: "Nous écrire sur WhatsApp",
   },
+  about: {
+    kicker: "À propos d'Aethel",
+    title: "Une technologie qui reste simple.",
+    text: "Aethel Technologies est une petite équipe qui construit des outils numériques utiles pour les entreprises et les particuliers. Elio Pages est ce que nous construisons et exploitons aujourd'hui : une page portfolio gratuite pour tous les métiers, avec un concierge qui réalise la page à votre place. Nous voulons un travail clair, sécurisé et fiable — un logiciel qu'on peut confier à un client sans mode d'emploi.",
+    items: [
+      {
+        title: "Utile avant tout",
+        text: "Chaque fonctionnalité doit se justifier. Si elle n'aide pas une entreprise à être trouvée ou à décrocher un chantier, elle ne sort pas.",
+      },
+      {
+        title: "Accessible par défaut",
+        text: "Gratuit, pensé pour le mobile, sans code ni jargon. Le concierge monte la page à votre place, pour que chacun puisse en avoir une.",
+      },
+      {
+        title: "Fait pour inspirer confiance",
+        text: "Votre page et vos données vous appartiennent. Sans engagement, sans commission, sans petites lignes.",
+      },
+    ],
+  },
   finalCta: {
     title: "Donnez à votre entreprise une vraie vitrine.",
     text: "Créez votre page Elio aujourd'hui. Gratuit, soigné, en ligne en quelques minutes.",
@@ -998,7 +1055,7 @@ const fr: Dict = {
     about: "À propos",
     contact: "Contact",
     privacy: "Confidentialité",
-    rights: "Elio Pages — un service gratuit d'Aethel Technologies.",
+    rights: "Tous droits réservés.",
   },
   dashboard: {
     client: {
@@ -1138,6 +1195,9 @@ const fr: Dict = {
     empty: "Aucune entreprise ne correspond à votre recherche.",
     emptyCta: "Soyez le premier. Créez votre page",
     pages: "pages",
+    page: "page",
+    projects: "projets",
+    project: "projet",
   },
   profile: {
     back: "Retour à l'annuaire",
@@ -1275,6 +1335,10 @@ const fr: Dict = {
     back: "Retour",
     skip: "Passer la visite",
     done: "Terminer",
+    open: "Ouvrir la visite",
+    close: "Fermer la visite",
+    view: "Voir",
+    thanks: "Visite terminée — bonne découverte d'Elio Pages.",
     steps: [
       {
         title: "Une page, un lien",
@@ -1311,6 +1375,8 @@ const tr: Dict = {
     create: "Sayfanı oluştur",
     signOut: "Çıkış yap",
     accountCta: "Hesabınız için giriş yapın",
+    menu: "Menüyü aç",
+    closeMenu: "Menüyü kapat",
   },
   theme: {
     toggle: "Karanlık modu değiştir",
@@ -1431,9 +1497,9 @@ const tr: Dict = {
     },
   },
   gallery: {
-    kicker: "Elio ile yapıldı",
-    title: "Gerçek işler, iyi sunulmuş.",
-    text: "Elio'nun gerçek işletmeler için kurduğu sayfalar. Her fotoğraf yerli yerinde, her proje nefes alacak kadar ferah.",
+    kicker: "Standart",
+    title: "İşiniz, doğru şekilde sunulur.",
+    text: "Her sayfa işin kendisi etrafında kurulur: her fotoğraf yerli yerinde, her proje için ferahlık, gereksiz hiçbir şey yok.",
     band: "İşiniz telefon galerinizden daha fazlasını hak ediyor.",
   },
   directoryCta: {
@@ -1447,6 +1513,8 @@ const tr: Dict = {
     title: "Brief'iniz sizin siparişinizdir.",
     subtitle:
       "Bilgilerinizi bir kez girin, form eksiksiz bir sipariş brief'ine dönüşür. WhatsApp'tan bize gönderin (isterseniz PDF'i de ekleyin); sayfanızı kurup yayınlarız. Ücretsiz.",
+    freeBadge: "%100 ücretsiz",
+    freeNote: "%100 ücretsiz — WhatsApp mesajınız siparişinizdir.",
     steps: [
       {
         title: "Bilgilerinizi gönderin",
@@ -1477,6 +1545,8 @@ const tr: Dict = {
       submitShort: "WhatsApp ile gönder",
       sendTeam: "Aethel ekibine gönder",
       privacy: "Brief doğrudan WhatsApp'ımıza düşer. O mesaj, siparişinizdir.",
+      errRequired: "İşletme adını ve detayları doldurun.",
+      errStudio: "Stüdyoya ulaşılamadı — lütfen WhatsApp'ı kullanın.",
       nfcTitle: "NFC kartı",
       nfcHelp: "Size gönderilecek fiziksel bir kart. İsteğe bağlı; sayfa onsuz da düzgün çalışır.",
       nfcWith: "NFC kartlı",
@@ -1620,6 +1690,25 @@ const tr: Dict = {
     ],
     cta: "WhatsApp'tan yazın",
   },
+  about: {
+    kicker: "Aethel hakkında",
+    title: "Sade kalan bir teknoloji şirketi.",
+    text: "Aethel Technologies; işletmeler ve bireyler için faydalı dijital araçlar geliştiren küçük bir ekip. Bugün ürettiğimiz ve işlettiğimiz ürün Elio Pages: her meslek için ücretsiz bir portföy sayfası ve sayfayı sizin yerinize kuran bir concierge. Net, güvenli ve güvenilir işler istiyoruz — kılavuza ihtiyaç duymadan müşteriye teslim edebileceğiniz bir yazılım.",
+    items: [
+      {
+        title: "Önce fayda",
+        text: "Her özellik yerini hak etmeli. Bir işletmenin bulunmasına veya iş kazanmasına yardımcı olmuyorsa yayına girmez.",
+      },
+      {
+        title: "Varsayılan olarak erişilebilir",
+        text: "Ücretsiz, mobil öncelikli, kod ve jargon yok. Concierge kurulumu yaptığı için herkesin bir sayfası olabilir.",
+      },
+      {
+        title: "Güvenilir olmak için tasarlandı",
+        text: "Sayfanız ve verileriniz sizin. Bağlayıcılık yok, komisyon yok, gizli madde yok.",
+      },
+    ],
+  },
   finalCta: {
     title: "İşletmenize gerçek bir vitrin kazandırın.",
     text: "Elio sayfanızı bugün oluşturun. Ücretsiz, derli toplu, dakikalar içinde yayında.",
@@ -1641,7 +1730,7 @@ const tr: Dict = {
     about: "Hakkında",
     contact: "İletişim",
     privacy: "Gizlilik",
-    rights: "Elio Pages — Aethel Technologies'in ücretsiz hizmeti.",
+    rights: "Tüm hakları saklıdır.",
   },
   dashboard: {
     client: {
@@ -1781,6 +1870,9 @@ const tr: Dict = {
     empty: "Aramanıza uyan bir işletme yok.",
     emptyCta: "İlk siz olun. Sayfanızı oluşturun",
     pages: "sayfa",
+    page: "sayfa",
+    projects: "proje",
+    project: "proje",
   },
   profile: {
     back: "Rehbere dön",
@@ -1918,6 +2010,10 @@ const tr: Dict = {
     back: "Geri",
     skip: "Turu atla",
     done: "Bitir",
+    open: "Turu aç",
+    close: "Turu kapat",
+    view: "Gör",
+    thanks: "Tur tamamlandı — iyi gezmeler.",
     steps: [
       {
         title: "Bir sayfa, bir bağlantı",

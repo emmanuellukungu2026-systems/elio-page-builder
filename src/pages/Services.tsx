@@ -71,7 +71,7 @@ export default function Services() {
   /** Land the brief straight into the Aethel team's studio (/admin orders). */
   const sendToStudio = async () => {
     if (!businessName.trim() || !details.trim()) {
-      toast.error(`${f.name} & ${f.details} — required`);
+      toast.error(f.errRequired);
       return;
     }
     setStudioSending(true);
@@ -90,7 +90,7 @@ export default function Services() {
       });
       setStudioSent(true);
     } catch {
-      toast.error("Could not reach the studio — please use WhatsApp instead.");
+      toast.error(f.errStudio);
     } finally {
       setStudioSending(false);
     }
@@ -99,7 +99,7 @@ export default function Services() {
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!businessName.trim() || !details.trim()) {
-      toast.error(`${f.name} & ${f.details} — required`);
+      toast.error(f.errRequired);
       return;
     }
     setSending(true);
@@ -154,8 +154,7 @@ export default function Services() {
               </div>
             </div>
             <span className="shrink-0 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-              100% free
-
+              {t.services.freeBadge}
             </span>
           </div>
 
@@ -424,7 +423,7 @@ export default function Services() {
                 <h3 className="font-display text-sm font-semibold">{t.services.made.title}</h3>
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">{t.services.made.text}</p>
                 <p className="mt-3 text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                  100% free — the WhatsApp message is the order.
+                  {t.services.freeNote}
                 </p>
               </div>
             </div>

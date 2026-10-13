@@ -14,7 +14,6 @@ import {
   CalendarDays,
   Instagram,
   Linkedin,
-  Loader2,
   Mail,
   MessageCircle,
 } from "lucide-react";

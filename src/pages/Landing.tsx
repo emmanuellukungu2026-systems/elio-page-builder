@@ -21,16 +21,7 @@ import { useI18n } from "@/lib/i18n";
 import { photoStrip, photos } from "@/lib/photos";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  FolderGit2,
-  Lightbulb,
-  MessageCircle,
-  Nfc,
-  Search,
-  Sparkles,
-  Store,
-} from "lucide-react";
+import { ArrowRight, MessageCircle, Nfc, Sparkles, Store } from "lucide-react";
 import { Link } from "react-router";
 import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { cn } from "@/lib/utils";
@@ -51,14 +42,14 @@ export default function Landing() {
   const myPage = useQuery(api.pages.getMyPage);
   const pageHref = myPage ? `/u/${myPage.username}` : "/auth?returnTo=%2Fdashboard";
 
-  const featureCards = [
-    { icon: Store, key: "profile" as const },
-    { icon: FolderGit2, key: "work" as const },
-    { icon: Lightbulb, key: "ideas" as const },
-    { icon: Search, key: "search" as const },
-    { icon: MessageCircle, key: "comments" as const },
-    { icon: Nfc, key: "qr" as const },
-  ];
+  const featureKeys = [
+    "profile",
+    "work",
+    "ideas",
+    "search",
+    "comments",
+    "qr",
+  ] as const;
 
   return (
     <div className="relative min-h-screen">
@@ -99,7 +90,7 @@ export default function Landing() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mt-6 font-display text-[clamp(2.25rem,5vw,4.25rem)] font-extrabold leading-[1.03] tracking-tight text-white"
+                  className="mt-6 max-w-[14ch] font-display text-[clamp(2.1rem,4.6vw,4rem)] font-bold leading-[1.06] tracking-tight text-white"
                 >
                   <span className="text-[#7db4ff]">{t.hero.titleA}</span>
                   <br />
@@ -123,7 +114,7 @@ export default function Landing() {
                 >
                   <Button
                     size="lg"
-                    className="h-12 rounded-full bg-white px-7 text-base font-semibold text-[#0b1020] shadow-lg hover:bg-white/90"
+                    className="h-12 rounded-2xl bg-white px-7 text-base font-semibold text-[#0b1020] shadow-lg hover:bg-white/90"
                     asChild
                   >
                     <Link to={pageHref}>
@@ -133,10 +124,10 @@ export default function Landing() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-12 rounded-full border-white/40 bg-white/10 px-7 text-base text-white hover:border-white/60 hover:bg-white/20 hover:text-white"
+                    className="h-12 rounded-2xl border-white/40 bg-white/10 px-7 text-base text-white hover:border-white/60 hover:bg-white/20 hover:text-white"
                     asChild
                   >
-                    <a href="/directory">{t.hero.secondary}</a>
+                    <Link to="/directory">{t.hero.secondary}</Link>
                   </Button>
                 </motion.div>
               </div>
@@ -172,7 +163,9 @@ export default function Landing() {
       {/* ================= HOW ================= */}
       <section id="how" className="relative px-4 py-24 sm:px-6">
         <Reveal className="mx-auto max-w-6xl">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">{t.how.kicker}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
+            {t.how.kicker}
+          </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
             {t.how.title}
           </h2>
@@ -193,7 +186,7 @@ export default function Landing() {
       {/* ================= FEATURES ================= */}
       <section id="features" className="relative px-4 py-24 sm:px-6">
         <Reveal className="mx-auto max-w-6xl">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
             {t.features.kicker}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
@@ -201,18 +194,21 @@ export default function Landing() {
           </h2>
         </Reveal>
 
-        <div className="mx-auto mt-12 grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {featureCards.map((c, i) => (
-            <Reveal key={c.key} delay={i * 0.06}>
-              <div className="glass h-full rounded-2xl p-6">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-ember/15 text-ember">
-                  <c.icon className="size-5" />
+        {/* Editorial list — hairline rules instead of six identical cards */}
+        <div className="mx-auto mt-10 grid max-w-6xl gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
+          {featureKeys.map((key, i) => (
+            <Reveal key={key} delay={i * 0.05}>
+              <div className="border-t border-border/70 py-5">
+                <div className="flex items-baseline justify-between gap-4">
+                  <h3 className="font-display text-base font-semibold">
+                    {t.features[key].title}
+                  </h3>
+                  <span className="font-display text-xs font-semibold text-ember">
+                    0{i + 1}
+                  </span>
                 </div>
-                <h3 className="mt-4 font-display text-lg font-semibold">
-                  {t.features[c.key].title}
-                </h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {t.features[c.key].text}
+                  {t.features[key].text}
                 </p>
               </div>
             </Reveal>
@@ -223,7 +219,7 @@ export default function Landing() {
       {/* ================= GALLERY ================= */}
       <section className="relative px-4 py-24 sm:px-6">
         <Reveal className="mx-auto max-w-6xl">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
             {t.gallery.kicker}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
@@ -272,7 +268,7 @@ export default function Landing() {
       <section className="relative px-4 py-24 sm:px-6">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
           <Reveal>
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
               {t.qr.kicker}
             </p>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
@@ -319,7 +315,7 @@ export default function Landing() {
             <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/85 to-background/70" />
             <div className="relative grid items-center gap-8 sm:grid-cols-[1fr_auto]">
               <div>
-                <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
                   {t.directoryCta.kicker}
                 </p>
                 <h2 className="mt-3 font-display text-3xl font-bold tracking-tight">
@@ -340,8 +336,8 @@ export default function Landing() {
       </section>
 
       {/* ================= CONCIERGE TEASER ================= */}
-      <section className="relative px-4 py-10 sm:px-6">
-        <Reveal className="mx-auto grid max-w-6xl gap-x-10 gap-y-6 md:grid-cols-3">
+      <section className="relative px-4 py-16 sm:px-6">
+        <Reveal className="mx-auto grid max-w-6xl gap-x-10 gap-y-6 sm:grid-cols-3">
           {t.services.steps.map((s) => (
             <div key={s.title} className="border-t border-border/70 pt-5">
               <span className="font-display text-sm font-semibold text-ember">{s.title}</span>
@@ -361,7 +357,9 @@ export default function Landing() {
       <section id="faq" className="relative px-4 py-24 sm:px-6">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <Reveal>
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">{t.faq.kicker}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
+              {t.faq.kicker}
+            </p>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
               {t.faq.title}
             </h2>
@@ -384,12 +382,38 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ================= ABOUT AETHEL ================= */}
+      <section id="about" className="relative px-4 py-24 sm:px-6">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+          <Reveal>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
+              {t.about.kicker}
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              {t.about.title}
+            </h2>
+            <AethelMark className="mt-8 hidden h-10 w-auto opacity-90 lg:block" />
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="max-w-xl leading-7 text-muted-foreground">{t.about.text}</p>
+            <div className="mt-8 grid gap-x-10 sm:grid-cols-3">
+              {t.about.items.map((item) => (
+                <div key={item.title} className="border-t border-border/70 pt-5">
+                  <h3 className="font-display text-base font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ================= WORK WITH AETHEL TEAM ================= */}
       <section id="aethel-team" className="relative px-4 py-24 sm:px-6">
         <Reveal className="mx-auto max-w-6xl">
           <div className="glass relative overflow-hidden rounded-2xl px-6 py-12 sm:px-10 sm:py-14">
             <div className="max-w-2xl">
-              <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
                 {t.aethelTeam.kicker}
               </p>
               <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
@@ -430,14 +454,13 @@ export default function Landing() {
 
       {/* ================= FINAL CTA ================= */}
       <section className="relative px-4 pb-8 pt-10 sm:px-6">
-        <Reveal className="mx-auto max-w-4xl">
-          <div
-            className="relative overflow-hidden rounded-2xl px-6 py-14 text-center sm:px-12"
-            style={adPanelStyle}
-          >
+        <Reveal className="mx-auto max-w-4xl">            <div
+              className="relative overflow-hidden rounded-2xl px-6 py-14 text-center sm:px-12"
+              style={adPanelStyle}
+            >
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-3 rounded-[1.25rem] border border-dashed border-white/25"
+              className="pointer-events-none absolute inset-3 rounded-[1.25rem] border border-white/15"
             />
             <AdSwirl className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 text-white/25" />
             <AdSwirl className="pointer-events-none absolute -bottom-16 -left-10 h-44 w-44 -rotate-90 text-white/15" />
@@ -448,7 +471,7 @@ export default function Landing() {
             <div className="relative mt-8 flex justify-center">
               <Button
                 size="lg"
-                className="h-12 rounded-full bg-white px-8 text-base font-semibold text-[#0b1020] shadow-lg hover:bg-white/90"
+                className="h-12 rounded-2xl bg-white px-8 text-base font-semibold text-[#0b1020] shadow-lg hover:bg-white/90"
                 asChild
               >
                 <Link to={pageHref}>

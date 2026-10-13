@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
 import { useI18n } from "@/lib/i18n";
+import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { useQuery } from "convex/react";
 import { Link } from "react-router";
 
@@ -16,7 +17,7 @@ export function Footer() {
     <footer className="relative z-10 mt-24 border-t border-border/60">
       {!isAuthenticated && (
         <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
-          <div className="glass-strong flex flex-col items-center justify-between gap-4 rounded-3xl p-6 sm:flex-row sm:p-7">
+          <div className="glass-strong flex flex-col items-center justify-between gap-4 rounded-2xl p-6 sm:flex-row sm:p-7">
             <div className="min-w-0 text-center sm:text-left">
               <p className="font-display text-lg font-semibold">{t.account.title}</p>
               <p className="mt-1 text-sm leading-6 text-muted-foreground">{t.account.text}</p>
@@ -37,7 +38,7 @@ export function Footer() {
           </div>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">{t.footer.blurb}</p>
           <p className="mt-4 text-xs text-muted-foreground/70">
-            Elio Pages — by Aethel Technologies · est. September 22, 2026
+            Elio Pages — by Aethel Technologies
           </p>
         </div>
 
@@ -48,19 +49,19 @@ export function Footer() {
             </h4>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
-                <a href="/#features" className="text-muted-foreground transition-colors hover:text-foreground">
+                <Link to="/#features" className="text-muted-foreground transition-colors hover:text-foreground">
                   {t.nav.features}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/directory" className="text-muted-foreground transition-colors hover:text-foreground">
+                <Link to="/directory" className="text-muted-foreground transition-colors hover:text-foreground">
                   {t.footer.directory}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/services" className="text-muted-foreground transition-colors hover:text-foreground">
+                <Link to="/services" className="text-muted-foreground transition-colors hover:text-foreground">
                   {t.footer.concierge}
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -94,13 +95,24 @@ export function Footer() {
             </div>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
-                <span className="text-muted-foreground">{t.footer.about}</span>
+                <Link to="/#about" className="text-muted-foreground transition-colors hover:text-foreground">
+                  {t.footer.about}
+                </Link>
               </li>
               <li>
-                <span className="text-muted-foreground">{t.footer.contact}</span>
+                <a
+                  href={waLink(CONCIERGE_WHATSAPP, "Hello Aethel team — I'd like to get in touch.")}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {t.footer.contact}
+                </a>
               </li>
               <li>
-                <span className="text-muted-foreground">{t.footer.privacy}</span>
+                <Link to="/#faq" className="text-muted-foreground transition-colors hover:text-foreground">
+                  {t.footer.faq}
+                </Link>
               </li>
             </ul>
           </div>

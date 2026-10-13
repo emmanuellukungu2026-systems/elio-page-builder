@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 
 /** Soft fade + translate reveal when scrolled into view. */
@@ -13,6 +13,11 @@ export function Reveal({
   y?: number;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+
+  // Reduced motion: show the content immediately, no movement at all.
+  if (reduceMotion) return <div className={className}>{children}</div>;
+
   return (
     <motion.div
       className={className}

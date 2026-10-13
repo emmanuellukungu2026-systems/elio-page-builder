@@ -63,7 +63,7 @@ export default function Directory() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t.directory.searchPh}
-              className="rounded-xl bg-white/[0.04] pl-9"
+              className="rounded-xl pl-9"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -95,7 +95,7 @@ export default function Directory() {
 
         {/* Grid */}
         {pages.length === 0 ? (
-          <div className="glass mt-12 flex flex-col items-center rounded-3xl p-14 text-center">
+          <div className="glass mt-12 flex flex-col items-center rounded-2xl p-14 text-center">
             <Store className="size-10 text-muted-foreground" />
             <p className="mt-4 text-sm text-muted-foreground">{t.directory.empty}</p>
             <Button className="btn-glow mt-6 rounded-2xl" asChild>
@@ -105,7 +105,7 @@ export default function Directory() {
         ) : (
           <>
             <p className="mt-8 text-xs text-muted-foreground">
-              {filtered.length} {t.directory.pages}
+              {filtered.length} {filtered.length === 1 ? t.directory.page : t.directory.pages}
             </p>
             <div className="mt-4 grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3">
               {filtered.map((p, i) => (
@@ -176,7 +176,7 @@ export default function Directory() {
                       )}
                       <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground sm:mt-3 sm:text-xs">
                         <Images className="size-3.5" />
-                        {p.itemCount} {t.directory.pages}
+                        {p.itemCount} {p.itemCount === 1 ? t.directory.project : t.directory.projects}
                       </p>
                     </div>
                   </Link>

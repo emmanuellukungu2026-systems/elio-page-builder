@@ -5,8 +5,8 @@
 
 /* DO NOT CHANGE */
 @theme inline {
-  --font-display: "Verdana", "Geneva", "Tahoma", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Verdana", "Geneva", "Tahoma", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -46,8 +46,8 @@
 
 /* CHANGE VALUES FOR THEME */
 :root {
-  --font-display: "Verdana", "Geneva", "Tahoma", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Verdana", "Geneva", "Tahoma", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Light theme — cool daylight neutrals with royal blue accent */
   --radius: 0.625rem;
@@ -95,13 +95,6 @@
 }
 
 /* ---------- Light-mode adjustments for the glass system ---------- */
-
-:root:not(.dark) .orbs {
-  background:
-    radial-gradient(1100px 700px at 85% -10%, rgba(30, 79, 216, 0.05), transparent 60%),
-    radial-gradient(1000px 900px at 50% 110%, rgba(63, 63, 160, 0.04), transparent 60%),
-    var(--background);
-}
 
 :root:not(.dark) .glass,
 :root:not(.dark) .glass-strong {
@@ -163,6 +156,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Anchor targets must clear the fixed nav. */
+    scroll-padding-top: 5.5rem;
   }
   body {
     font-family: var(--font-sans);
@@ -175,7 +170,7 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
   ::selection {
     background: rgba(79, 125, 255, 0.3);
@@ -219,51 +214,19 @@
     box-shadow: 0 2px 6px rgba(2, 6, 23, 0.26);
   }
 
-  /* Static, very subtle page backdrop — no motion, no noise. */
+  /* Flat page backdrop — no orbs, no glow, no noise. */
   .orbs {
     position: fixed;
     inset: 0;
     z-index: -1;
     overflow: hidden;
-    background:
-      radial-gradient(1200px 800px at 85% -10%, rgba(99, 102, 241, 0.07), transparent 60%),
-      radial-gradient(1000px 900px at 50% 110%, rgba(79, 125, 255, 0.05), transparent 60%),
-      var(--background);
-  }
-
-
-  /* Hairline divider with a cool core */
-  .divider-glow {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(79, 125, 255, 0.45), transparent);
+    background: var(--background);
   }
 }
 
 /* Serif accents for “Story” headings */
 .font-serif-accent {
   font-family: "Georgia", "Times New Roman", serif;
-}
-
-/* QR scanning beam */
-@keyframes scan {
-  0% {
-    top: 6%;
-  }
-  50% {
-    top: 88%;
-  }
-  100% {
-    top: 6%;
-  }
-}
-.animate-scan {
-  animation: scan 3.2s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-scan {
-    animation: none;
-  }
 }
 
 /* ============ /Elio glass theme ============ */
@@ -301,6 +264,20 @@
 .px-safe {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+}
+
+/* Respect a visitor's reduced-motion preference everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Hide scrollbars while keeping scrollability (horizontal panels, snack rails). */

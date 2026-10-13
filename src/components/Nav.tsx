@@ -9,7 +9,7 @@ import { OWNER_EMAILS } from "@/lib/elio";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Hash, LogOut, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import {
   DropdownMenu,
@@ -34,6 +34,16 @@ export function Nav({ overlay = false }: { overlay?: boolean }) {
     isAuthenticated && !!user?.email && OWNER_EMAILS.includes(user.email.trim().toLowerCase());
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 24));
+
+  // Close the mobile sheet on Escape — the menu is a disclosure, not a trap.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   // Over a dark poster: transparent bar with light type. Scrolled: white glass.
   const onHero = overlay && !scrolled;
@@ -66,7 +76,11 @@ export function Nav({ overlay = false }: { overlay?: boolean }) {
               ),
         )}
       >
-        <Link to="/" className="group flex items-center gap-2.5" aria-label="Elio Pages">
+        <Link
+          to="/"
+          className="group flex items-center gap-2.5"
+          aria-label="Elio Pages — by Aethel Technologies"
+        >
           <img
             src={onHero ? logoInverted : logo}
             alt="Elio Pages"
@@ -74,21 +88,26 @@ export function Nav({ overlay = false }: { overlay?: boolean }) {
           />
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className={cn(
-                "rounded-lg px-3 py-1.5 text-sm transition-colors",
-                onHero
-                  ? "text-white/80 hover:bg-white/10 hover:text-white"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground",
-              )}
-            >
-              {l.label}
-            </a>
-          ))}
+        <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
+          {links.map((l) => {
+            const cls = cn(
+              "rounded-lg px-3 py-1.5 text-sm transition-colors",
+              onHero
+                ? "text-white/80 hover:bg-white/10 hover:text-white"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground",
+            );
+            // Hash links stay plain anchors (native in-page jump); routes use
+            // the router so the app is not reloaded.
+            return l.href.startsWith("/#") ? (
+              <a key={l.href} href={l.href} className={cls}>
+                {l.label}
+              </a>
+            ) : (
+              <Link key={l.href} to={l.href} className={cls}>
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -202,11 +221,14 @@ export function Nav({ overlay = false }: { overlay?: boolean }) {
           )}
 
           <button
+            type="button"
             className={cn(
               "ml-1 inline-flex rounded-lg p-2 md:hidden",
               onHero ? "text-white hover:bg-white/10" : "text-muted-foreground hover:bg-accent",
             )}
-            aria-label="Toggle menu"
+            aria-label={menuOpen ? t.nav.closeMenu : t.nav.menu}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -214,17 +236,23 @@ export function Nav({ overlay = false }: { overlay?: boolean }) {
         </div>
 
         {menuOpen && (
-          <div className="glass absolute inset-x-3 top-full mt-2 rounded-2xl p-3 md:hidden">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setMenuOpen(false)}
-                className="block rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                {l.label}
-              </a>
-            ))}
+          <div
+            id="mobile-menu"
+            className="glass absolute inset-x-3 top-full mt-2 rounded-2xl p-3 md:hidden"
+          >
+            {links.map((l) => {
+              const cls =
+                "block rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground";
+              return l.href.startsWith("/#") ? (
+                <a key={l.href} href={l.href} className={cls} onClick={() => setMenuOpen(false)}>
+                  {l.label}
+                </a>
+              ) : (
+                <Link key={l.href} to={l.href} className={cls} onClick={() => setMenuOpen(false)}>
+                  {l.label}
+                </Link>
+              );
+            })}
             {isOwner && (
               <button
                 onClick={() => {

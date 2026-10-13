@@ -1,5 +1,5 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, type MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 
 /**
@@ -17,12 +17,12 @@ export const currentUser = query({
 });
 
 /** Generate a unique 5-digit ID (10000–99999) not used by any other user. */
-async function generateUniqueLoginId(ctx: { db: any }): Promise<string> {
+async function generateUniqueLoginId(ctx: MutationCtx): Promise<string> {
   for (let attempt = 0; attempt < 50; attempt++) {
     const candidate = String(Math.floor(10000 + Math.random() * 90000));
     const existing = await ctx.db
       .query("users")
-      .withIndex("by_login_id", (q: any) => q.eq("loginId", candidate))
+      .withIndex("by_login_id", (q) => q.eq("loginId", candidate))
       .first();
     if (!existing) return candidate;
   }
