@@ -1,17 +1,19 @@
 import { AethelMark } from "@/components/AethelMark";
+import { CinematicStage } from "@/components/CinematicStage";
 import { ElioMark } from "@/components/ElioMark";
 import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { useI18n } from "@/lib/i18n";
 import { photos } from "@/lib/photos";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, type MotionStyle } from "framer-motion";
 import { Check, MessageCircle, Nfc, Sparkles, Wand2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 /**
- * "Order your card" section — the three NFC card tiers shown side by side,
- * no scroll hijacking.
+ * "Order your card" section — the three NFC card tiers take the scroll stage
+ * one by one, with the same choreography as the product modules above:
+ * each card zooms forward, types its title, presents itself, then recedes.
  *  - Standard: black cards (logos front, QR back), fixed design.
  *  - Pro: Aethel-branded geometric showcase, customizable.
  *  - Independent: fully custom luxury card, no Aethel mention.
@@ -350,20 +352,32 @@ function TierCard({
   art,
   featured,
   cta,
+  tierName,
+  staged = false,
+  titleStyle,
+  bodyStyle,
 }: {
   icon: LucideIcon;
   badge: string;
-  title: string;
+  /** Tier name — the stage types it letter by letter. */
+  title: ReactNode;
+  /** Plain-text tier name for the WhatsApp deep link. */
+  tierName: string;
   desc: string;
   features: readonly string[];
   art: ReactNode;
   featured?: boolean;
   cta: string;
+  /** On the scroll stage the card must fit inside the pinned viewport. */
+  staged?: boolean;
+  /** Scroll choreography: title clears then retypes, body blurs in. */
+  titleStyle?: MotionStyle;
+  bodyStyle?: MotionStyle;
 }) {
   return (
     <div
       className={cn(
-        "glass relative flex h-full flex-col rounded-3xl p-6 text-left",
+        "glass relative flex h-full flex-col rounded-3xl p-6 text-left transition-transform duration-300 hover:-translate-y-1",
         featured && "ring-2 ring-[#1e4fd8]/60",
       )}
     >
@@ -377,34 +391,56 @@ function TierCard({
         <span className="flex size-10 items-center justify-center rounded-2xl bg-ember/15 text-ember">
           <Icon className="size-5" />
         </span>
-        <h3 className="font-display text-base font-semibold sm:text-lg">{title}</h3>
+        <motion.h3
+          className="font-display text-base font-semibold sm:text-lg"
+          style={titleStyle}
+        >
+          {title}
+        </motion.h3>
       </div>
 
-      <p className="mt-3 text-sm leading-6 text-muted-foreground">
-        {desc}
-      </p>
-      {/* Fixed-height art stage: the card visual is scaled down to fit. */}
-      <div className="my-3 flex h-[160px] justify-center overflow-visible sm:h-[220px] lg:h-[260px]">
-        <div className="origin-top scale-[0.55] sm:scale-[0.72] lg:scale-[0.86]">{art}</div>
-      </div>
+      <motion.div className="flex flex-1 flex-col" style={bodyStyle}>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">{desc}</p>
+        {/* Fixed-height art stage: the card visual is scaled down to fit.
+            Staged cards run smaller so the whole tier clears 100svh. */}
+        <div
+          className={cn(
+            "my-3 flex justify-center overflow-visible",
+            staged
+              ? "h-[120px] sm:h-[170px] lg:h-[210px]"
+              : "h-[160px] sm:h-[220px] lg:h-[260px]",
+          )}
+        >
+          <div
+            className={cn(
+              "origin-top",
+              staged
+                ? "scale-[0.42] sm:scale-[0.59] lg:scale-[0.73]"
+                : "scale-[0.55] sm:scale-[0.72] lg:scale-[0.86]",
+            )}
+          >
+            {art}
+          </div>
+        </div>
 
-      <ul className="mt-auto space-y-2 text-sm sm:space-y-2.5">
-        {features.map((f) => (
-          <li key={f} className="flex items-start gap-2.5 text-foreground/85">
-            <Check className="mt-0.5 size-4 shrink-0 text-emerald-500" />
-            {f}
-          </li>
-        ))}
-      </ul>
+        <ul className="mt-auto space-y-2 text-sm sm:space-y-2.5">
+          {features.map((f) => (
+            <li key={f} className="flex items-start gap-2.5 text-foreground/85">
+              <Check className="mt-0.5 size-4 shrink-0 text-emerald-500" />
+              {f}
+            </li>
+          ))}
+        </ul>
 
-      <a
-        href={waLink(CONCIERGE_WHATSAPP, `Hello Aethel team 👋 I'd like to order a card — tier: ${title}`)}
-        target="_blank"
-        rel="noreferrer"
-        className="btn-glow mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-600 text-[13px] font-semibold text-white transition-colors hover:bg-emerald-500"
-      >
-        <MessageCircle className="size-4" /> {cta}
-      </a>
+        <a
+          href={waLink(CONCIERGE_WHATSAPP, `Hello Aethel team 👋 I'd like to order a card — tier: ${tierName}`)}
+          target="_blank"
+          rel="noreferrer"
+          className="btn-glow mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-600 text-[13px] font-semibold text-white transition-colors hover:bg-emerald-500"
+        >
+          <MessageCircle className="size-4" /> {cta}
+        </a>
+      </motion.div>
     </div>
   );
 }
@@ -425,41 +461,19 @@ export function CardOrdering({ className }: { className?: string }) {
     logo?: string;
     name: string;
   }[] = [
-    { key: "standard", icon: Nfc, accent: "#ffffff30", logo: photos.portraits, name: c.stdName },
+    { key: "standard", icon: Nfc, accent: "#4f7dff", logo: photos.portraits, name: c.stdName },
     { key: "pro", icon: Wand2, featured: true, accent: "#c0854f", name: c.proName },
     { key: "independent", icon: Sparkles, accent: "#0e7490", name: c.indName },
   ];
 
-  const renderCard = (tier: (typeof tiers)[number]) => {
-    const dict = c[tier.key];
-    const art =
-      tier.key === "standard" ? (
-        <StandardCard businessName={tier.name} businessLogo={tier.logo} />
-      ) : tier.key === "pro" ? (
-        <ShowcaseCards
-          accent={tier.accent}
-          name={tier.name}
-          role={t.hero.cardRole}
-          phone="+243 990 000 000"
-          email="bonjour@studiokivu.cd"
-          mark={<AethelMark className="size-8 rounded-md bg-white/95 p-0.5" />}
-        />
-      ) : (
-        <IndependentCard company={tier.name} person="KATE MILLER" role="Product Manager" />
-      );
-    return (
-      <TierCard
-        icon={tier.icon}
-        badge={c.popular}
-        title={dict.title}
-        desc={dict.desc}
-        features={dict.features}
-        art={art}
-        cta={c.cta}
-        featured={tier.featured}
-      />
-    );
-  };
+  // The three tiers on stage: each card keeps its art, features and CTA, and
+  // follows the shared scroll choreography (zoom, type, present, recede).
+  const stageItems = tiers.map((tier) => ({
+    ...tier,
+    title: c[tier.key].title,
+    desc: c[tier.key].desc,
+    features: c[tier.key].features,
+  }));
 
   return (
     <section id="cards" className={cn("relative px-4 py-24 sm:px-6", className)}>
@@ -474,13 +488,47 @@ export function CardOrdering({ className }: { className?: string }) {
         <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">{c.title}</h2>
         <p className="mt-4 leading-7 text-muted-foreground">{c.text}</p>
       </motion.div>
-      <div className="mx-auto mt-12 grid max-w-6xl gap-5 md:grid-cols-3">
-        {tiers.map((tier) => (
-          <div key={tier.key} className="flex">
-            {renderCard(tier)}
-          </div>
-        ))}
-      </div>
+      <CinematicStage
+        items={stageItems}
+        className="mt-12"
+        cardClassName="w-[min(88vw,24rem)] sm:w-[min(54vw,24rem)] lg:w-[min(36vw,26rem)]"
+        renderCard={(tier, face) => {
+          // The stage passes scroll styles; the reduced-motion row does not —
+          // that decides whether the card needs the compact pinned proportions.
+          const staged = face.titleStyle !== undefined;
+          const art =
+            tier.key === "standard" ? (
+              <StandardCard businessName={tier.name} businessLogo={tier.logo} />
+            ) : tier.key === "pro" ? (
+              <ShowcaseCards
+                accent={tier.accent}
+                name={tier.name}
+                role={t.hero.cardRole}
+                phone="+243 990 000 000"
+                email="bonjour@studiokivu.cd"
+                mark={<AethelMark className="size-8 rounded-md bg-white/95 p-0.5" />}
+              />
+            ) : (
+              <IndependentCard company={tier.name} person="KATE MILLER" role="Product Manager" />
+            );
+          return (
+            <TierCard
+              staged={staged}
+              icon={tier.icon}
+              badge={c.popular}
+              title={face.title}
+              tierName={tier.title}
+              desc={tier.desc}
+              features={tier.features}
+              art={art}
+              cta={c.cta}
+              featured={tier.featured}
+              titleStyle={face.titleStyle}
+              bodyStyle={face.bodyStyle}
+            />
+          );
+        }}
+      />
       <p className="mx-auto mt-8 flex max-w-2xl items-center justify-center gap-2 text-center text-xs text-muted-foreground">
         <ElioMark className="size-4" />
         {c.note}

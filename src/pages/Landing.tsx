@@ -2,6 +2,8 @@ import { AdSwirl } from "@/components/AdSwirl";
 import { AethelMark } from "@/components/AethelMark";
 import { CardOrdering } from "@/components/CardOrdering";
 import {
+  CardFace,
+  CardLink,
   CinematicStage,
   type StageItem,
 } from "@/components/CinematicStage";
@@ -189,7 +191,20 @@ export default function Landing() {
         </div>
 
         {/* ============ LINEUP — the scroll-driven product sequence ============ */}
-        <CinematicStage items={stageItems} className="pt-4 sm:pt-8" />
+        <CinematicStage
+          items={stageItems}
+          className="pt-4 sm:pt-8"
+          renderCard={(item, face) => (
+            <CardLink href={item.href}>
+              <CardFace
+                item={item}
+                title={face.title}
+                titleStyle={face.titleStyle}
+                faceStyle={face.bodyStyle}
+              />
+            </CardLink>
+          )}
+        />
       </section>
 
 

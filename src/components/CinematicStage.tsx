@@ -24,6 +24,20 @@ export type StageItem = {
   href: string;
 };
 
+/**
+ * What a card renderer receives while the stage plays: the title node
+ * (typed once the card settles on stage) plus the motion styles for the
+ * title and the body — the caller simply spreads them onto its elements.
+ */
+export type StageFace = {
+  title: ReactNode;
+  titleStyle?: MotionStyle;
+  bodyStyle?: MotionStyle;
+};
+
+/** Minimal shape every staged item must provide. */
+export type StageKey = { key: string; title: string; accent: string };
+
 /* Scroll choreography — all values are fractions of the pinned scroll range. */
 const STAGE_END = 0.96;
 const INTRO_END_DESKTOP = 0.12;
@@ -36,26 +50,34 @@ const smoothstep = (a: number, b: number, v: number) => {
 };
 
 /**
- * The pinned, scroll-driven product sequence that replaces the plain card row.
+ * The pinned, scroll-driven sequence where cards take the stage one by one.
  *
- * Layout: the section is 520vh tall and holds a sticky 100svh stage. Scroll
- * position drives every card:
+ * The section is 520vh tall and holds a sticky 100svh stage. Scroll position
+ * drives every card:
  *
- *  - intro     the three cards sit as a fanned row (desktop) or a stack (mobile)
+ *  - intro     the cards sit as a fanned row (desktop) or a stack (mobile)
  *  - focus     the current card flies to the centre, un-rotates, comes forward
  *              on Z and sharpens while the others recede, blur and dim
  *  - present   its title types itself, then the body and the link fade in
  *  - hand-off  it recedes and the next card takes the stage
  *
- * Everything is transform/opacity/filter driven (no layout reads per frame),
- * every animation instance is a framer-motion subscription that unmounts with
- * the component, and `prefers-reduced-motion` falls back to a plain grid.
+ * The choreography is content-agnostic: the caller passes `renderCard`, which
+ * receives the typed title node and the motion styles to spread on its own
+ * markup. Everything is transform/opacity/filter driven (no layout reads per
+ * frame), every animation instance unmounts with the component, and
+ * `prefers-reduced-motion` falls back to a plain grid of the same cards.
  */
-export function CinematicStage({
+export function CinematicStage<T extends StageKey>({
   items,
+  renderCard,
+  cardClassName,
   className,
 }: {
-  items: StageItem[];
+  items: T[];
+  /** Renders one card face; spread `titleStyle` / `bodyStyle` to follow the scroll. */
+  renderCard: (item: T, face: StageFace) => ReactNode;
+  /** Width classes of the staged card (default: the product-card widths). */
+  cardClassName?: string;
   className?: string;
 }) {
   const [reduce] = useState(
@@ -83,7 +105,7 @@ export function CinematicStage({
       className={cn("relative", reduce ? "py-8" : "h-[520vh]", className)}
     >
       {reduce ? (
-        <StaticRow items={items} />
+        <StaticRow items={items} renderCard={renderCard} />
       ) : (
         <motion.div className="stage__pin" style={{ opacity: stageOpacity }}>
           <div className="stage__grid">
@@ -97,6 +119,8 @@ export function CinematicStage({
                 introEnd={introEnd}
                 isMobile={isMobile}
                 progress={scrollYProgress}
+                renderCard={renderCard}
+                cardClassName={cardClassName}
               />
             ))}
           </div>
@@ -106,7 +130,7 @@ export function CinematicStage({
   );
 }
 
-function StageCard({
+function StageCard<T extends StageKey>({
   item,
   index,
   count,
@@ -114,14 +138,18 @@ function StageCard({
   introEnd,
   isMobile,
   progress,
+  renderCard,
+  cardClassName,
 }: {
-  item: StageItem;
+  item: T;
   index: number;
   count: number;
   seg: number;
   introEnd: number;
   isMobile: boolean;
   progress: MotionValue<number>;
+  renderCard: (item: T, face: StageFace) => ReactNode;
+  cardClassName?: string;
 }) {
   const segStart = introEnd + index * seg;
   const isLast = index === count - 1;
@@ -192,46 +220,45 @@ function StageCard({
       <motion.div
         className={cn(
           "stage__card",
-          isMobile ? "w-[min(78vw,22rem)]" : "w-[min(36vw,24rem)]",
+          cardClassName ??
+            (isMobile ? "w-[min(78vw,22rem)]" : "w-[min(36vw,24rem)]"),
         )}
         style={{ x, z, rotateY, scale, opacity, filter, zIndex }}
       >
-        <CardLink href={item.href}>
-          <CardFace
-            item={item}
-            title={
-              <TypeText
-                text={item.title}
-                active={typed}
-                placeholder="full"
-                speed={34}
-              />
-            }
-            titleStyle={{ opacity: titleOpacity }}
-            faceStyle={{ opacity: bodyOpacity, filter: bodyFilter }}
-          />
-        </CardLink>
+        {renderCard(item, {
+          title: typed ? (
+            <TypeText text={item.title} active placeholder="full" speed={34} />
+          ) : (
+            item.title
+          ),
+          titleStyle: { opacity: titleOpacity },
+          bodyStyle: { opacity: bodyOpacity, filter: bodyFilter },
+        })}
       </motion.div>
     </>
   );
 }
 
 /** The row shown when the visitor prefers reduced motion. */
-function StaticRow({ items }: { items: StageItem[] }) {
+function StaticRow<T extends StageKey>({
+  items,
+  renderCard,
+}: {
+  items: T[];
+  renderCard: (item: T, face: StageFace) => ReactNode;
+}) {
   return (
     <div className="mx-auto grid max-w-6xl gap-4 px-5 pb-20 sm:px-10 md:grid-cols-3 lg:px-14">
       {items.map((item) => (
         <div key={item.key} className="h-full">
-          <CardLink href={item.href}>
-            <CardFace item={item} title={item.title.replace(/\*/g, "")} />
-          </CardLink>
+          {renderCard(item, { title: item.title })}
         </div>
       ))}
     </div>
   );
 }
 
-function CardLink({ href, children }: { href: string; children: ReactNode }) {
+export function CardLink({ href, children }: { href: string; children: ReactNode }) {
   const cls =
     "group flex h-full min-h-64 flex-col rounded-2xl bg-[#0a1a44]/60 p-6 ring-1 ring-white/15 backdrop-blur-md transition-[background-color,box-shadow] duration-300 hover:bg-white/[0.07] hover:shadow-[0_28px_60px_-28px_var(--glow)] hover:ring-white/30 sm:p-7";
   // In-page anchors must be native links so the browser scrolls to them.
@@ -247,7 +274,7 @@ function CardLink({ href, children }: { href: string; children: ReactNode }) {
 }
 
 /** The face shared by the animated stage and the reduced-motion row. */
-function CardFace({
+export function CardFace({
   item,
   title,
   titleStyle,
