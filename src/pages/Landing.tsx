@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/accordion";
 import { api } from "@/convex/_generated/api";
 import { useI18n } from "@/lib/i18n";
-import { photoStrip, photos } from "@/lib/photos";
+import { photos } from "@/lib/photos";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { ArrowRight, LayoutGrid, MessageCircle, Nfc, Store } from "lucide-react";
@@ -38,18 +38,22 @@ const heroFieldStyle = {
   ].join(", "),
 };
 
+/* The gallery keeps three prints — the rest of the strip is distributed
+   across the sections above and below, so imagery reads across the page
+   instead of piling up in one block. */
+const galleryPhotos = [
+  photos.studio,
+  photos.film,
+  photos.hands,
+];
+
 /* Scattered pinboard layout for the gallery strip: vertical offset, crop
    ratio and a slight tilt per print. Offsets only kick in at the breakpoint
    where the column count makes them meaningful. */
 const scatter = [
   { y: "lg:mt-2", ratio: "aspect-[4/5]", tilt: "-rotate-1" },
   { y: "mt-8 lg:mt-24", ratio: "aspect-[3/4]", tilt: "rotate-[1.5deg]" },
-  { y: "lg:mt-10", ratio: "aspect-square", tilt: "rotate-1" },
-  { y: "mt-8 lg:mt-4", ratio: "aspect-[4/5]", tilt: "-rotate-[1.5deg]" },
-  { y: "lg:mt-16", ratio: "aspect-[3/4]", tilt: "rotate-[0.8deg]" },
-  { y: "mt-8 lg:mt-0", ratio: "aspect-square", tilt: "-rotate-1" },
-  { y: "lg:mt-6", ratio: "aspect-[4/5]", tilt: "rotate-[1.2deg]" },
-  { y: "mt-8 lg:mt-20", ratio: "aspect-[3/4]", tilt: "-rotate-[0.6deg]" },
+  { y: "mt-8 lg:mt-10", ratio: "aspect-square", tilt: "rotate-1" },
 ] as const;
 
 /* Deep-blue poster panel shared by the hero and the closing CTA. */
@@ -194,13 +198,23 @@ export default function Landing() {
 
       {/* ================= HOW ================= */}
       <section id="how" className="relative px-4 py-24 sm:px-6">
-        <Reveal className="mx-auto max-w-6xl">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
-            {t.how.kicker}
-          </p>
-          <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            {t.how.title}
-          </h2>
+        <Reveal className="mx-auto grid max-w-6xl items-end gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
+              {t.how.kicker}
+            </p>
+            <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              {t.how.title}
+            </h2>
+          </div>
+          <figure className="overflow-hidden rounded-2xl border border-border/50 lg:-rotate-1">
+            <img
+              src={photos.work}
+              alt=""
+              loading="lazy"
+              className="aspect-[16/10] w-full object-cover"
+            />
+          </figure>
         </Reveal>
         <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-3">
           {t.how.items.map((s, i) => (
@@ -262,8 +276,8 @@ export default function Landing() {
         {/* Pinboard: every print keeps its own offset, ratio and a whisper of
             tilt, so the strip reads like photos laid out on a table rather
             than a grid of identical tiles. */}
-        <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {photoStrip.map((src, i) => {
+        <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+          {galleryPhotos.map((src, i) => {
             const { y, ratio, tilt } = scatter[i];
             return (
               <Reveal key={src} delay={i * 0.05} className={y}>
@@ -406,6 +420,14 @@ export default function Landing() {
               {t.faq.title}
             </h2>
             <p className="mx-auto mt-4 max-w-sm leading-7 text-muted-foreground sm:mx-0">{t.faq.sub}</p>
+            <figure className="mt-8 max-w-sm overflow-hidden rounded-2xl border border-border/50 rotate-1">
+              <img
+                src={photos.space}
+                alt=""
+                loading="lazy"
+                className="aspect-[3/2] w-full object-cover"
+              />
+            </figure>
           </Reveal>
           <Reveal delay={0.1}>
             <Accordion type="single" collapsible className="glass rounded-2xl px-6">
