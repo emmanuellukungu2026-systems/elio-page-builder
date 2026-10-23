@@ -46,6 +46,8 @@ const en = {
     circleValue: "0 €",
     cardRole: "Design & build studio",
     cardCta: "Start a conversation",
+    aethelLabel: "Aethel Technologies",
+    aethelLine: "A small team building useful digital tools for businesses and individuals.",
   },
   products: {
     page: {
@@ -768,6 +770,8 @@ const fr: Dict = {
     circleValue: "0 €",
     cardRole: "Studio de design & fabrication",
     cardCta: "Démarrer la conversation",
+    aethelLabel: "Aethel Technologies",
+    aethelLine: "Une petite équipe qui construit des outils numériques utiles pour les entreprises et les particuliers.",
   },
   products: {
     page: {
@@ -1488,6 +1492,8 @@ const tr: Dict = {
     circleValue: "0 €",
     cardRole: "Tasarım ve üretim atölyesi",
     cardCta: "Sohbeti başlat",
+    aethelLabel: "Aethel Technologies",
+    aethelLine: "İşletmeler ve bireyler için faydalı dijital araçlar geliştiren küçük bir ekip.",
   },
   products: {
     page: {

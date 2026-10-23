@@ -114,11 +114,29 @@ export default function Landing() {
           style={heroFieldStyle}
         >
           <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 pb-10 pt-28 sm:px-10 sm:pt-32 lg:px-14">
+            {/* Aethel signature — who is behind Elio Pages */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.21, 0.6, 0.35, 1] }}
+              className="mx-auto flex max-w-md items-center gap-3 rounded-2xl bg-white/[0.08] px-4 py-3 ring-1 ring-white/20 backdrop-blur-md"
+            >
+              <AethelMark className="size-10 shrink-0 rounded-xl bg-white/95 p-1" />
+              <div className="min-w-0">
+                <p className="text-[13px] font-semibold leading-5 text-white">
+                  {t.hero.aethelLabel}
+                </p>
+                <p className="mt-0.5 text-xs leading-5 text-white/70">
+                  {t.hero.aethelLine}
+                </p>
+              </div>
+            </motion.div>
+
             {/* The circle badge — the "latest release" disc of the poster */}
             <motion.div
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
+              transition={{ duration: 0.7, delay: 0.08, ease: [0.21, 0.6, 0.35, 1] }}
               className="mx-auto flex size-40 flex-col items-center justify-center rounded-full bg-white/15 ring-1 ring-white/25 backdrop-blur-md sm:size-52"
             >
               <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/85 sm:text-xs">
