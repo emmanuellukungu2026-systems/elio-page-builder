@@ -114,37 +114,21 @@ export default function Landing() {
           style={heroFieldStyle}
         >
           <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 pb-10 pt-28 sm:px-10 sm:pt-32 lg:px-14">
-            {/* Aethel signature — who is behind Elio Pages */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.21, 0.6, 0.35, 1] }}
-              className="mx-auto flex max-w-md items-center gap-3 rounded-2xl bg-white/[0.08] px-4 py-3 ring-1 ring-white/20 backdrop-blur-md"
-            >
-              <AethelMark className="size-10 shrink-0 rounded-xl bg-white/95 p-1" />
-              <div className="min-w-0">
-                <p className="text-[13px] font-semibold leading-5 text-white">
-                  {t.hero.aethelLabel}
-                </p>
-                <p className="mt-0.5 text-xs leading-5 text-white/70">
-                  {t.hero.aethelLine}
-                </p>
-              </div>
-            </motion.div>
-
-            {/* The circle badge — the "latest release" disc of the poster */}
+            {/* The circle badge — Aethel's own introduction, in the place of
+                the poster's "latest release" disc */}
             <motion.div
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.08, ease: [0.21, 0.6, 0.35, 1] }}
-              className="mx-auto flex size-40 flex-col items-center justify-center rounded-full bg-white/15 ring-1 ring-white/25 backdrop-blur-md sm:size-52"
+              transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
+              className="mx-auto flex size-48 flex-col items-center justify-center rounded-full bg-white/15 px-7 text-center ring-1 ring-white/25 backdrop-blur-md sm:size-64 sm:px-10"
             >
-              <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/85 sm:text-xs">
-                {t.hero.circleLabel}
-              </span>
-              <span className="mt-1 font-display text-4xl font-bold text-white sm:text-5xl">
-                {t.hero.circleValue}
-              </span>
+              <AethelMark className="size-10 rounded-xl bg-white/95 p-1 sm:size-12 sm:rounded-2xl" />
+              <p className="mt-2.5 text-[11px] font-semibold leading-4 text-white sm:text-xs">
+                {t.hero.aethelLabel}
+              </p>
+              <p className="mt-1.5 text-[10px] leading-[14px] text-white/70 sm:text-[11px] sm:leading-4">
+                {t.hero.aethelLine}
+              </p>
             </motion.div>
 
             <motion.h1
