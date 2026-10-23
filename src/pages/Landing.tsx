@@ -10,7 +10,6 @@ import { Footer } from "@/components/Footer";
 import { Marquee } from "@/components/Marquee";
 import { Nav } from "@/components/Nav";
 import { Reveal } from "@/components/Reveal";
-import { TypeText } from "@/components/TypeText";
 import { TiltCard } from "@/components/TiltCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +37,20 @@ const heroFieldStyle = {
     "#2f62d9",
   ].join(", "),
 };
+
+/* Scattered pinboard layout for the gallery strip: vertical offset, crop
+   ratio and a slight tilt per print. Offsets only kick in at the breakpoint
+   where the column count makes them meaningful. */
+const scatter = [
+  { y: "lg:mt-2", ratio: "aspect-[4/5]", tilt: "-rotate-1" },
+  { y: "mt-8 lg:mt-24", ratio: "aspect-[3/4]", tilt: "rotate-[1.5deg]" },
+  { y: "lg:mt-10", ratio: "aspect-square", tilt: "rotate-1" },
+  { y: "mt-8 lg:mt-4", ratio: "aspect-[4/5]", tilt: "-rotate-[1.5deg]" },
+  { y: "lg:mt-16", ratio: "aspect-[3/4]", tilt: "rotate-[0.8deg]" },
+  { y: "mt-8 lg:mt-0", ratio: "aspect-square", tilt: "-rotate-1" },
+  { y: "lg:mt-6", ratio: "aspect-[4/5]", tilt: "rotate-[1.2deg]" },
+  { y: "mt-8 lg:mt-20", ratio: "aspect-[3/4]", tilt: "-rotate-[0.6deg]" },
+] as const;
 
 /* Deep-blue poster panel shared by the hero and the closing CTA. */
 const adPanelStyle = {
@@ -184,7 +197,7 @@ export default function Landing() {
             {t.how.kicker}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            <TypeText text={t.how.title} />
+            {t.how.title}
           </h2>
         </Reveal>
         <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-3">
@@ -207,7 +220,7 @@ export default function Landing() {
             {t.features.kicker}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            <TypeText text={t.features.title} />
+            {t.features.title}
           </h2>
         </Reveal>
 
@@ -240,27 +253,37 @@ export default function Landing() {
             {t.gallery.kicker}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            <TypeText text={t.gallery.title} />
+            {t.gallery.title}
           </h2>
           <p className="mx-auto mt-4 max-w-xl leading-7 text-muted-foreground sm:mx-0">{t.gallery.text}</p>
         </Reveal>
+        {/* Pinboard: every print keeps its own offset, ratio and a whisper of
+            tilt, so the strip reads like photos laid out on a table rather
+            than a grid of identical tiles. */}
         <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {photoStrip.map((src, i) => (
-            <Reveal key={src} delay={i * 0.05}>                <figure
+          {photoStrip.map((src, i) => {
+            const { y, ratio, tilt } = scatter[i];
+            return (
+              <Reveal key={src} delay={i * 0.05} className={y}>
+                <figure
                   className={cn(
                     "group relative overflow-hidden rounded-2xl border border-border/50",
-                    i % 4 === 1 || i % 4 === 2 ? "lg:mt-8" : "",
+                    tilt,
                   )}
                 >
                   <img
                     src={src}
                     alt=""
                     loading="lazy"
-                    className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    className={cn(
+                      "w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]",
+                      ratio,
+                    )}
                   />
                 </figure>
-            </Reveal>
-          ))}
+              </Reveal>
+            );
+          })}
         </div>
         <Reveal className="mx-auto mt-10 max-w-6xl">
           <div className="glass relative overflow-hidden rounded-2xl">
@@ -289,7 +312,7 @@ export default function Landing() {
               {t.qr.kicker}
             </p>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              <TypeText text={t.qr.title} />
+              {t.qr.title}
             </h2>
             <p className="mx-auto mt-4 max-w-md leading-7 text-muted-foreground sm:mx-0">{t.qr.text}</p>
             <ul className="mt-6 space-y-3 text-sm">
@@ -336,7 +359,7 @@ export default function Landing() {
                   {t.directoryCta.kicker}
                 </p>
                 <h2 className="mt-3 font-display text-3xl font-bold tracking-tight">
-                  <TypeText text={t.directoryCta.title} />
+                  {t.directoryCta.title}
                 </h2>
                 <p className="mx-auto mt-3 max-w-lg leading-7 text-muted-foreground sm:mx-0">
                   {t.directoryCta.text}
@@ -378,7 +401,7 @@ export default function Landing() {
               {t.faq.kicker}
             </p>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              <TypeText text={t.faq.title} />
+              {t.faq.title}
             </h2>
             <p className="mx-auto mt-4 max-w-sm leading-7 text-muted-foreground sm:mx-0">{t.faq.sub}</p>
           </Reveal>
@@ -407,7 +430,7 @@ export default function Landing() {
               {t.about.kicker}
             </p>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              <TypeText text={t.about.title} />
+              {t.about.title}
             </h2>
             <AethelMark className="mt-8 hidden h-10 w-auto opacity-90 lg:block" />
           </Reveal>
@@ -434,7 +457,7 @@ export default function Landing() {
                 {t.aethelTeam.kicker}
               </p>
               <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-                <TypeText text={t.aethelTeam.title} />
+                {t.aethelTeam.title}
               </h2>
               <p className="mt-4 leading-7 text-muted-foreground">{t.aethelTeam.text}</p>
             </div>
@@ -485,7 +508,7 @@ export default function Landing() {
             <AdSwirl className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 text-white/25" />
             <AdSwirl className="pointer-events-none absolute -bottom-16 -left-10 h-44 w-44 -rotate-90 text-white/15" />
             <h2 className="relative font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              <TypeText text={t.finalCta.title} />
+              {t.finalCta.title}
             </h2>
             <p className="relative mx-auto mt-4 max-w-md text-white/75">{t.finalCta.text}</p>
             <div className="relative mt-8 flex justify-center">
