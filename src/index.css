@@ -306,6 +306,114 @@
   }
 }
 
+/* ============ Typed titles ============ */
+/* The spacer holds the full line at opacity 0, so typing never shifts the
+   layout and screen readers still get the text; the layer draws the
+   characters revealed so far on top of it. */
+.type-text {
+  position: relative;
+  display: block;
+}
+.type-text__spacer {
+  opacity: 0;
+}
+.type-text__layer {
+  position: absolute;
+  inset: 0;
+}
+.type-word {
+  position: relative;
+  display: inline-block;
+}
+
+/* Animated underline sweep under highlighted words. */
+.type-word--hl::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.12em;
+  height: 0.14em;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.35;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.type-word--hl-on::after {
+  animation: hl-sweep 0.55s cubic-bezier(0.21, 0.6, 0.35, 1) forwards;
+}
+/* Two highlighted words in a row: carry the rule through the space. */
+.type-word--hl:has(+ .type-word--hl)::after {
+  right: -0.28em;
+}
+@keyframes hl-sweep {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Caret blinking while the line types. Absolutely positioned inside the last
+   word, so it never changes the line breaking. */
+.type-caret {
+  position: absolute;
+  left: 100%;
+  top: 0.1em;
+  width: 0.06em;
+  min-width: 2px;
+  height: 0.9em;
+  margin-left: 0.06em;
+  border-radius: 1px;
+  background: currentColor;
+  animation: caret-blink 1s steps(1, end) infinite;
+}
+@keyframes caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ============ Cinematic stage (scroll-driven cards) ============ */
+.stage__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+/* Every card is a direct child, so they share one 3D rendering context and
+   sort by Z — the focused card comes forward, the others recede. */
+.stage__grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
+  place-items: center;
+  perspective: 1400px;
+  perspective-origin: 50% 45%;
+}
+.stage__card {
+  grid-area: 1 / 1;
+  position: relative;
+  will-change: transform, opacity, filter;
+}
+/* Soft accent light that breathes in behind the focused card. */
+.stage__glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 92vmax;
+  height: 92vmax;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: opacity;
+}
+
 /* Respect a visitor's reduced-motion preference everywhere. */
 @media (prefers-reduced-motion: reduce) {
   html {
