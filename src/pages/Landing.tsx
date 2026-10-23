@@ -10,6 +10,7 @@ import { Footer } from "@/components/Footer";
 import { Marquee } from "@/components/Marquee";
 import { Nav } from "@/components/Nav";
 import { Reveal } from "@/components/Reveal";
+import { TypeText } from "@/components/TypeText";
 import { TiltCard } from "@/components/TiltCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -183,7 +184,7 @@ export default function Landing() {
             {t.how.kicker}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            {t.how.title}
+            <TypeText text={t.how.title} />
           </h2>
         </Reveal>
         <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-3">
@@ -206,7 +207,7 @@ export default function Landing() {
             {t.features.kicker}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            {t.features.title}
+            <TypeText text={t.features.title} />
           </h2>
         </Reveal>
 
@@ -239,7 +240,7 @@ export default function Landing() {
             {t.gallery.kicker}
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            {t.gallery.title}
+            <TypeText text={t.gallery.title} />
           </h2>
           <p className="mx-auto mt-4 max-w-xl leading-7 text-muted-foreground sm:mx-0">{t.gallery.text}</p>
         </Reveal>
@@ -288,7 +289,7 @@ export default function Landing() {
               {t.qr.kicker}
             </p>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              {t.qr.title}
+              <TypeText text={t.qr.title} />
             </h2>
             <p className="mx-auto mt-4 max-w-md leading-7 text-muted-foreground sm:mx-0">{t.qr.text}</p>
             <ul className="mt-6 space-y-3 text-sm">
@@ -335,7 +336,7 @@ export default function Landing() {
                   {t.directoryCta.kicker}
                 </p>
                 <h2 className="mt-3 font-display text-3xl font-bold tracking-tight">
-                  {t.directoryCta.title}
+                  <TypeText text={t.directoryCta.title} />
                 </h2>
                 <p className="mx-auto mt-3 max-w-lg leading-7 text-muted-foreground sm:mx-0">
                   {t.directoryCta.text}
@@ -377,7 +378,7 @@ export default function Landing() {
               {t.faq.kicker}
             </p>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              {t.faq.title}
+              <TypeText text={t.faq.title} />
             </h2>
             <p className="mx-auto mt-4 max-w-sm leading-7 text-muted-foreground sm:mx-0">{t.faq.sub}</p>
           </Reveal>
@@ -406,7 +407,7 @@ export default function Landing() {
               {t.about.kicker}
             </p>
             <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              {t.about.title}
+              <TypeText text={t.about.title} />
             </h2>
             <AethelMark className="mt-8 hidden h-10 w-auto opacity-90 lg:block" />
           </Reveal>
@@ -433,7 +434,7 @@ export default function Landing() {
                 {t.aethelTeam.kicker}
               </p>
               <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-                {t.aethelTeam.title}
+                <TypeText text={t.aethelTeam.title} />
               </h2>
               <p className="mt-4 leading-7 text-muted-foreground">{t.aethelTeam.text}</p>
             </div>
@@ -484,7 +485,7 @@ export default function Landing() {
             <AdSwirl className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 text-white/25" />
             <AdSwirl className="pointer-events-none absolute -bottom-16 -left-10 h-44 w-44 -rotate-90 text-white/15" />
             <h2 className="relative font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              {t.finalCta.title}
+              <TypeText text={t.finalCta.title} />
             </h2>
             <p className="relative mx-auto mt-4 max-w-md text-white/75">{t.finalCta.text}</p>
             <div className="relative mt-8 flex justify-center">

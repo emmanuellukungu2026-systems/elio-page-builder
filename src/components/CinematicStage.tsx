@@ -223,7 +223,7 @@ function StaticRow({ items }: { items: StageItem[] }) {
       {items.map((item) => (
         <div key={item.key} className="h-full">
           <CardLink href={item.href}>
-            <CardFace item={item} title={item.title} />
+            <CardFace item={item} title={item.title.replace(/\*/g, "")} />
           </CardLink>
         </div>
       ))}

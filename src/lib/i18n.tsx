@@ -50,26 +50,26 @@ const en = {
   products: {
     page: {
       name: "Page",
-      title: "Your work, on one clean page.",
+      title: "Your work, on one *clean page*.",
       text: "Projects, photos, services, reviews and contact details gathered on a single address. Share the link or the QR code.",
       link: "Create your page",
     },
     card: {
       name: "NFC card",
-      title: "One tap, and your page opens.",
+      title: "One *tap*, and your page opens.",
       text: "The NFC card opens your page on any phone. Nothing to install, nothing to type.",
       link: "See the card",
     },
     concierge: {
       name: "Concierge",
-      title: "We build it for you.",
+      title: "We build it *for you*.",
       text: "Send your brief on WhatsApp. The Aethel team designs your page and publishes it with you.",
       link: "Discover the concierge",
     },
   },
   how: {
     kicker: "Built for business",
-    title: "Show up like a pro from day one.",
+    title: "Show up like a pro *from day one*.",
     items: [
       {
         title: "Tell your story",
@@ -87,7 +87,7 @@ const en = {
   },
   features: {
     kicker: "The catalog",
-    title: "What a client needs to pick you.",
+    title: "What a client needs to *pick you*.",
     profile: {
       title: "Company profile",
       text: "Your logo, story, location and certifications, laid out clearly.",
@@ -115,7 +115,7 @@ const en = {
   },
   qr: {
     kicker: "NFC & link",
-    title: "Your page, on a real card.",
+    title: "Your page, on a *real card*.",
     text: "Hand over a black NFC card and one tap on any phone opens your page. No app, nothing to type. Rather share it online? Your link works just as well in a chat, a bio or an email signature.",
     bullets: [
       "A real NFC card, one tap to open",
@@ -168,13 +168,13 @@ const en = {
   },
   gallery: {
     kicker: "The standard",
-    title: "Your work, shown properly.",
+    title: "Your work, *shown properly*.",
     text: "Every page is built around the work itself: photos in their place, projects with room to breathe, nothing in the way.",
     band: "Your work deserves better than a camera roll.",
   },
   directoryCta: {
     kicker: "The directory",
-    title: "Businesses, side by side.",
+    title: "Businesses, *side by side*.",
     text: "Every published page lives in one searchable catalog. Clients filter by trade or city, open what catches their eye and message you from there.",
     cta: "Open the directory",
   },
@@ -244,7 +244,7 @@ const en = {
   },
   faq: {
     kicker: "FAQ",
-    title: "Questions, answered.",
+    title: "Questions, *answered*.",
     sub: "The short version on creating, sharing and growing with Elio Pages.",
     items: [
       {
@@ -342,7 +342,7 @@ const en = {
   },
   aethelTeam: {
     kicker: "Work with us",
-    title: "Work with the Aethel team. Or join it.",
+    title: "Work with the Aethel team. *Or join it*.",
     text: "Designer, developer, photographer, partner on a project? Write to us about working together or joining. Every message lands on our WhatsApp and we read every one ourselves.",
     items: [
       {
@@ -362,7 +362,7 @@ const en = {
   },
   about: {
     kicker: "About Aethel",
-    title: "A technology company that keeps things simple.",
+    title: "A technology company that keeps things *simple*.",
     text: "Aethel Technologies is a small team building useful digital tools for businesses and individuals. Elio Pages is what we build and run today: a free portfolio page for every trade, with a concierge that does the building for you. We care about work that is clear, secure and reliable — software you can hand to a client without a manual.",
     items: [
       {
@@ -401,7 +401,7 @@ const en = {
     ],
   },
   finalCta: {
-    title: "Give your business a real front door.",
+    title: "Give your business a *real front door*.",
     text: "Create your Elio page today. Free, clean, live in minutes.",
     cta: "Create your page",
     ctaVerify: "Check your page",
@@ -772,26 +772,26 @@ const fr: Dict = {
   products: {
     page: {
       name: "Page",
-      title: "Votre travail, dans une page claire.",
+      title: "Votre travail, dans une *page claire*.",
       text: "Projets, photos, services, avis et contact réunis sur une seule adresse. Partagez le lien ou le QR code.",
       link: "Créer ma page",
     },
     card: {
       name: "Carte NFC",
-      title: "Un geste, et votre page s'ouvre.",
+      title: "Un *geste*, et votre page s'ouvre.",
       text: "La carte NFC ouvre votre page sur n'importe quel téléphone. Rien à installer, rien à taper.",
       link: "Voir la carte",
     },
     concierge: {
       name: "Conciergerie",
-      title: "On la construit pour vous.",
+      title: "On la construit *pour vous*.",
       text: "Envoyez votre brief sur WhatsApp. L'équipe Aethel conçoit votre page et la publie avec vous.",
       link: "Découvrir la conciergerie",
     },
   },
   how: {
     kicker: "Pensé pour les pros",
-    title: "Ayez l'allure d'un pro dès le premier jour.",
+    title: "Ayez l'allure d'un pro *dès le premier jour*.",
     items: [
       {
         title: "Racontez votre histoire",
@@ -809,7 +809,7 @@ const fr: Dict = {
   },
   features: {
     kicker: "Le catalogue",
-    title: "Ce qu'il faut au client pour vous choisir.",
+    title: "Ce qu'il faut au client pour *vous choisir*.",
     profile: {
       title: "Profil d'entreprise",
       text: "Votre logo, votre histoire, votre ville et vos certifications, présentés clairement.",
@@ -837,7 +837,7 @@ const fr: Dict = {
   },
   qr: {
     kicker: "NFC & lien",
-    title: "Votre page, sur une vraie carte.",
+    title: "Votre page, sur une *vraie carte*.",
     text: "Tendez une carte NFC noire : un geste sur n'importe quel téléphone ouvre votre page. Pas d'application, rien à taper. Vous préférez le digital ? Votre lien marche tout aussi bien dans un chat, une bio ou une signature d'e-mail.",
     bullets: [
       "Une vraie carte NFC, un geste pour ouvrir",
@@ -890,13 +890,13 @@ const fr: Dict = {
   },
   gallery: {
     kicker: "Le standard",
-    title: "Votre travail, bien présenté.",
+    title: "Votre travail, *bien présenté*.",
     text: "Chaque page est construite autour du travail lui-même : chaque photo à sa place, chaque projet avec de l'espace, sans rien qui détourne.",
     band: "Votre travail mérite mieux qu'une pellicule de téléphone.",
   },
   directoryCta: {
     kicker: "L'annuaire",
-    title: "Des entreprises, côte à côte.",
+    title: "Des entreprises, *côte à côte*.",
     text: "Toutes les pages publiées sont réunies dans un catalogue recherchable. Les clients filtrent par métier ou ville, ouvrent ce qui leur plaît et vous écrivent depuis là.",
     cta: "Ouvrir l'annuaire",
   },
@@ -966,7 +966,7 @@ const fr: Dict = {
   },
   faq: {
     kicker: "FAQ",
-    title: "Les réponses à vos questions.",
+    title: "Les réponses à *vos questions*.",
     sub: "L'essentiel sur la création, le partage et la croissance avec Elio Pages.",
     items: [
       {
@@ -1064,7 +1064,7 @@ const fr: Dict = {
   },
   aethelTeam: {
     kicker: "Travailler avec nous",
-    title: "Travaillez avec l'équipe Aethel. Ou rejoignez-la.",
+    title: "Travaillez avec l'équipe Aethel. *Ou rejoignez-la*.",
     text: "Designer, développeur, photographe, partenaire sur un projet ? Écrivez-nous pour travailler ensemble ou rejoindre l'équipe. Chaque message arrive sur notre WhatsApp et on les lit tous nous-mêmes.",
     items: [
       {
@@ -1084,7 +1084,7 @@ const fr: Dict = {
   },
   about: {
     kicker: "À propos d'Aethel",
-    title: "Une technologie qui reste simple.",
+    title: "Une technologie qui reste *simple*.",
     text: "Aethel Technologies est une petite équipe qui construit des outils numériques utiles pour les entreprises et les particuliers. Elio Pages est ce que nous construisons et exploitons aujourd'hui : une page portfolio gratuite pour tous les métiers, avec un concierge qui réalise la page à votre place. Nous voulons un travail clair, sécurisé et fiable — un logiciel qu'on peut confier à un client sans mode d'emploi.",
     items: [
       {
@@ -1123,7 +1123,7 @@ const fr: Dict = {
     ],
   },
   finalCta: {
-    title: "Donnez à votre entreprise une vraie vitrine.",
+    title: "Donnez à votre entreprise une *vraie vitrine*.",
     text: "Créez votre page Elio aujourd'hui. Gratuit, soigné, en ligne en quelques minutes.",
     cta: "Créer ma page",
     ctaVerify: "Vérifier ma page",
@@ -1492,26 +1492,26 @@ const tr: Dict = {
   products: {
     page: {
       name: "Sayfa",
-      title: "İşiniz, tek bir temiz sayfada.",
+      title: "İşiniz, tek bir *temiz sayfada*.",
       text: "Projeler, fotoğraflar, hizmetler, yorumlar ve iletişim tek bir adreste. Linki veya QR kodunu paylaşın.",
       link: "Sayfanı oluştur",
     },
     card: {
       name: "NFC kart",
-      title: "Tek dokunuş, sayfanız açılır.",
+      title: "Tek *dokunuş*, sayfanız açılır.",
       text: "NFC kartı sayfanızı her telefonda açar. Kurulum yok, yazacak bir şey yok.",
       link: "Kartı gör",
     },
     concierge: {
       name: "Concierge",
-      title: "Biz sizin için kuruyoruz.",
+      title: "Biz sizin için *kuruyoruz*.",
       text: "Brief'inizi WhatsApp'tan gönderin. Aethel ekibi sayfanızı tasarlar ve sizinle birlikte yayınlar.",
       link: "Concierge'i keşfedin",
     },
   },
   how: {
     kicker: "İş dünyası için",
-    title: "İlk günden profesyonel görünün.",
+    title: "İlk günden *profesyonel* görünün.",
     items: [
       {
         title: "Hikayenizi anlatın",
@@ -1529,7 +1529,7 @@ const tr: Dict = {
   },
   features: {
     kicker: "Katalog",
-    title: "Müşterinin sizi seçmesi için gerekenler.",
+    title: "Müşterinin sizi *seçmesi için* gerekenler.",
     profile: {
       title: "Firma profili",
       text: "Logonuz, hikayeniz, şehriniz ve referanslarınız, açık seçik sunulmuş.",
@@ -1557,7 +1557,7 @@ const tr: Dict = {
   },
   qr: {
     kicker: "NFC & link",
-    title: "Sayfanız, gerçek bir kartta.",
+    title: "Sayfanız, *gerçek bir kartta*.",
     text: "Siyah bir NFC kart uzatın: herhangi bir telefona tek dokunuş sayfanızı açar. Uygulama yok, yazacak bir şey yok. Dijital mi tercih edersiniz? Linkiniz sohbette, biyoda veya e-posta imzasında aynı işi görür.",
     bullets: [
       "Gerçek bir NFC kart, açmak için tek dokunuş",
@@ -1610,13 +1610,13 @@ const tr: Dict = {
   },
   gallery: {
     kicker: "Standart",
-    title: "İşiniz, doğru şekilde sunulur.",
+    title: "İşiniz, *doğru şekilde* sunulur.",
     text: "Her sayfa işin kendisi etrafında kurulur: her fotoğraf yerli yerinde, her proje için ferahlık, gereksiz hiçbir şey yok.",
     band: "İşiniz telefon galerinizden daha fazlasını hak ediyor.",
   },
   directoryCta: {
     kicker: "Rehber",
-    title: "İşletmeler, yan yana.",
+    title: "İşletmeler, *yan yana*.",
     text: "Yayınlanan tüm sayfalar aranabilir tek bir katalogda. Müşteriler mesleğe veya şehre göre filtreler, gözüne kestirdiğini açar ve oradan mesaj atar.",
     cta: "Rehberi aç",
   },
@@ -1686,7 +1686,7 @@ const tr: Dict = {
   },
   faq: {
     kicker: "SSS",
-    title: "Sorular, cevaplar.",
+    title: "Sorular, *cevaplar*.",
     sub: "Elio Pages ile sayfa kurma, paylaşma ve büyütmenin özeti.",
     items: [
       {
@@ -1784,7 +1784,7 @@ const tr: Dict = {
   },
     aethelTeam: {
     kicker: "Bizimle çalışın",
-    title: "Aethel ekibiyle çalışın. Ya da ekibe katılın.",
+    title: "Aethel ekibiyle çalışın. *Ya da ekibe katılın*.",
     text: "Tasarımcı, geliştirici, fotoğrafçı, proje ortağı mısınız? Birlikte çalışmak veya ekibe katılmak için bize yazın. Her mesaj WhatsApp'ımıza düşer ve hepsini bizzat biz okuruz.",
     items: [
       {
@@ -1804,7 +1804,7 @@ const tr: Dict = {
   },
   about: {
     kicker: "Aethel hakkında",
-    title: "Sade kalan bir teknoloji şirketi.",
+    title: "*Sade* kalan bir teknoloji şirketi.",
     text: "Aethel Technologies; işletmeler ve bireyler için faydalı dijital araçlar geliştiren küçük bir ekip. Bugün ürettiğimiz ve işlettiğimiz ürün Elio Pages: her meslek için ücretsiz bir portföy sayfası ve sayfayı sizin yerinize kuran bir concierge. Net, güvenli ve güvenilir işler istiyoruz — kılavuza ihtiyaç duymadan müşteriye teslim edebileceğiniz bir yazılım.",
     items: [
       {
@@ -1843,7 +1843,7 @@ const tr: Dict = {
     ],
   },
   finalCta: {
-    title: "İşletmenize gerçek bir vitrin kazandırın.",
+    title: "İşletmenize *gerçek bir vitrin* kazandırın.",
     text: "Elio sayfanızı bugün oluşturun. Ücretsiz, derli toplu, dakikalar içinde yayında.",
     cta: "Sayfanı oluştur",
     ctaVerify: "Sayfamı kontrol et",
