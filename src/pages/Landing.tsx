@@ -6,6 +6,7 @@ import { CodeBackdrop } from "@/components/CodeBackdrop";
 import { NfcHeroVisual } from "@/components/NfcHeroVisual";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { Footer } from "@/components/Footer";
+import { Marquee } from "@/components/Marquee";
 import { Nav } from "@/components/Nav";
 import { Reveal } from "@/components/Reveal";
 import { TiltCard } from "@/components/TiltCard";
@@ -160,6 +161,9 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* ================= MARQUEE BAND ================= */}
+      <Marquee items={t.marquee.a} tone="dark" speed={52} />
 
       {/* ================= HOW ================= */}
       <section id="how" className="relative px-4 py-24 sm:px-6">
@@ -452,6 +456,9 @@ export default function Landing() {
           </div>
         </Reveal>
       </section>
+
+      {/* ================= MARQUEE BAND ================= */}
+      <Marquee items={t.marquee.b} speed={44} />
 
       {/* ================= FINAL CTA ================= */}
       <section className="relative px-4 pb-8 pt-10 sm:px-6">

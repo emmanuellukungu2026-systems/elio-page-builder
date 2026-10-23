@@ -271,6 +271,28 @@
   padding-right: env(safe-area-inset-right);
 }
 
+/* ============ Marquee band (scrolling ribbon) ============ */
+/* The track holds two identical rows; translating -50% loops seamlessly.
+   Duration is set inline per band; speed is constant regardless of width. */
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-track {
+  animation: marquee-scroll linear infinite;
+  will-change: transform;
+}
+
+/* Hovering the ribbon pauses it, so a visitor can read it at their pace. */
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
 /* Respect a visitor's reduced-motion preference everywhere. */
 @media (prefers-reduced-motion: reduce) {
   html {
