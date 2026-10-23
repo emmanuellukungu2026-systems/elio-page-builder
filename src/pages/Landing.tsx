@@ -1,9 +1,6 @@
 import { AdSwirl } from "@/components/AdSwirl";
-import { Atmosphere } from "@/components/Atmosphere";
 import { AethelMark } from "@/components/AethelMark";
 import { CardOrdering } from "@/components/CardOrdering";
-import { CodeBackdrop } from "@/components/CodeBackdrop";
-import { NfcHeroVisual } from "@/components/NfcHeroVisual";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { Footer } from "@/components/Footer";
 import { Marquee } from "@/components/Marquee";
@@ -22,10 +19,20 @@ import { useI18n } from "@/lib/i18n";
 import { photoStrip, photos } from "@/lib/photos";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { ArrowRight, MessageCircle, Nfc, Sparkles, Store } from "lucide-react";
+import { ArrowRight, LayoutGrid, MessageCircle, Nfc, Store } from "lucide-react";
 import { Link } from "react-router";
 import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { cn } from "@/lib/utils";
+
+/* Flat blue field for the Fedora-style hero: one confident colour, soft light
+   from the top, nothing else. The dark lineup section shows through the
+   diagonal clip at the bottom. */
+const heroFieldStyle = {
+  background: [
+    "radial-gradient(760px 460px at 50% -6%, rgba(255, 255, 255, 0.18), transparent 62%)",
+    "#2f62d9",
+  ].join(", "),
+};
 
 /* Deep-blue poster panel shared by the hero and the closing CTA. */
 const adPanelStyle = {
@@ -52,104 +59,94 @@ export default function Landing() {
     "qr",
   ] as const;
 
+  // The three offerings shown under the hero diagonal (Fedora-style lineup).
+  const productCards = [
+    { key: "page" as const, accent: "#6ee7a0", Icon: LayoutGrid, href: pageHref },
+    { key: "card" as const, accent: "#7db4ff", Icon: Nfc, href: "#cards" },
+    {
+      key: "concierge" as const,
+      accent: "#ffbe6f",
+      Icon: MessageCircle,
+      href: "/services",
+    },
+  ];
+
   return (
     <div className="center-mobile relative min-h-screen">
-      <Atmosphere />
 
-      {/* ================= HERO — the nav is merged into the poster ================= */}
-      <section className="relative">
+      {/* ================= HERO — flat blue field, Fedora-style ================= */}
+      <section className="relative bg-[#06143a]">
         {/* Transparent over the poster; the white bar fades in on scroll. */}
         <Nav overlay />
         <div
           id="main"
-          className="relative flex min-h-[100svh] flex-col overflow-hidden"
-          style={adPanelStyle}
+          className="hero-diagonal relative flex min-h-[88svh] flex-col overflow-hidden"
+          style={heroFieldStyle}
         >
-          {/* Ad framing — ribbon swirls */}
-          {/* Mobile backdrop — the code editor sits behind the words, poster style */}
-          <div className="absolute inset-0 overflow-hidden lg:hidden">
-            <CodeBackdrop className="size-full" />
-            <div className="absolute inset-0 bg-[#0b2a6b]/25" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#06143a]/80 via-[#06143a]/55 to-[#071a4d]/93" />
-          </div>
+          <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 pb-10 pt-28 sm:px-10 sm:pt-32 lg:px-14">
+            {/* The circle badge — the "latest release" disc of the poster */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
+              className="mx-auto flex size-40 flex-col items-center justify-center rounded-full bg-white/15 ring-1 ring-white/25 sm:size-52"
+            >
+              <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/85 sm:text-xs">
+                {t.hero.circleLabel}
+              </span>
+              <span className="mt-1 font-display text-4xl font-bold text-white sm:text-5xl">
+                {t.hero.circleValue}
+              </span>
+            </motion.div>
 
-          <AdSwirl className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 text-white/25" />
-          <AdSwirl className="pointer-events-none absolute -bottom-20 -left-16 h-56 w-56 -rotate-90 text-white/15" />
-          <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 pb-12 pt-28 sm:px-10 sm:pb-14 sm:pt-32 lg:px-14">
-            <div className="grid items-center gap-12 lg:grid-cols-[1.25fr_0.75fr]">
-              <div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs text-white/85 backdrop-blur"
-                >
-                  <Sparkles className="size-3.5 text-[#7db4ff]" />
-                  {t.hero.badge}
-                </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
+              className="mx-auto mt-10 max-w-[18ch] text-center font-display text-[clamp(2rem,4.4vw,3.6rem)] font-bold leading-[1.08] tracking-tight text-white"
+            >
+              <span className="text-[#bcd7ff]">{t.hero.titleA}</span>{" "}
+              {t.hero.titleB}
+            </motion.h1>
 
-                <motion.h1
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mx-auto mt-6 max-w-[14ch] font-display text-[clamp(2.1rem,4.6vw,4rem)] font-bold leading-[1.06] tracking-tight text-white sm:mx-0"
-                >
-                  <span className="text-[#7db4ff]">{t.hero.titleA}</span>
-                  <br />
-                  {t.hero.titleB}
-                </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
+              className="mx-auto mt-5 max-w-xl text-center text-lg leading-8 text-white/80"
+            >
+              {t.hero.subtitle}
+            </motion.p>
 
-                <motion.p
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mx-auto mt-6 max-w-lg text-lg leading-8 text-white/75 sm:mx-0"
-                >
-                  {t.hero.subtitle}
-                </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3, ease: [0.21, 0.6, 0.35, 1] }}
-                  className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:justify-start"
-                >
-                  <Button
-                    size="lg"
-                    className="h-12 rounded-2xl bg-white px-7 text-base font-semibold text-[#0b1020] shadow-lg hover:bg-white/90"
-                    asChild
-                  >
-                    <Link to={pageHref}>
-                      {myPage ? t.hero.ctaVerify : t.hero.cta} <ArrowRight className="size-4" />
-                    </Link>
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-12 rounded-2xl border-white/40 bg-white/10 px-7 text-base text-white hover:border-white/60 hover:bg-white/20 hover:text-white"
-                    asChild
-                  >
-                    <Link to="/directory">{t.hero.secondary}</Link>
-                  </Button>
-                </motion.div>
-              </div>
-
-              {/* Desktop only — on mobile the card visual is the backdrop */}
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.35, ease: [0.21, 0.6, 0.35, 1] }}
-                className="relative mx-auto hidden w-full max-w-md lg:block"
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.21, 0.6, 0.35, 1] }}
+              className="mt-9 flex flex-wrap items-center justify-center gap-3"
+            >
+              <Button
+                size="lg"
+                className="h-12 rounded-2xl bg-white px-7 text-base font-semibold text-[#0b1020] shadow-lg hover:bg-white/90"
+                asChild
               >
-                <NfcHeroVisual />
-              </motion.div>
-            </div>
+                <Link to={pageHref}>
+                  {myPage ? t.hero.ctaVerify : t.hero.cta} <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-12 rounded-2xl border-white/40 bg-white/10 px-7 text-base text-white hover:border-white/60 hover:bg-white/20 hover:text-white"
+                asChild
+              >
+                <Link to="/directory">{t.hero.secondary}</Link>
+              </Button>
+            </motion.div>
           </div>
 
-          {/* Contact bar — the strip of details at the foot of the poster */}
-          <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-3 border-t border-white/15 px-5 pb-6 pt-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:pb-8 sm:text-sm lg:px-14">
+          {/* Foot of the field — the strip of details, kept from the poster */}
+          <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-2 px-5 pb-20 pt-6 text-xs text-white/75 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:pb-28 sm:text-sm lg:px-14">
             <span>{t.hero.note}</span>
-            <span className="hidden text-white/40 sm:block">—</span>
             <a
               href={waLink(CONCIERGE_WHATSAPP, "Hello Aethel team 👋 I'd like my own Elio page.")}
               target="_blank"
@@ -158,6 +155,59 @@ export default function Landing() {
             >
               {t.aethelTeam.cta}
             </a>
+          </div>
+        </div>
+
+        {/* ============ LINEUP — the three offerings under the diagonal ============ */}
+        <div className="pb-20 pt-4 sm:pb-28 sm:pt-8">
+          <div className="mx-auto grid max-w-6xl gap-4 px-5 sm:px-10 md:grid-cols-3 lg:px-14">
+            {productCards.map(({ key, accent, Icon, href }, i) => {
+              const cardBody = (
+                <>
+                  <span
+                    className="flex size-11 items-center justify-center rounded-xl"
+                    style={{ backgroundColor: `${accent}26`, color: accent }}
+                  >
+                    <Icon className="size-5" />
+                  </span>
+                  <span className="mt-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/50">
+                    elio
+                  </span>
+                  <span className="font-display text-lg font-bold uppercase tracking-wide text-white">
+                    {t.products[key].name}
+                  </span>
+                  <h2
+                    className="mt-4 font-display text-2xl font-bold leading-snug sm:text-[1.75rem]"
+                    style={{ color: accent }}
+                  >
+                    {t.products[key].title}
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-white/70">
+                    {t.products[key].text}
+                  </p>
+                  <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-white/90 transition-transform group-hover:translate-x-0.5">
+                    {t.products[key].link} <ArrowRight className="size-4" />
+                  </span>
+                </>
+              );
+              const cardClass =
+                "group flex h-full flex-col rounded-2xl bg-white/[0.04] p-6 ring-1 ring-white/10 transition-colors hover:bg-white/[0.08] sm:p-7";
+              return (
+                <Reveal key={key} delay={i * 0.08} className="h-full">
+                  {/* In-page anchors (#cards) must be native links so the
+                      browser scrolls to the section itself. */}
+                  {href.startsWith("#") ? (
+                    <a href={href} className={cardClass}>
+                      {cardBody}
+                    </a>
+                  ) : (
+                    <Link to={href} className={cardClass}>
+                      {cardBody}
+                    </Link>
+                  )}
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -34,7 +34,6 @@ const en = {
   },
   langName: "Language",
   hero: {
-    badge: "Elio Pages — by Aethel Technologies",
     titleA: "Work that speaks",
     titleB: "for your business.",
     subtitle:
@@ -43,8 +42,30 @@ const en = {
     ctaVerify: "Check your page",
     secondary: "Browse the directory",
     note: "Free · No coding needed · Live in minutes",
+    circleLabel: "Free",
+    circleValue: "0 €",
     cardRole: "Design & build studio",
     cardCta: "Start a conversation",
+  },
+  products: {
+    page: {
+      name: "Page",
+      title: "Your work, on one clean page.",
+      text: "Projects, photos, services, reviews and contact details gathered on a single address. Share the link or the QR code.",
+      link: "Create your page",
+    },
+    card: {
+      name: "NFC card",
+      title: "One tap, and your page opens.",
+      text: "The NFC card opens your page on any phone. Nothing to install, nothing to type.",
+      link: "See the card",
+    },
+    concierge: {
+      name: "Concierge",
+      title: "We build it for you.",
+      text: "Send your brief on WhatsApp. The Aethel team designs your page and publishes it with you.",
+      link: "Discover the concierge",
+    },
   },
   how: {
     kicker: "Built for business",
@@ -735,7 +756,6 @@ const fr: Dict = {
   },
   langName: "Langue",
   hero: {
-    badge: "Elio Pages — par Aethel Technologies",
     titleA: "Un travail qui parle",
     titleB: "pour votre entreprise.",
     subtitle:
@@ -744,8 +764,30 @@ const fr: Dict = {
     ctaVerify: "Vérifier ma page",
     secondary: "Parcourir l'annuaire",
     note: "Gratuit · Sans code · En ligne en quelques minutes",
+    circleLabel: "Gratuit",
+    circleValue: "0 €",
     cardRole: "Studio de design & fabrication",
     cardCta: "Démarrer la conversation",
+  },
+  products: {
+    page: {
+      name: "Page",
+      title: "Votre travail, dans une page claire.",
+      text: "Projets, photos, services, avis et contact réunis sur une seule adresse. Partagez le lien ou le QR code.",
+      link: "Créer ma page",
+    },
+    card: {
+      name: "Carte NFC",
+      title: "Un geste, et votre page s'ouvre.",
+      text: "La carte NFC ouvre votre page sur n'importe quel téléphone. Rien à installer, rien à taper.",
+      link: "Voir la carte",
+    },
+    concierge: {
+      name: "Conciergerie",
+      title: "On la construit pour vous.",
+      text: "Envoyez votre brief sur WhatsApp. L'équipe Aethel conçoit votre page et la publie avec vous.",
+      link: "Découvrir la conciergerie",
+    },
   },
   how: {
     kicker: "Pensé pour les pros",
@@ -1434,7 +1476,6 @@ const tr: Dict = {
   },
   langName: "Dil",
   hero: {
-    badge: "Elio Pages — Aethel Technologies",
     titleA: "İşiniz sizin yerinize",
     titleB: "konuşsun.",
     subtitle:
@@ -1443,8 +1484,30 @@ const tr: Dict = {
     ctaVerify: "Sayfamı kontrol et",
     secondary: "Rehbere göz at",
     note: "Ücretsiz · Kod gerekmez · Dakikalar içinde yayında",
+    circleLabel: "Ücretsiz",
+    circleValue: "0 €",
     cardRole: "Tasarım ve üretim atölyesi",
     cardCta: "Sohbeti başlat",
+  },
+  products: {
+    page: {
+      name: "Sayfa",
+      title: "İşiniz, tek bir temiz sayfada.",
+      text: "Projeler, fotoğraflar, hizmetler, yorumlar ve iletişim tek bir adreste. Linki veya QR kodunu paylaşın.",
+      link: "Sayfanı oluştur",
+    },
+    card: {
+      name: "NFC kart",
+      title: "Tek dokunuş, sayfanız açılır.",
+      text: "NFC kartı sayfanızı her telefonda açar. Kurulum yok, yazacak bir şey yok.",
+      link: "Kartı gör",
+    },
+    concierge: {
+      name: "Concierge",
+      title: "Biz sizin için kuruyoruz.",
+      text: "Brief'inizi WhatsApp'tan gönderin. Aethel ekibi sayfanızı tasarlar ve sizinle birlikte yayınlar.",
+      link: "Concierge'i keşfedin",
+    },
   },
   how: {
     kicker: "İş dünyası için",
