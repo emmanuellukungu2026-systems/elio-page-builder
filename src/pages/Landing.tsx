@@ -18,7 +18,8 @@ import { api } from "@/convex/_generated/api";
 import { useI18n } from "@/lib/i18n";
 import { photoStrip, photos } from "@/lib/photos";
 import { useQuery } from "convex/react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import type { CSSProperties } from "react";
 import { ArrowRight, LayoutGrid, MessageCircle, Nfc, Store } from "lucide-react";
 import { Link } from "react-router";
 import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
@@ -45,6 +46,7 @@ const adPanelStyle = {
 
 export default function Landing() {
   const { t } = useI18n();
+  const reduceMotion = useReducedMotion();
   // Signed-in visitors who already have a page get "Check your page" instead
   // of "Create your page" — it opens their live page.
   const myPage = useQuery(api.pages.getMyPage);
@@ -185,15 +187,34 @@ export default function Landing() {
                   <p className="mt-3 text-sm leading-6 text-white/70">
                     {t.products[key].text}
                   </p>
-                  <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-white/90 transition-transform group-hover:translate-x-0.5">
+                  <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-white/90 transition-transform duration-300 group-hover:translate-x-1.5">
                     {t.products[key].link} <ArrowRight className="size-4" />
                   </span>
                 </>
               );
               const cardClass =
-                "group flex h-full flex-col rounded-2xl bg-white/[0.04] p-6 ring-1 ring-white/10 transition-colors hover:bg-white/[0.08] sm:p-7";
+                "group flex h-full flex-col rounded-2xl bg-white/[0.04] p-6 ring-1 ring-white/10 transition-[background-color,box-shadow] duration-300 hover:bg-white/[0.08] hover:shadow-[0_28px_60px_-28px_var(--glow)] hover:ring-white/25 sm:p-7";
               return (
-                <Reveal key={key} delay={i * 0.08} className="h-full">
+                /* "Claude-style" card motion: spring entrance (fade + rise +
+                   slight scale, staggered per column) and a hover lift. The
+                   accent colour doubles as a soft glow under the card. */
+                <motion.div
+                  key={key}
+                  className="h-full"
+                  style={{ "--glow": `${accent}66` } as CSSProperties}
+                  initial={reduceMotion ? false : { opacity: 0, y: 34, scale: 0.96 }}
+                  whileInView={
+                    reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }
+                  }
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 110,
+                    damping: 18,
+                    delay: 0.09 * i,
+                  }}
+                  whileHover={reduceMotion ? undefined : { y: -10 }}
+                >
                   {/* In-page anchors (#cards) must be native links so the
                       browser scrolls to the section itself. */}
                   {href.startsWith("#") ? (
@@ -205,7 +226,7 @@ export default function Landing() {
                       {cardBody}
                     </Link>
                   )}
-                </Reveal>
+                </motion.div>
               );
             })}
           </div>
