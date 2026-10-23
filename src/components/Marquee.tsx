@@ -2,19 +2,25 @@ import { cn } from "@/lib/utils";
 
 /**
  * Scrolling marquee band ("banderole"). The track holds two identical rows and
- * translates -50%, so the loop is seamless. Decorative by nature: the strip is
- * hidden from screen readers because the same message already lives elsewhere.
+ * translates -50%, so the loop is seamless. `tilt` lays the band across the
+ * page on a diagonal: the strip is overscanned (115% width, shifted to stay
+ * centred) and clipped by the wrapper, so the rotation never creates
+ * horizontal overflow. Decorative by nature: the strip is hidden from screen
+ * readers because the same message already lives elsewhere.
  */
 export function Marquee({
   items,
   tone = "light",
   speed = 40,
+  tilt = 0,
   className,
 }: {
   items: string[];
   tone?: "light" | "dark";
   /** Seconds for one full pass (width-independent). */
   speed?: number;
+  /** Diagonal angle in degrees; 0 keeps the band straight. */
+  tilt?: number;
   className?: string;
 }) {
   const row = (
@@ -36,16 +42,16 @@ export function Marquee({
     </ul>
   );
 
-  return (
+  const band = (
     <div
-      aria-hidden="true"
       className={cn(
-        "marquee overflow-hidden py-3.5 select-none sm:py-4",
+        "marquee overflow-hidden py-3.5 sm:py-4",
         tone === "dark"
           ? "border-y border-white/10 bg-[#06143a] text-white/75"
           : "border-y border-border/60 bg-card text-muted-foreground",
-        className,
+        tilt !== 0 && "ml-[-7.5%] w-[115%]",
       )}
+      style={tilt !== 0 ? { transform: `rotate(${tilt}deg)` } : undefined}
     >
       <div
         className="marquee-track flex w-max"
@@ -54,6 +60,19 @@ export function Marquee({
         {row}
         {row}
       </div>
+    </div>
+  );
+
+  return (
+    <div
+      aria-hidden="true"
+      className={cn(
+        "relative select-none",
+        tilt !== 0 && "overflow-hidden py-14 sm:py-16",
+        className,
+      )}
+    >
+      {band}
     </div>
   );
 }

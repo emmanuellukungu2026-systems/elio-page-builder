@@ -113,7 +113,7 @@ export default function Landing() {
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
-              className="mx-auto flex size-40 flex-col items-center justify-center rounded-full bg-white/15 ring-1 ring-white/25 sm:size-52"
+              className="mx-auto flex size-40 flex-col items-center justify-center rounded-full bg-white/15 ring-1 ring-white/25 backdrop-blur-md sm:size-52"
             >
               <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/85 sm:text-xs">
                 {t.hero.circleLabel}
@@ -168,17 +168,19 @@ export default function Landing() {
             </motion.div>
           </div>
 
-          {/* Foot of the field — the strip of details, kept from the poster */}
-          <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-2 px-5 pb-20 pt-6 text-xs text-white/75 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:pb-28 sm:text-sm lg:px-14">
-            <span>{t.hero.note}</span>
-            <a
-              href={waLink(CONCIERGE_WHATSAPP, "Hello Aethel team 👋 I'd like my own Elio page.")}
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-white"
-            >
-              {t.aethelTeam.cta}
-            </a>
+          {/* Foot of the field — frosted glass strip carrying the details */}
+          <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 pt-6 sm:px-10 sm:pb-28 lg:px-14">
+            <div className="flex flex-col gap-2 rounded-2xl bg-white/[0.08] px-4 py-3.5 text-xs text-white/80 ring-1 ring-white/20 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-3 sm:text-sm">
+              <span>{t.hero.note}</span>
+              <a
+                href={waLink(CONCIERGE_WHATSAPP, "Hello Aethel team 👋 I'd like my own Elio page.")}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-white"
+              >
+                {t.aethelTeam.cta}
+              </a>
+            </div>
           </div>
         </div>
 
@@ -188,7 +190,7 @@ export default function Landing() {
 
 
       {/* ================= MARQUEE BAND ================= */}
-      <Marquee items={t.marquee.a} tone="dark" speed={52} />
+      <Marquee items={t.marquee.a} tone="dark" speed={52} tilt={-2.5} />
 
       {/* ================= HOW ================= */}
       <section id="how" className="relative px-4 py-24 sm:px-6">
@@ -493,7 +495,7 @@ export default function Landing() {
       </section>
 
       {/* ================= MARQUEE BAND ================= */}
-      <Marquee items={t.marquee.b} speed={44} />
+      <Marquee items={t.marquee.b} speed={44} tilt={2.5} />
 
       {/* ================= FINAL CTA ================= */}
       <section className="relative px-4 pb-8 pt-10 sm:px-6">

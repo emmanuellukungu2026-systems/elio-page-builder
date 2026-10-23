@@ -38,7 +38,7 @@ const smoothstep = (a: number, b: number, v: number) => {
 /**
  * The pinned, scroll-driven product sequence that replaces the plain card row.
  *
- * Layout: the section is 360vh tall and holds a sticky 100svh stage. Scroll
+ * Layout: the section is 520vh tall and holds a sticky 100svh stage. Scroll
  * position drives every card:
  *
  *  - intro     the three cards sit as a fanned row (desktop) or a stack (mobile)
@@ -80,7 +80,7 @@ export function CinematicStage({
   return (
     <div
       ref={ref}
-      className={cn("relative", reduce ? "py-8" : "h-[360vh]", className)}
+      className={cn("relative", reduce ? "py-8" : "h-[520vh]", className)}
     >
       {reduce ? (
         <StaticRow items={items} />
@@ -204,7 +204,7 @@ function StageCard({
                 text={item.title}
                 active={typed}
                 placeholder="full"
-                speed={26}
+                speed={34}
               />
             }
             titleStyle={{ opacity: titleOpacity }}
@@ -233,7 +233,7 @@ function StaticRow({ items }: { items: StageItem[] }) {
 
 function CardLink({ href, children }: { href: string; children: ReactNode }) {
   const cls =
-    "group flex h-full min-h-64 flex-col rounded-2xl bg-[#0a1a44]/70 p-6 ring-1 ring-white/10 backdrop-blur-sm transition-[background-color,box-shadow] duration-300 hover:bg-white/[0.07] hover:shadow-[0_28px_60px_-28px_var(--glow)] hover:ring-white/25 sm:p-7";
+    "group flex h-full min-h-64 flex-col rounded-2xl bg-[#0a1a44]/60 p-6 ring-1 ring-white/15 backdrop-blur-md transition-[background-color,box-shadow] duration-300 hover:bg-white/[0.07] hover:shadow-[0_28px_60px_-28px_var(--glow)] hover:ring-white/30 sm:p-7";
   // In-page anchors must be native links so the browser scrolls to them.
   return href.startsWith("#") ? (
     <a href={href} className={cls}>
