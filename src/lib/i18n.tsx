@@ -46,6 +46,7 @@ const en = {
     cardCta: "Start a conversation",
     aethelLabel: "Aethel Technologies",
     aethelLine: "A small team building useful digital tools for businesses and individuals.",
+    welcome: "Welcome to Elio Pages — the very first product by Aethel Technologies.",
   },
   products: {
     page: {
@@ -768,6 +769,7 @@ const fr: Dict = {
     cardCta: "Démarrer la conversation",
     aethelLabel: "Aethel Technologies",
     aethelLine: "Une petite équipe qui construit des outils numériques utiles pour les entreprises et les particuliers.",
+    welcome: "Bienvenue sur Elio Pages — le tout premier produit d'Aethel Technologies.",
   },
   products: {
     page: {
@@ -1488,6 +1490,7 @@ const tr: Dict = {
     cardCta: "Sohbeti başlat",
     aethelLabel: "Aethel Technologies",
     aethelLine: "İşletmeler ve bireyler için faydalı dijital araçlar geliştiren küçük bir ekip.",
+    welcome: "Elio Pages'e hoş geldiniz — Aethel Technologies'in ilk ürünü.",
   },
   products: {
     page: {

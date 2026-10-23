@@ -131,11 +131,21 @@ export default function Landing() {
               </p>
             </motion.div>
 
+            {/* Welcome — Aethel greets you on its very first product */}
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.18, ease: [0.21, 0.6, 0.35, 1] }}
+              className="mx-auto mt-7 max-w-lg text-center text-[15px] leading-6 text-white/85 sm:text-base"
+            >
+              <span className="font-semibold text-white">{t.hero.welcome}</span>
+            </motion.p>
+
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-              className="mx-auto mt-10 max-w-[18ch] text-center font-display text-[clamp(2rem,4.4vw,3.6rem)] font-bold leading-[1.08] tracking-tight text-white"
+              transition={{ duration: 0.6, delay: 0.26, ease: [0.21, 0.6, 0.35, 1] }}
+              className="mx-auto mt-6 max-w-[18ch] text-center font-display text-[clamp(2rem,4.4vw,3.6rem)] font-bold leading-[1.08] tracking-tight text-white"
             >
               <span className="text-[#bcd7ff]">{t.hero.titleA}</span>{" "}
               {t.hero.titleB}
@@ -144,7 +154,7 @@ export default function Landing() {
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: [0.21, 0.6, 0.35, 1] }}
+              transition={{ duration: 0.6, delay: 0.34, ease: [0.21, 0.6, 0.35, 1] }}
               className="mx-auto mt-5 max-w-xl text-center text-lg leading-8 text-white/80"
             >
               {t.hero.subtitle}
@@ -153,7 +163,7 @@ export default function Landing() {
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3, ease: [0.21, 0.6, 0.35, 1] }}
+              transition={{ duration: 0.6, delay: 0.42, ease: [0.21, 0.6, 0.35, 1] }}
               className="mt-9 flex flex-wrap items-center justify-center gap-3"
             >
               <Button
