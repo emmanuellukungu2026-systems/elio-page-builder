@@ -1,45 +1,86 @@
-import { Atmosphere } from "@/components/Atmosphere";
 import { ElioMark } from "@/components/ElioMark";
 import { ProfileComments } from "@/components/ProfileComments";
+import { Reveal } from "@/components/Reveal";
 import type { Doc } from "@/convex/_generated/dataModel";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { waLink } from "@/lib/elio";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import {
+  animate,
+  AnimatePresence,
+  motion,
+  useInView,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import {
   ArrowRight,
+  ArrowUpRight,
   CalendarRange,
-  ChevronLeft,
-  ChevronRight,
   Mail,
   MapPin,
+  Menu,
   MessageCircle,
-  Newspaper,
+  Sparkles,
   User,
+  X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router";
 
-type Item = Doc<"elioPages">["items"][number];
+/* ------------------------------------------------------------------ *
+ * Art direction — a warm, bright editorial portfolio (reference:
+ * "William Harry"). One confident coral for primary actions, a purple
+ * counterpoint for the geometric decor, deep-navy ink on off-white.
+ * ------------------------------------------------------------------ */
+const BG = "#f4f2ee";
+const INK = "#151a2b";
+const MUTED = "#5b6479";
+const CORAL = "#ef4b34";
+const PURPLE = "#6b39d6";
+const LINE = "rgba(21, 26, 43, 0.09)";
+const CARD = "#ffffff";
+
+/* White surface shared by cards, bands and the nav once it is scrolled. */
+const surface =
+  "rounded-3xl border bg-white shadow-[0_1px_2px_rgba(21,26,43,0.05)]";
+const surfaceLine = { borderColor: LINE };
+const EASE: [number, number, number, number] = [0.21, 0.6, 0.35, 1];
 
 /** Dict shape of the portfolio strings (mirrors t.portfolio). */
 type PortfolioDict = {
   home: string;
   projects: string;
+  projectsKicker: string;
   articles: string;
+  articlesKicker: string;
   services: string;
+  servicesKicker: string;
   about: string;
+  aboutKicker: string;
   gallery: string;
+  tagline: string;
   view: string;
-  read: string;
-  buyCta: string;
-  contact: string;
   storyTitle: string;
   noStory: string;
   whatsNext: string;
   workTogether: string;
   workTogetherText: string;
+  greeting: string;
+  hireMe: string;
+  knowMore: string;
+  contactMe: string;
+  contact: string;
+  skills: string;
+  skillsKicker: string;
+  experience: string;
+  experienceKicker: string;
+  featured: string;
+  statsKicker: string;
 };
 
 /** Structural shape — accepts the public page object as returned by Convex. */
@@ -60,688 +101,1095 @@ export type ProPage = Pick<
   | "email"
 >;
 
+type Item = Doc<"elioPages">["items"][number];
+
 /**
- * "Pro" template — full portfolio, magazine style (reference: Arctic Edage):
- * a bold accent hero with the featured work on a raised card and oversized
- * display title, then content delivered as full-height panels.
- *  - Mobile: the panels stack horizontally — swipe/scroll left-right.
- *  - Desktop: normal vertical page scroll, one panel after another.
- * The CatMascot (mini chat) doubles as the guide through the panels.
+ * "Pro" template — a full personal portfolio. Warm off-white canvas, oversized
+ * navy headline, coral calls-to-action and purple/coral geometric decor behind
+ * a portrait with floating cards. Sections flow as one responsive vertical
+ * page; the sticky nav tracks the active section and collapses to an animated
+ * sheet on mobile.
  */
 export function ProProfile({ page }: { page: ProPage }) {
   const { t } = useI18n();
-  const w = t.portfolio;
-  const isMobile = useIsMobile();
+  const w = t.portfolio as PortfolioDict;
   const accent = page.accent ?? "#1e4fd8";
-  const initials = page.displayName.slice(0, 2).toUpperCase();
-  const [avatarBroken, setAvatarBroken] = useState(false);
-  const [coverBroken, setCoverBroken] = useState(false);
+  const waMessage = `Hello ${page.displayName} — found you through your Elio page.`;
 
   const projects = (page.items ?? []).filter((it) => it.kind === "project");
   const articles = (page.items ?? []).filter((it) => it.kind === "article");
-  const services = (page.items ?? []).filter((it) => it.kind === "service" || it.kind === "price");
+  const services = (page.items ?? []).filter(
+    (it) => it.kind === "service" || it.kind === "price",
+  );
   const gallery = (page.items ?? []).filter((it) => it.kind === "portfolio");
   const ideas = (page.items ?? []).filter((it) => it.kind === "idea");
 
-  // Hero featured work: first project with an image, else first project.
   const featured = projects.find((it) => !!it.imageUrl) ?? projects[0];
 
-  /* ---------------- Horizontal panels (mobile) ---------------- */
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const [panel, setPanel] = useState(0);
-  const panelCount = [
-    projects.length > 0,
-    articles.length > 0,
-    services.length > 0 || gallery.length > 0,
-    true, // about + contact panel always exists
-  ].filter(Boolean).length;
+  // Skills: every distinct tag the owner has ever applied to their work.
+  const skills = Array.from(
+    new Set((page.items ?? []).flatMap((it) => it.tags ?? [])),
+  );
 
-  useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el || !isMobile) return;
-    const onScroll = () => {
-      setPanel(Math.round(el.scrollLeft / el.clientWidth));
-    };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, [isMobile]);
+  // Experience: anything carrying a role, a client or a date range.
+  const experience = (page.items ?? [])
+    .filter((it) => it.role || it.client || it.startDate || it.endDate)
+    .sort((a, b) => (b.startDate ?? "").localeCompare(a.startDate ?? ""))
+    .slice(0, 8);
 
-  const goToPanel = (i: number) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
-  };
-
-  /* ---------------- Vertical progress (desktop) ---------------- */
-  const [visible, setVisible] = useState(0);
-  useEffect(() => {
-    if (isMobile) return;
-    const sections = document.querySelectorAll<HTMLElement>("[data-pro-panel]");
-    const onScroll = () => {
-      let current = 0;
-      sections.forEach((s, i) => {
-        if (s.getBoundingClientRect().top < window.innerHeight * 0.45) current = i;
-      });
-      setVisible(current);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [isMobile]);
-
-  const waMessage = `Hello ${page.displayName} — found you through your Elio page.`;
-
-  /* ================= Mobile: horizontal snap panels ================= */
-  if (isMobile) {
-    return (
-      <div className="relative min-h-screen overflow-hidden">
-        <Atmosphere />
-        {/* Top bar */}
-        <header className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-4 pt-5">
-          <div className="flex min-w-0 items-center gap-2">
-            {page.logoUrl && !avatarBroken ? (
-              <img
-                src={page.logoUrl}
-                alt={page.displayName}
-                onError={() => setAvatarBroken(true)}
-                className="size-8 rounded-full object-cover ring-2 ring-white/30"
-              />
-            ) : (
-              <span
-                className="flex size-8 items-center justify-center rounded-full font-display text-[10px] font-bold text-white"
-                style={{ background: accent }}
-              >
-                {initials}
-              </span>
-            )}
-            <span className="truncate font-display text-sm font-semibold text-white/95">
-              {page.displayName}
-            </span>
-          </div>
-          {page.whatsapp && (
-            <a
-              href={waLink(page.whatsapp, waMessage)}
-              target="_blank"
-              rel="noreferrer"
-              className="flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur"
-              aria-label="WhatsApp"
-            >
-              <MessageCircle className="size-4" />
-            </a>
-          )}
-        </header>
-
-        {/* Horizontal snap scroller — scroll/swipe left-right */}
-        <div
-          ref={scrollerRef}
-          className="no-scrollbar h-[100dvh] w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden"
-        >
-          {/* Panel 1 — hero / featured work */}
-          <PanelShell accent={accent} label={w.home}>
-            <HeroContent page={page} accent={accent} featured={featured} avatarBroken={avatarBroken} setAvatarBroken={setAvatarBroken} compact />
-          </PanelShell>
-
-          {/* Panel 2 — projects */}
-          {projects.length > 0 && (
-            <PanelShell accent={accent} label={w.projects}>
-              <ProjectsContent page={page} projects={projects} accent={accent} w={w} />
-            </PanelShell>
-          )}
-
-          {/* Panel 3 — articles */}
-          {articles.length > 0 && (
-            <PanelShell accent={accent} label={w.articles}>
-              <ArticlesContent page={page} articles={articles} accent={accent} w={w} />
-            </PanelShell>
-          )}
-
-          {/* Panel 4 — services / gallery */}
-          {(services.length > 0 || gallery.length > 0) && (
-            <PanelShell accent={accent} label={w.services}>
-              <ServicesContent page={page} services={services} gallery={gallery} accent={accent} w={w} />
-            </PanelShell>
-          )}
-
-          {/* Panel 5 — about + contact + comments */}
-          <PanelShell accent={accent} label={w.about}>
-            <AboutContent page={page} accent={accent} w={w} ideas={ideas} coverBroken={coverBroken} setCoverBroken={setCoverBroken} />
-          </PanelShell>
-        </div>
-
-        {/* Panel dots + arrows — the scroll guide */}
-        <div className="absolute inset-x-0 bottom-5 z-30 flex items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={() => goToPanel(Math.max(0, panel - 1))}
-            className="flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition disabled:opacity-30"
-            disabled={panel === 0}
-            aria-label={w.prev}
-          >
-            <ChevronLeft className="size-4" />
-          </button>
-          <div className="flex items-center gap-1.5">
-            {Array.from({ length: panelCount }).map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => goToPanel(i)}
-                className={cn(
-                  "rounded-full transition-all",
-                  i === panel ? "h-1.5 w-6 bg-white" : "size-1.5 bg-white/40",
-                )}
-                aria-label={`${w.panel} ${i + 1}`}
-              />
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={() => goToPanel(Math.min(panelCount - 1, panel + 1))}
-            className="flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition disabled:opacity-30"
-            disabled={panel >= panelCount - 1}
-            aria-label={w.next}
-          >
-            <ChevronRight className="size-4" />
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  /* ================= Desktop: vertical panels ================= */
   return (
-    <div className="relative min-h-screen">
-      <Atmosphere />
-      {/* Fixed section rail */}
-      <nav className="fixed right-6 top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-2 lg:flex">
-        {[
-          { label: w.home, show: true },
-          { label: w.projects, show: projects.length > 0 },
-          { label: w.articles, show: articles.length > 0 },
-          { label: w.services, show: services.length > 0 || gallery.length > 0 },
-          { label: w.about, show: true },
-        ]
-          .filter((s) => s.show)
-          .map((s, i) => (
-            <a
-              key={s.label}
-              href={`#pro-${i}`}
-              className="group flex items-center justify-end gap-2"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(`pro-${i}`)?.scrollIntoView({ behavior: "smooth" });
-              }}
+    <div className="relative min-h-screen" style={{ background: BG, color: INK }}>
+      <PortfolioNav page={page} accent={accent} w={w} />
+
+      <main id="main">
+        {/* ================= HERO ================= */}
+        <PortfolioHero
+          page={page}
+          w={w}
+          featured={featured}
+          projectCount={projects.length}
+          waMessage={waMessage}
+        />
+
+        {/* ================= STATS ================= */}
+        <StatBand
+          projects={projects.length}
+          services={services.length}
+          articles={articles.length}
+          gallery={gallery.length}
+          since={page.since}
+          w={w}
+        />
+
+        {/* ================= ABOUT ================= */}
+        <Section id="about" kicker={w.aboutKicker} title={w.about}>
+          <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+            <Reveal>
+              <div className={cn(surface, "p-7 sm:p-9")} style={surfaceLine}>
+                <h3
+                  className="font-display text-xl font-bold tracking-tight"
+                  style={{ color: INK }}
+                >
+                  {w.storyTitle}
+                </h3>
+                <p className="mt-4 whitespace-pre-line text-[15px] leading-7" style={{ color: MUTED }}>
+                  {page.bio || w.noStory}
+                </p>
+                {(page.headline || page.trade) && (
+                  <p className="mt-6 border-t pt-5 text-sm" style={{ borderColor: LINE, color: INK }}>
+                    <span className="font-semibold">{page.headline || page.trade}</span>
+                  </p>
+                )}
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              {page.coverUrl ? (
+                <img
+                  src={page.coverUrl}
+                  alt=""
+                  loading="lazy"
+                  className="h-56 w-full rounded-3xl object-cover shadow-[0_1px_2px_rgba(21,26,43,0.06)] ring-1 lg:h-full"
+                  style={surfaceLine}
+                />
+              ) : (
+                <div
+                  className="hidden h-full min-h-56 rounded-3xl lg:block"
+                  style={{
+                    border: `1px solid ${LINE}`,
+                    background: `linear-gradient(150deg, ${CORAL}1f, ${PURPLE}1f)`,
+                  }}
+                />
+              )}
+            </Reveal>
+          </div>
+        </Section>
+
+        {/* ================= SKILLS ================= */}
+        {skills.length > 0 && (
+          <Section id="skills" kicker={w.skillsKicker} title={w.skills}>
+            <Reveal>
+              <div className="flex flex-wrap gap-2.5">
+                {skills.map((s) => (
+                  <span
+                    key={s}
+                    className="rounded-full px-4 py-2 text-sm font-medium"
+                    style={{ background: `${PURPLE}12`, color: PURPLE }}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
+          </Section>
+        )}
+
+        {/* ================= SERVICES ================= */}
+        {services.length > 0 && (
+          <Section id="services" kicker={w.servicesKicker} title={w.services}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {services.map((item, i) => (
+                <Reveal key={item.id} delay={i * 0.06}>
+                  <ServiceCard page={page} item={item} accent={accent} />
+                </Reveal>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* ================= PROJECTS ================= */}
+        {projects.length > 0 && (
+          <Section id="works" kicker={w.projectsKicker} title={w.projects}>
+            <div className="grid gap-5 sm:grid-cols-2">
+              {projects.map((item, i) => (
+                <Reveal key={item.id} delay={(i % 2) * 0.08}>
+                  <ProjectCard
+                    page={page}
+                    item={item}
+                    accent={accent}
+                    w={w}
+                    featuredBadge={item.id === featured?.id}
+                  />
+                </Reveal>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* ================= ARTICLES ================= */}
+        {articles.length > 0 && (
+          <Section id="writing" kicker={w.articlesKicker} title={w.articles}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {articles.map((item, i) => (
+                <Reveal key={item.id} delay={i * 0.06}>
+                  <ArticleCard page={page} item={item} accent={accent} w={w} />
+                </Reveal>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* ================= EXPERIENCE ================= */}
+        {experience.length > 0 && (
+          <Section id="experience" kicker={w.experienceKicker} title={w.experience}>
+            <div className="mx-auto max-w-2xl">
+              {experience.map((item, i) => (
+                <Reveal key={item.id} delay={i * 0.05}>
+                  <div
+                    className="relative border-l pb-8 pl-7 last:pb-0"
+                    style={{ borderColor: LINE }}
+                  >
+                    <span
+                      className="absolute -left-[5px] top-1.5 size-2.5 rounded-full"
+                      style={{ background: CORAL, boxShadow: `0 0 0 4px ${CORAL}22` }}
+                    />
+                    {(item.startDate || item.endDate) && (
+                      <p className="text-xs font-semibold" style={{ color: accent }}>
+                        {[item.startDate, item.endDate].filter(Boolean).join(" → ")}
+                      </p>
+                    )}
+                    <h3 className="mt-1 font-display text-lg font-bold" style={{ color: INK }}>
+                      {item.title}
+                    </h3>
+                    {(item.role || item.client) && (
+                      <p className="mt-1 flex items-center gap-1.5 text-sm" style={{ color: INK }}>
+                        <User className="size-3.5" style={{ color: MUTED }} />
+                        {[item.role, item.client].filter(Boolean).join(" · ")}
+                      </p>
+                    )}
+                    {item.description && (
+                      <p className="mt-1.5 line-clamp-2 text-sm leading-6" style={{ color: MUTED }}>
+                        {item.description}
+                      </p>
+                    )}
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* ================= GALLERY ================= */}
+        {gallery.length > 0 && (
+          <Section id="gallery" kicker={w.gallery} title={w.gallery}>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {gallery.slice(0, 8).map((item, i) => (
+                <Reveal key={item.id} delay={(i % 4) * 0.05}>
+                  <Link
+                    to={`/u/${page.username}/i/${item.id}`}
+                    className="group block aspect-square overflow-hidden rounded-2xl ring-1"
+                    style={surfaceLine}
+                  >
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      loading="lazy"
+                      className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* ================= IDEAS ================= */}
+        {ideas.length > 0 && (
+          <Section id="ideas" kicker={w.whatsNext} title={w.whatsNext}>
+            <div className="flex flex-wrap gap-2.5">
+              {ideas.map((idea, i) => (
+                <Reveal key={idea.id} delay={i * 0.05}>
+                  <Link
+                    to={`/u/${page.username}/i/${idea.id}`}
+                    className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium ring-1 transition hover:-translate-y-0.5"
+                    style={{ borderColor: LINE, color: INK }}
+                  >
+                    <Sparkles className="size-3.5" style={{ color: CORAL }} />
+                    {idea.title}
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* ================= CONTACT ================= */}
+        <Section id="contact" kicker={w.contact} title={w.workTogether}>
+          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <Reveal>
+              <div
+                className="relative overflow-hidden rounded-3xl p-8 sm:p-10"
+                style={{ background: CORAL }}
+              >
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full"
+                  style={{ background: PURPLE, opacity: 0.55 }}
+                />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -bottom-20 -left-10 size-40 rotate-12 rounded-3xl"
+                  style={{ background: "#ffffff", opacity: 0.12 }}
+                />
+                <div className="relative">
+                  <h3 className="font-display text-2xl font-bold text-white sm:text-3xl">
+                    {w.workTogether}
+                  </h3>
+                  <p className="mt-3 max-w-sm text-white/85">{w.workTogetherText}</p>
+                  <div className="mt-7 flex flex-wrap items-center gap-3">
+                    {page.whatsapp && (
+                      <a
+                        href={waLink(page.whatsapp, waMessage)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex h-12 items-center gap-2 rounded-2xl bg-white px-6 text-sm font-semibold shadow-lg transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+                        style={{ color: CORAL }}
+                      >
+                        <MessageCircle className="size-4" /> {w.contactMe}
+                      </a>
+                    )}
+                    {page.email && (
+                      <a
+                        href={`mailto:${page.email}`}
+                        className="inline-flex h-12 items-center gap-2 rounded-2xl border border-white/40 px-6 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                      >
+                        <Mail className="size-4" /> {page.email}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <ProfileComments username={page.username} accent={accent} />
+            </Reveal>
+          </div>
+        </Section>
+      </main>
+
+      {/* ================= FOOTER ================= */}
+      <footer className="border-t" style={{ borderColor: LINE }}>
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-5 py-10 text-center sm:flex-row sm:justify-between sm:text-left">
+          <div className="flex items-center gap-2.5">
+            <span
+              className="flex size-9 items-center justify-center rounded-xl font-display text-xs font-bold text-white"
+              style={{ background: INK }}
             >
-              <span className="text-[11px] uppercase tracking-wider text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
-                {s.label}
-              </span>
-              <span
-                className={cn("rounded-full transition-all", i === visible ? "h-6 w-1.5" : "h-1.5 w-1.5")}
-                style={{ background: i === visible ? accent : "var(--border)" }}
-              />
-            </a>
-          ))}
-      </nav>
-
-      {/* Panel 0 — hero */}
-      <section id="pro-0" data-pro-panel className="relative min-h-screen">
-        <HeroContent page={page} accent={accent} featured={featured} avatarBroken={avatarBroken} setAvatarBroken={setAvatarBroken} />
-      </section>
-
-      {/* Panel — projects */}
-      {projects.length > 0 && (
-        <section id="pro-1" data-pro-panel className="relative mx-auto max-w-5xl px-6 py-20">
-          <SectionHead kicker={w.projectsKicker} title={w.projects} accent={accent} />
-          <ProjectsContent page={page} projects={projects} accent={accent} w={w} />
-        </section>
-      )}
-
-      {/* Panel — articles */}
-      {articles.length > 0 && (
-        <section id="pro-2" data-pro-panel className="relative py-20">
-          <div className="mx-auto max-w-5xl px-6">
-            <SectionHead kicker={w.articlesKicker} title={w.articles} accent={accent} />
-            <ArticlesContent page={page} articles={articles} accent={accent} w={w} />
+              {page.displayName.slice(0, 2).toUpperCase()}
+            </span>
+            <div>
+              <p className="font-display text-sm font-bold" style={{ color: INK }}>
+                {page.displayName}
+              </p>
+              <p className="font-mono text-xs" style={{ color: MUTED }}>
+                /u/{page.username}
+              </p>
+            </div>
           </div>
-        </section>
-      )}
-
-      {/* Panel — services + gallery */}
-      {(services.length > 0 || gallery.length > 0) && (
-        <section id="pro-3" data-pro-panel className="relative py-20">
-          <div className="mx-auto max-w-5xl px-6">
-            <SectionHead kicker={w.servicesKicker} title={w.services} accent={accent} />
-            <ServicesContent page={page} services={services} gallery={gallery} accent={accent} w={w} />
-          </div>
-        </section>
-      )}
-
-      {/* Panel — about + contact + comments */}
-      <section id="pro-4" data-pro-panel className="relative py-20">
-        <div className="mx-auto max-w-5xl px-6">
-          <SectionHead kicker={w.aboutKicker} title={w.about} accent={accent} />
-          <AboutContent page={page} accent={accent} w={w} ideas={ideas} coverBroken={coverBroken} setCoverBroken={setCoverBroken} />
+          <p className="flex items-center gap-1.5 text-xs" style={{ color: MUTED }}>
+            <ElioMark className="size-4" /> Elio Pages — by Aethel Technologies · ©{" "}
+            {new Date().getFullYear()}
+          </p>
         </div>
-      </section>
-
-      <footer className="flex items-center justify-center gap-1.5 pb-10 text-xs text-muted-foreground">
-        <ElioMark className="size-3.5" />
-        <span className="font-mono">{page.username}</span>
       </footer>
     </div>
   );
 }
 
-/* ================= Shared pieces ================= */
+/* ================================================================== *
+ * Navigation
+ * ================================================================== */
 
-function SectionHead({ kicker, title, accent }: { kicker: string; title: string; accent: string }) {
+const SECTIONS = [
+  { id: "main", key: "home" },
+  { id: "works", key: "projects" },
+  { id: "about", key: "about" },
+  { id: "gallery", key: "gallery" },
+  { id: "services", key: "services" },
+  { id: "contact", key: "contact" },
+] as const;
+
+function PortfolioNav({
+  page,
+  accent,
+  w,
+}: {
+  page: ProPage;
+  accent: string;
+  w: PortfolioDict;
+}) {
+  const { scrollY } = useScroll();
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState<string>("main");
+  const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
+
+  useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 16));
+
+  // Track which section is in view for the active indicator.
+  useEffect(() => {
+    const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(
+      Boolean,
+    ) as HTMLElement[];
+    if (els.length === 0) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(e.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  // Close the mobile sheet on Escape.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const label = (key: string) => {
+    switch (key) {
+      case "home":
+        return w.home;
+      case "projects":
+        return w.projects;
+      case "about":
+        return w.about;
+      case "gallery":
+        return w.gallery;
+      case "services":
+        return w.services;
+      default:
+        return w.contact;
+    }
+  };
+
   return (
-    <div className="mb-8">
-      <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: accent }}>
-        {kicker}
-      </p>
-      <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
-    </div>
+    <header className="sticky inset-x-0 top-0 z-50">
+      <div
+        className={cn(
+          "mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 transition-all duration-300 sm:px-6",
+          scrolled ? "py-2.5" : "py-4",
+        )}
+      >
+        <a
+          href="#main"
+          className={cn(
+            "flex items-center gap-2.5 rounded-2xl px-2 py-1.5 transition-all duration-300",
+            scrolled && "bg-white shadow-[0_1px_2px_rgba(21,26,43,0.05)] ring-1",
+          )}
+          style={scrolled ? surfaceLine : undefined}
+        >
+          {page.logoUrl ? (
+            <img
+              src={page.logoUrl}
+              alt={page.displayName}
+              className="size-8 rounded-full object-cover"
+            />
+          ) : (
+            <span
+              className="flex size-8 items-center justify-center rounded-full font-display text-[10px] font-bold text-white"
+              style={{ background: accent }}
+            >
+              {page.displayName.slice(0, 2).toUpperCase()}
+            </span>
+          )}
+          <span className="font-display text-sm font-bold" style={{ color: INK }}>
+            {page.displayName}
+          </span>
+        </a>
+
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Sections">
+          {SECTIONS.map((s) => (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              aria-current={active === s.id ? "true" : undefined}
+              className={cn(
+                "relative rounded-lg px-3 py-1.5 text-sm transition-colors",
+                active === s.id ? "font-semibold" : "",
+              )}
+              style={{ color: active === s.id ? INK : MUTED }}
+            >
+              {label(s.key)}
+              {active === s.id && (
+                <motion.span
+                  layoutId="nav-underline"
+                  className="absolute inset-x-2 -bottom-0.5 h-0.5 rounded-full"
+                  style={{ background: CORAL }}
+                  transition={
+                    reduce ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }
+                  }
+                />
+              )}
+            </a>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <a
+            href="#contact"
+            className="hidden h-10 items-center rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 sm:inline-flex"
+            style={{ background: CORAL }}
+          >
+            {w.contactMe}
+          </a>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="portfolio-menu"
+            className="inline-flex size-10 items-center justify-center rounded-xl ring-1 lg:hidden"
+            style={{ borderColor: LINE, color: INK }}
+          >
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            id="portfolio-menu"
+            initial={reduce ? false : { opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.22, ease: [0.21, 0.6, 0.35, 1] }}
+            className="mx-3 mb-2 rounded-2xl border bg-white p-3 shadow-lg lg:hidden"
+            style={surfaceLine}
+          >
+            {SECTIONS.map((s) => (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                onClick={() => setOpen(false)}
+                className="block rounded-xl px-3 py-2.5 text-sm transition-colors hover:bg-black/[0.03]"
+                style={{ color: active === s.id ? INK : MUTED }}
+              >
+                {label(s.key)}
+              </a>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 }
 
-/** Full-height accent panel used by the mobile horizontal scroller. */
-function PanelShell({
-  accent,
-  label,
-  children,
+/* ================================================================== *
+ * Hero
+ * ================================================================== */
+
+function PortfolioHero({
+  page,
+  w,
+  featured,
+  projectCount,
+  waMessage,
 }: {
-  accent: string;
-  label: string;
-  children: React.ReactNode;
+  page: ProPage;
+  w: PortfolioDict;
+  featured?: Item;
+  projectCount: number;
+  waMessage: string;
 }) {
+  const { t } = useI18n();
+  const reduce = useReducedMotion();
+  const tagline = page.headline || page.trade || w.tagline;
+
+  /* Subtle mouse parallax on the decor (desktop pointers only). */
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 55, damping: 18 });
+  const sy = useSpring(my, { stiffness: 55, damping: 18 });
+  const coralX = useTransform(sx, [-0.5, 0.5], [18, -18]);
+  const coralY = useTransform(sy, [-0.5, 0.5], [12, -12]);
+  const purpleX = useTransform(sx, [-0.5, 0.5], [-26, 26]);
+  const purpleY = useTransform(sy, [-0.5, 0.5], [-18, 18]);
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (reduce) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  };
+
+  const enter = (delay: number) => ({
+    initial: reduce ? false : { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: reduce ? 0 : 0.6, delay: reduce ? 0 : delay, ease: EASE },
+  });
+
   return (
-    <section className="relative h-[100dvh] w-full shrink-0 snap-start overflow-y-auto no-scrollbar">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ background: `radial-gradient(120% 90% at 20% 0%, ${accent}2e, transparent 60%)` }}
-        aria-hidden="true"
-      />
-      <div className="relative flex min-h-[100dvh] flex-col px-5 pb-28 pt-24">
-        <span className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em]" style={{ color: accent }}>
-          {label}
-        </span>
-        <div className="flex-1">{children}</div>
+    <section
+      id="main"
+      onMouseMove={onMove}
+      onMouseLeave={() => {
+        mx.set(0);
+        my.set(0);
+      }}
+      className="relative overflow-hidden"
+    >
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-16 pt-10 sm:px-6 sm:pt-16 lg:grid-cols-[1.02fr_0.98fr] lg:gap-8 lg:pb-24 lg:pt-16">
+        {/* ---------- Left: greeting, name, pitch, CTAs ---------- */}
+        <div className="order-2 text-center lg:order-1 lg:text-left">
+          <motion.p
+            {...enter(0)}
+            className="font-display text-lg font-bold sm:text-xl"
+            style={{ color: CORAL }}
+          >
+            {w.greeting}
+          </motion.p>
+          <motion.h1
+            {...enter(0.08)}
+            className="mt-1 font-display font-bold leading-[1.02] tracking-tight"
+            style={{ color: INK, fontSize: "clamp(2.5rem, 6.2vw, 4.4rem)" }}
+          >
+            {page.displayName}
+          </motion.h1>
+
+          <motion.p
+            {...enter(0.16)}
+            className="mx-auto mt-5 max-w-lg text-base leading-7 sm:text-lg"
+            style={{ color: MUTED }}
+          >
+            {tagline}
+          </motion.p>
+
+          {page.bio && (
+            <motion.p
+              {...enter(0.22)}
+              className="mx-auto mt-3 max-w-lg text-sm leading-6 lg:mx-0"
+              style={{ color: MUTED, opacity: 0.85 }}
+            >
+              {page.bio}
+            </motion.p>
+          )}
+
+          <motion.div
+            {...enter(0.3)}
+            className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+          >
+            {page.whatsapp ? (
+              <a
+                href={waLink(page.whatsapp, waMessage)}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-12 items-center gap-2 rounded-2xl px-7 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+                style={{ background: CORAL }}
+              >
+                {w.hireMe} <ArrowRight className="size-4" />
+              </a>
+            ) : (
+              <a
+                href="#contact"
+                className="inline-flex h-12 items-center gap-2 rounded-2xl px-7 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-0.5"
+                style={{ background: CORAL }}
+              >
+                {w.hireMe} <ArrowRight className="size-4" />
+              </a>
+            )}
+            <a
+              href="#about"
+              className="inline-flex h-12 items-center rounded-2xl px-7 text-sm font-semibold ring-1 transition-colors hover:bg-black/[0.03]"
+              style={{ color: INK, borderColor: LINE, background: CARD }}
+            >
+              {w.knowMore}
+            </a>
+          </motion.div>
+
+          {/* Professional information */}
+          <motion.div
+            {...enter(0.36)}
+            className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs lg:justify-start"
+            style={{ color: MUTED }}
+          >
+            {page.location && (
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="size-3.5" style={{ color: CORAL }} /> {page.location}
+              </span>
+            )}
+            {page.since && (
+              <span className="inline-flex items-center gap-1.5">
+                <CalendarRange className="size-3.5" style={{ color: CORAL }} />
+                {t.profile.since} {page.since}
+              </span>
+            )}
+            {page.email && (
+              <a
+                href={`mailto:${page.email}`}
+                className="inline-flex items-center gap-1.5 transition-colors hover:opacity-70"
+              >
+                <Mail className="size-3.5" style={{ color: CORAL }} /> {page.email}
+              </a>
+            )}
+          </motion.div>
+        </div>
+
+        {/* ---------- Right: portrait over geometric decor ---------- */}
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
+          className="relative order-1 mx-auto w-full max-w-sm lg:order-2 lg:max-w-none"
+        >
+          {/* Coral angular block behind the portrait */}
+          <motion.div
+            aria-hidden="true"
+            style={{ x: coralX, y: coralY, background: CORAL }}
+            className="absolute left-1/2 top-1/2 -z-0 h-[80%] w-[74%] -translate-x-1/2 -translate-y-1/2 rotate-12 rounded-[2.5rem]"
+          />
+          {/* Purple counter-shape */}
+          <motion.div
+            aria-hidden="true"
+            style={{ x: purpleX, y: purpleY, background: PURPLE }}
+            className="absolute -left-3 top-4 -z-0 h-24 w-24 -rotate-12 rounded-3xl sm:h-32 sm:w-32"
+          />
+          {/* Dot cluster */}
+          <motion.div
+            aria-hidden="true"
+            style={{ x: purpleX, y: coralY }}
+            className="absolute -right-2 bottom-16 -z-0 grid grid-cols-3 gap-1.5"
+          >
+            {Array.from({ length: 9 }).map((_, i) => (
+              <span
+                key={i}
+                className="size-1.5 rounded-full"
+                style={{ background: PURPLE, opacity: 0.6 }}
+              />
+            ))}
+          </motion.div>
+
+          {/* Portrait */}
+          <div className="relative z-10 mx-auto w-[80%] max-w-xs sm:w-[72%]">
+            {page.logoUrl ? (
+              <img
+                src={page.logoUrl}
+                alt={page.displayName}
+                className="aspect-[4/5] w-full rounded-[2rem] object-cover shadow-[0_24px_48px_-24px_rgba(21,26,43,0.45)] ring-4 ring-white"
+              />
+            ) : (
+              <div
+                className="flex aspect-[4/5] w-full items-center justify-center rounded-[2rem] shadow-[0_24px_48px_-24px_rgba(21,26,43,0.4)] ring-4 ring-white"
+                style={{ background: `linear-gradient(150deg, ${INK}, ${PURPLE})` }}
+              >
+                <span className="font-display text-6xl font-bold text-white">
+                  {page.displayName.slice(0, 1)}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Floating stat card */}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="absolute -left-1 bottom-10 z-20 sm:left-0"
+          >
+            <motion.div
+              animate={reduce ? undefined : { y: [0, -10, 0] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+              className="rounded-2xl border bg-white px-4 py-3 shadow-xl"
+              style={surfaceLine}
+            >
+              <p className="font-display text-2xl font-bold" style={{ color: INK }}>
+                {projectCount}
+              </p>
+              <p className="text-[11px] font-medium" style={{ color: MUTED }}>
+                {w.projects}
+              </p>
+            </motion.div>
+          </motion.div>
+
+          {/* Floating featured-work card */}
+          {featured && (
+            <motion.div
+              initial={reduce ? false : { opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="absolute -right-1 top-6 z-20 sm:right-0"
+            >
+              <motion.div
+                animate={reduce ? undefined : { y: [0, 10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+                className="flex max-w-[190px] items-center gap-2.5 rounded-2xl border bg-white p-2.5 pr-3.5 shadow-xl"
+                style={surfaceLine}
+              >
+              {featured.imageUrl ? (
+                <img
+                  src={featured.imageUrl}
+                  alt=""
+                  className="size-11 shrink-0 rounded-xl object-cover"
+                />
+              ) : (
+                <span
+                  className="flex size-11 shrink-0 items-center justify-center rounded-xl"
+                  style={{ background: `${CORAL}1a`, color: CORAL }}
+                >
+                  <Sparkles className="size-5" />
+                </span>
+              )}
+              <div className="min-w-0">
+                <p
+                  className="text-[10px] font-bold uppercase tracking-wider"
+                  style={{ color: CORAL }}
+                >
+                  {w.featured}
+                </p>
+                <p className="truncate text-xs font-semibold" style={{ color: INK }}>
+                  {featured.title}
+                </p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </motion.div>
       </div>
     </section>
   );
 }
 
-/** Hero — reference layout: raised work card left, oversized title right. */
-function HeroContent({
-  page,
-  accent,
-  featured,
-  avatarBroken,
-  setAvatarBroken,
-  compact = false,
+/* ================================================================== *
+ * Stats band
+ * ================================================================== */
+
+function StatBand({
+  projects,
+  services,
+  articles,
+  gallery,
+  since,
+  w,
 }: {
-  page: ProPage;
-  accent: string;
-  featured?: Item;
-  avatarBroken: boolean;
-  setAvatarBroken: (v: boolean) => void;
-  compact?: boolean;
+  projects: number;
+  services: number;
+  articles: number;
+  gallery: number;
+  since?: string;
+  w: PortfolioDict;
 }) {
   const { t } = useI18n();
-  const w = t.portfolio;
-  const initials = page.displayName.slice(0, 2).toUpperCase();
-  const waMessage = `Hello ${page.displayName} — found you through your Elio page.`;
+  const stats: { value: number; label: string }[] = [
+    { value: projects, label: w.projects },
+    { value: services, label: w.services },
+    { value: articles, label: w.articles },
+    { value: gallery, label: w.gallery },
+  ].filter((s) => s.value > 0);
 
   return (
-    <div className={cn("grid items-center gap-8", compact ? "" : "mx-auto max-w-6xl px-6 lg:grid-cols-2 lg:py-24")}>
-      {/* Raised featured-work card */}
-      {featured?.imageUrl && (
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
-          className={cn(
-            "relative rounded-[2rem] bg-white/[0.06] p-3 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.55)] ring-1 ring-white/15 backdrop-blur-sm",
-            compact ? "mx-auto w-full max-w-xs" : "mx-auto w-full max-w-md",
-          )}
+    <section className="px-4 sm:px-6">
+      <Reveal className="mx-auto max-w-6xl">
+        <div
+          className={cn(surface, "grid grid-cols-2 divide-y p-2 sm:grid-cols-4 sm:divide-x sm:divide-y-0")}
+          style={{ ...surfaceLine, borderColor: LINE }}
         >
-          <img
-            src={featured.imageUrl}
-            alt={featured.title}
-            className="aspect-[4/5] w-full rounded-[1.5rem] object-cover"
-          />
-          <div className="flex items-center justify-between px-3 py-3">
-            <p className="truncate font-display text-sm font-semibold text-white">{featured.title}</p>
-            <Link
-              to={`/u/${page.username}/i/${featured.id}`}
-              className="flex shrink-0 items-center gap-1 text-xs font-medium text-white/85 transition-colors hover:text-white"
-            >
-              {w.view} <ArrowRight className="size-3" />
-            </Link>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Identity + oversized title */}
-      <div className={cn(compact ? "" : "text-center lg:text-left")}>
-        {!featured?.imageUrl && (
-          <div className={cn("mb-6", compact ? "" : "flex justify-center lg:justify-start")}>
-            {page.logoUrl && !avatarBroken ? (
-              <img
-                src={page.logoUrl}
-                alt={page.displayName}
-                onError={() => setAvatarBroken(true)}
-                className="size-16 rounded-full object-cover ring-2 ring-white/30"
-              />
-            ) : (
-              <span
-                className="flex size-16 items-center justify-center rounded-full font-display text-lg font-bold text-white"
-                style={{ background: accent }}
-              >
-                {initials}
+          {stats.map((s) => (
+            <div key={s.label} className="flex flex-col items-center px-4 py-6 text-center">
+              <span className="font-display text-3xl font-bold sm:text-4xl" style={{ color: INK }}>
+                <Counter to={s.value} />
               </span>
-            )}
-          </div>
-        )}
-        <h1
-          className={cn(
-            "font-display font-bold tracking-tight text-white",
-            compact ? "text-4xl" : "text-5xl sm:text-6xl lg:text-7xl",
+              <span className="mt-1 text-xs font-medium uppercase tracking-wider" style={{ color: MUTED }}>
+                {s.label}
+              </span>
+            </div>
+          ))}
+          {since && (
+            <div className="flex flex-col items-center px-4 py-6 text-center">
+              <span className="font-display text-3xl font-bold sm:text-4xl" style={{ color: INK }}>
+                {since}
+              </span>
+              <span className="mt-1 text-xs font-medium uppercase tracking-wider" style={{ color: MUTED }}>
+                {t.profile.since}
+              </span>
+            </div>
           )}
-        >
-          {page.displayName}
-        </h1>
-        <p className="mt-2 font-display text-lg" style={{ color: accent }}>
-          {page.headline || page.trade || w.tagline}
-        </p>
-        {(page.location || page.since) && (
-          <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-white/70">
-            <MapPin className="size-3.5" />
-            {[page.location, page.since && `${t.profile.since} ${page.since}`].filter(Boolean).join(" · ")}
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Counter({ to }: { to: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const reduce = useReducedMotion();
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    if (!inView || reduce) return;
+    const controls = animate(0, to, {
+      duration: 1.1,
+      ease: "easeOut",
+      onUpdate: (n) => setV(Math.round(n)),
+    });
+    return () => controls.stop();
+  }, [inView, to, reduce]);
+  return <span ref={ref}>{reduce ? to : v}</span>;
+}
+
+/* ================================================================== *
+ * Shared section wrapper
+ * ================================================================== */
+
+function Section({
+  id,
+  kicker,
+  title,
+  children,
+}: {
+  id?: string;
+  kicker?: string;
+  title?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section id={id} className="mx-auto max-w-6xl px-5 py-16 sm:px-6 sm:py-20">
+      {(kicker || title) && (
+        <Reveal className="mb-9">
+          {kicker && (
+            <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: CORAL }}>
+              {kicker}
+            </p>
+          )}
+          {title && (
+            <h2
+              className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl"
+              style={{ color: INK }}
+            >
+              {title}
+            </h2>
+          )}
+        </Reveal>
+      )}
+      {children}
+    </section>
+  );
+}
+
+/* ================================================================== *
+ * Cards
+ * ================================================================== */
+
+function ProjectCard({
+  page,
+  item,
+  accent,
+  w,
+  featuredBadge,
+}: {
+  page: ProPage;
+  item: Item;
+  accent: string;
+  w: PortfolioDict;
+  featuredBadge?: boolean;
+}) {
+  return (
+    <Link
+      to={`/u/${page.username}/i/${item.id}`}
+      className={cn(surface, "group block h-full overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl")}
+      style={surfaceLine}
+    >
+      {item.imageUrl && (
+        <div className="relative h-44 overflow-hidden">
+          <img
+            src={item.imageUrl}
+            alt={item.title}
+            loading="lazy"
+            className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          {featuredBadge && (
+            <span
+              className="absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white"
+              style={{ background: CORAL }}
+            >
+              {w.featured}
+            </span>
+          )}
+        </div>
+      )}
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-display text-lg font-bold" style={{ color: INK }}>
+            {item.title}
+          </h3>
+          <ArrowUpRight
+            className="mt-1 size-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            style={{ color: CORAL }}
+          />
+        </div>
+        {item.description && (
+          <p className="mt-2 line-clamp-2 text-sm leading-6" style={{ color: MUTED }}>
+            {item.description}
           </p>
         )}
-        {page.bio && <p className="mt-4 max-w-md text-sm leading-6 text-white/75">{page.bio}</p>}
-
-        <div className={cn("mt-6 flex flex-wrap items-center gap-3", compact ? "" : "justify-center lg:justify-start")}>
-          {page.whatsapp && (
-            <a
-              href={waLink(page.whatsapp, waMessage)}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-11 items-center gap-2 rounded-xl bg-white px-5 text-sm font-semibold text-[#111318] shadow-lg transition-transform active:scale-[0.98]"
-            >
-              {w.buyCta} <ArrowRight className="size-4" />
-            </a>
-          )}
-          {page.email && (
-            <a
-              href={`mailto:${page.email}`}
-              className="flex size-11 items-center justify-center rounded-xl bg-white/15 text-white backdrop-blur transition-colors hover:bg-white/25"
-              aria-label={page.email}
-            >
-              <Mail className="size-4" />
-            </a>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProjectsContent({
-  page,
-  projects,
-  accent,
-}: {
-  page: ProPage;
-  projects: Item[];
-  accent: string;
-  w: PortfolioDict;
-}) {
-  return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      {projects.map((item) => (
-        <Link
-          key={item.id}
-          to={`/u/${page.username}/i/${item.id}`}
-          className="group overflow-hidden rounded-3xl bg-white/[0.05] ring-1 ring-white/10 transition-all hover:bg-white/[0.09]"
-        >
-          {item.imageUrl && (
-            <img
-              src={item.imageUrl}
-              alt={item.title}
-              loading="lazy"
-              className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-            />
-          )}
-          <div className="p-5">
-            <div className="flex items-center justify-between gap-2">
-              <h3 className="truncate font-display font-semibold text-white">{item.title}</h3>
-              <ArrowRight className="size-4 shrink-0 text-white/50 transition-transform group-hover:translate-x-0.5 group-hover:text-white" />
-            </div>
-            {item.description && (
-              <p className="mt-1.5 line-clamp-2 text-sm leading-5 text-white/65">{item.description}</p>
-            )}
-            {(item.client || item.role) && (
-              <p className="mt-2 flex items-center gap-1.5 text-[11px] text-white/55">
-                <User className="size-3" />
-                {[item.role, item.client].filter(Boolean).join(" · ")}
-              </p>
-            )}
-            {(item.startDate || item.endDate) && (
-              <p className="mt-1 flex items-center gap-1.5 text-[11px] text-white/55">
-                <CalendarRange className="size-3" />
-                {[item.startDate, item.endDate].filter(Boolean).join(" → ")}
-              </p>
-            )}
-            {(item.tags ?? []).length > 0 && (
-              <div className="mt-2.5 flex flex-wrap gap-1.5">
-                {(item.tags ?? []).slice(0, 3).map((tg) => (
-                  <span key={tg} className="rounded-full px-2 py-0.5 text-[10px]" style={{ background: `${accent}30`, color: "#fff" }}>
-                    {tg}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-function ArticlesContent({
-  page,
-  articles,
-  accent,
-  w,
-}: {
-  page: ProPage;
-  articles: Item[];
-  accent: string;
-  w: PortfolioDict;
-}) {
-  return (
-    <div className="space-y-4">
-      {articles.map((item) => (
-        <Link
-          key={item.id}
-          to={`/u/${page.username}/i/${item.id}`}
-          className="group flex gap-4 rounded-3xl bg-white/[0.05] p-4 ring-1 ring-white/10 transition-all hover:bg-white/[0.09] sm:p-5"
-        >
-          {item.imageUrl ? (
-            <img src={item.imageUrl} alt="" loading="lazy" className="size-20 shrink-0 rounded-2xl object-cover sm:size-24" />
-          ) : (
-            <span
-              className="flex size-20 shrink-0 items-center justify-center rounded-2xl sm:size-24"
-              style={{ background: `${accent}30` }}
-            >
-              <Newspaper className="size-7 text-white/80" />
-            </span>
-          )}
-          <div className="min-w-0 flex-1">
-            {item.date && <p className="text-[11px] uppercase tracking-wider" style={{ color: accent }}>{item.date}</p>}
-            <h3 className="mt-0.5 truncate font-display font-semibold text-white">{item.title}</h3>
-            {item.description && <p className="mt-1 line-clamp-2 text-sm leading-5 text-white/65">{item.description}</p>}
-            <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-white/85">
-              {w.read} <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-            </span>
-          </div>
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-function ServicesContent({
-  page,
-  services,
-  gallery,
-  accent,
-  w,
-}: {
-  page: ProPage;
-  services: Item[];
-  gallery: Item[];
-  accent: string;
-  w: PortfolioDict;
-}) {
-  return (
-    <div className="space-y-6">
-      {services.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {services.map((item) => (
-            <Link
-              key={item.id}
-              to={`/u/${page.username}/i/${item.id}`}
-              className="group rounded-2xl bg-white/[0.05] p-5 ring-1 ring-white/10 transition-all hover:bg-white/[0.09]"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="truncate font-display font-semibold text-white">{item.title}</h3>
-                {item.status && (
-                  <span className="shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold" style={{ background: `${accent}35`, color: "#fff" }}>
-                    {item.status}
-                  </span>
-                )}
-              </div>
-              {item.description && <p className="mt-1.5 text-sm leading-5 text-white/65">{item.description}</p>}
-            </Link>
-          ))}
-        </div>
-      )}
-      {gallery.length > 0 && (
-        <div>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-white/60">{w.gallery}</p>
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-            {gallery.slice(0, 8).map((item) => (
-              <Link
-                key={item.id}
-                to={`/u/${page.username}/i/${item.id}`}
-                className="group relative overflow-hidden rounded-xl ring-1 ring-white/10"
+        {(item.role || item.client) && (
+          <p className="mt-3 flex items-center gap-1.5 text-xs" style={{ color: MUTED }}>
+            <User className="size-3" /> {[item.role, item.client].filter(Boolean).join(" · ")}
+          </p>
+        )}
+        {(item.startDate || item.endDate) && (
+          <p className="mt-1 flex items-center gap-1.5 text-xs" style={{ color: MUTED }}>
+            <CalendarRange className="size-3" />
+            {[item.startDate, item.endDate].filter(Boolean).join(" → ")}
+          </p>
+        )}
+        {(item.tags ?? []).length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {(item.tags ?? []).slice(0, 3).map((tg) => (
+              <span
+                key={tg}
+                className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                style={{ background: `${accent}14`, color: accent }}
               >
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  loading="lazy"
-                  className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </Link>
+                {tg}
+              </span>
             ))}
           </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function AboutContent({
-  page,
-  accent,
-  w,
-  ideas,
-  coverBroken,
-  setCoverBroken,
-}: {
-  page: ProPage;
-  accent: string;
-  w: PortfolioDict;
-  ideas: Item[];
-  coverBroken: boolean;
-  setCoverBroken: (v: boolean) => void;
-}) {
-  const waMessage = `Hello ${page.displayName} — found you through your Elio page.`;
-  return (
-    <div className="space-y-8">
-      {/* Story + cover */}
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-3xl bg-white/[0.05] p-6 ring-1 ring-white/10">
-          <h3 className="font-display text-lg font-semibold text-white">{w.storyTitle}</h3>
-          <p className="mt-3 whitespace-pre-line text-sm leading-7 text-white/75">
-            {page.bio || w.noStory}
-          </p>
-          {ideas.length > 0 && (
-            <div className="mt-5 border-t border-white/10 pt-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">{w.whatsNext}</p>
-              <div className="mt-2.5 flex flex-wrap gap-2">
-                {ideas.map((idea) => (
-                  <Link
-                    key={idea.id}
-                    to={`/u/${page.username}/i/${idea.id}`}
-                    className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white/85 transition-colors hover:bg-white/20"
-                  >
-                    {idea.title}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        {page.coverUrl && !coverBroken ? (
-          <img
-            src={page.coverUrl}
-            alt=""
-            onError={() => setCoverBroken(true)}
-            className="h-48 w-full rounded-3xl object-cover ring-1 ring-white/10 lg:h-full"
-          />
-        ) : (
-          <div
-            className="hidden h-full min-h-40 rounded-3xl ring-1 ring-white/10 lg:block"
-            style={{ background: `radial-gradient(300px 200px at 50% 100%, ${accent}55, transparent)` }}
-          />
         )}
       </div>
-
-      {/* Contact band */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6 ring-1 ring-white/15" style={{ background: `${accent}30` }}>
-        <div>
-          <h3 className="font-display text-lg font-semibold text-white">{w.workTogether}</h3>
-          <p className="mt-1 text-sm text-white/70">{w.workTogetherText}</p>
-        </div>
-        <div className="flex items-center gap-2.5">
-          {page.whatsapp && (
-            <a
-              href={waLink(page.whatsapp, waMessage)}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-11 items-center gap-2 rounded-xl bg-white px-5 text-sm font-semibold text-[#111318] shadow-lg transition-transform active:scale-[0.98]"
-            >
-              <MessageCircle className="size-4" /> {w.contact}
-            </a>
-          )}
-          {page.email && (
-            <a
-              href={`mailto:${page.email}`}
-              className="flex size-11 items-center justify-center rounded-xl bg-white/20 text-white transition-colors hover:bg-white/30"
-              aria-label={page.email}
-            >
-              <Mail className="size-4" />
-            </a>
-          )}
-        </div>
-      </div>
-
-      {/* Visitor comments */}
-      <ProfileComments username={page.username} accent={accent} onAccent />
-    </div>
+    </Link>
   );
 }
+
+function ServiceCard({
+  page,
+  item,
+  accent,
+}: {
+  page: ProPage;
+  item: Item;
+  accent: string;
+}) {
+  return (
+    <Link
+      to={`/u/${page.username}/i/${item.id}`}
+      className={cn(surface, "group block h-full p-6 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl")}
+      style={surfaceLine}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="font-display text-lg font-bold" style={{ color: INK }}>
+          {item.title}
+        </h3>
+        {item.status && (
+          <span
+            className="shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold"
+            style={{ background: `${accent}18`, color: accent }}
+          >
+            {item.status}
+          </span>
+        )}
+      </div>
+      {item.description && (
+        <p className="mt-2.5 text-sm leading-6" style={{ color: MUTED }}>
+          {item.description}
+        </p>
+      )}
+      <span
+        className="mt-4 inline-flex items-center gap-1 text-sm font-semibold transition-transform group-hover:translate-x-0.5"
+        style={{ color: CORAL }}
+      >
+        <ArrowRight className="size-4" />
+      </span>
+    </Link>
+  );
+}
+
+function ArticleCard({
+  page,
+  item,
+  accent,
+  w,
+}: {
+  page: ProPage;
+  item: Item;
+  accent: string;
+  w: PortfolioDict;
+}) {
+  return (
+    <Link
+      to={`/u/${page.username}/i/${item.id}`}
+      className={cn(surface, "group flex gap-4 p-4 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl")}
+      style={surfaceLine}
+    >
+      {item.imageUrl ? (
+        <img
+          src={item.imageUrl}
+          alt=""
+          loading="lazy"
+          className="size-20 shrink-0 rounded-2xl object-cover"
+        />
+      ) : (
+        <span
+          className="flex size-20 shrink-0 items-center justify-center rounded-2xl"
+          style={{ background: `${accent}16`, color: accent }}
+        >
+          <Sparkles className="size-6" />
+        </span>
+      )}
+      <div className="min-w-0 flex-1">
+        {item.date && (
+          <p className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: CORAL }}>
+            {item.date}
+          </p>
+        )}
+        <h3 className="mt-0.5 truncate font-display text-base font-bold" style={{ color: INK }}>
+          {item.title}
+        </h3>
+        {item.description && (
+          <p className="mt-1 line-clamp-2 text-sm leading-5" style={{ color: MUTED }}>
+            {item.description}
+          </p>
+        )}
+        <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: INK }}>
+          {w.view} <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+
