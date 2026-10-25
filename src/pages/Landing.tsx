@@ -10,6 +10,7 @@ import {
 import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { Footer } from "@/components/Footer";
 import { Marquee } from "@/components/Marquee";
+import { ModelPreview } from "@/components/ModelPreview";
 import { Nav } from "@/components/Nav";
 import { Reveal } from "@/components/Reveal";
 import { TiltCard } from "@/components/TiltCard";
@@ -23,6 +24,7 @@ import {
 import { api } from "@/convex/_generated/api";
 import { useI18n } from "@/lib/i18n";
 import { photos } from "@/lib/photos";
+import { MODELS, MODEL_ORDER } from "@/lib/portfolio-models";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { ArrowRight, LayoutGrid, MessageCircle, Nfc, Store } from "lucide-react";
@@ -341,6 +343,61 @@ export default function Landing() {
               {t.gallery.band}
             </p>
           </div>
+        </Reveal>
+      </section>
+
+      {/* ================= PAGE STYLES ================= */}
+      <section className="relative px-4 py-24 sm:px-6">
+        <Reveal className="mx-auto max-w-6xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ember">
+            {t.models.kicker}
+          </p>
+          <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            {t.models.title}
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl leading-7 text-muted-foreground sm:mx-0">
+            {t.models.sub}
+          </p>
+        </Reveal>
+
+        <div className="mx-auto mt-12 grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {MODEL_ORDER.map((id, i) => (
+            <Reveal key={id} delay={i * 0.07}>
+              <Link
+                to="/services#order"
+                className="group flex h-full flex-col gap-3 rounded-2xl border border-border/60 bg-card p-3 text-left transition-colors hover:border-primary/50"
+              >
+                <span className="relative block">
+                  <ModelPreview model={id} className="rounded-xl" />
+                  <span className="absolute right-2 top-2 rounded-full bg-background/85 px-2 py-0.5 text-[10px] font-semibold tabular-nums text-muted-foreground backdrop-blur">
+                    #{i + 1}
+                  </span>
+                  {id === "editorial" && (
+                    <span className="absolute left-2 top-2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
+                      {t.services.form.recommended}
+                    </span>
+                  )}
+                </span>
+                <span className="flex items-baseline justify-between gap-2 px-1">
+                  <span className="font-display text-sm font-semibold group-hover:text-primary">
+                    {MODELS[id].label}
+                  </span>
+                  <ArrowRight className="size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
+                </span>
+                <span className="px-1 pb-1 text-xs leading-5 text-muted-foreground">
+                  {t.services.form.modelDescs[id]}
+                </span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal className="mx-auto mt-10 max-w-6xl text-center">
+          <Button className="btn-glow rounded-2xl" asChild>
+            <Link to="/services#order">
+              {t.models.cta} <ArrowRight className="size-4" />
+            </Link>
+          </Button>
         </Reveal>
       </section>
 

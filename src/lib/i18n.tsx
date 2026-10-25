@@ -167,6 +167,12 @@ const en = {
       ],
     },
   },
+  models: {
+    kicker: "Page styles",
+    title: "One page, four moods.",
+    sub: "Every Elio page shares the same sections — you choose the look. Pick a style at order time and the team builds it with your content.",
+    cta: "Pick your style",
+  },
   gallery: {
     kicker: "The standard",
     title: "Your work, shown properly.",
@@ -910,6 +916,12 @@ const fr: Dict = {
       ],
     },
   },
+  models: {
+    kicker: "Styles de page",
+    title: "Une page, quatre ambiances.",
+    sub: "Toutes les pages Elio partagent les mêmes sections — vous choisissez l'allure. Choisissez un style au moment de la commande : l'équipe la construit avec votre contenu.",
+    cta: "Choisir mon style",
+  },
   gallery: {
     kicker: "Le standard",
     title: "Votre travail, bien présenté.",
@@ -1650,6 +1662,12 @@ const tr: Dict = {
         "Sipariş üzerine, tamamen size özel",
       ],
     },
+  },
+  models: {
+    kicker: "Sayfa stilleri",
+    title: "Bir sayfa, dört hava.",
+    sub: "Tüm Elio sayfaları aynı bölümleri paylaşır — görünümü siz seçersiniz. Sipariş sırasında bir stil seçin; ekip içeriğinizle kurar.",
+    cta: "Stilimi seç",
   },
   gallery: {
     kicker: "Standart",
