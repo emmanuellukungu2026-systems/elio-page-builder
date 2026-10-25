@@ -106,6 +106,7 @@ const schema = defineSchema(
       email: v.string(),
       details: v.string(),
       cardTier: v.optional(v.string()), // standard | pro | independent (NFC card model chosen at order time)
+      model: v.optional(v.string()), // editorial | authory | corporate | elegant (page style chosen at order time)
       status: v.optional(v.string()),
     }).index("by_user", ["userId"]),
   },

@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ModelPreview } from "@/components/ModelPreview";
 import { api } from "@/convex/_generated/api";
 import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
+import { MODELS, MODEL_ORDER, type ModelId } from "@/lib/portfolio-models";
 import { cn } from "@/lib/utils";
 import { downloadBriefPdf, type BriefData } from "@/lib/brief-pdf";
 import { useI18n } from "@/lib/i18n";
@@ -16,7 +18,7 @@ import { photoStrip } from "@/lib/photos";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation } from "convex/react";
 import { AethelMark } from "@/components/AethelMark";
-import { ArrowRight, Check, CreditCard, Download, FileText, ListChecks, Loader2, Lock, MessageCircle, Nfc, Send, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, CreditCard, Download, FileText, ListChecks, Loader2, Lock, MessageCircle, Nfc, Palette, Send, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
@@ -34,6 +36,7 @@ export default function Services() {
   const [details, setDetails] = useState("");
   const [withCard, setWithCard] = useState<boolean | null>(null); // null = pas encore choisi
   const [cardTier, setCardTier] = useState<"standard" | "pro" | "independent">("standard");
+  const [pageModel, setPageModel] = useState<ModelId | null>(null);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [studioSent, setStudioSent] = useState(false);
@@ -52,6 +55,10 @@ export default function Services() {
   const cardLine =
     withCard === null ? null : withCard ? `*NFC card:* YES — ship a physical card` : `*NFC card:* NO — page only`;
 
+  const modelLine = pageModel
+    ? `*Page style:* ${MODELS[pageModel].label} (model ${MODEL_ORDER.indexOf(pageModel) + 1})`
+    : null;
+
   const waMessage = [
     "*Elio Pages — Order*",
     "",
@@ -61,6 +68,7 @@ export default function Services() {
     trade ? `*Trade:* ${trade}` : "",
     "",
     cardLine,
+    modelLine,
     `*Details:* ${details || "—"}`,
     "",
     "_This message is my order — please build my Elio page from it._",
@@ -74,6 +82,10 @@ export default function Services() {
       toast.error(f.errRequired);
       return;
     }
+    if (pageModel === null) {
+      toast.error(f.modelRequired);
+      return;
+    }
     setStudioSending(true);
     try {
       await traceOrder({
@@ -81,6 +93,7 @@ export default function Services() {
         name: `${businessName} (${contactName || "no contact"})`,
         email: whatsapp || trade || "-",
         cardTier: withCard ? cardTier : undefined,
+        model: pageModel ?? undefined,
         details: [
           withCard === null ? null : withCard ? "NFC card: YES" : "NFC card: NO",
           details.slice(0, 2000),
@@ -102,6 +115,10 @@ export default function Services() {
       toast.error(f.errRequired);
       return;
     }
+    if (pageModel === null) {
+      toast.error(f.modelRequired);
+      return;
+    }
     setSending(true);
     // Trace the order locally; delivery is the WhatsApp message itself.
     try {
@@ -110,6 +127,7 @@ export default function Services() {
         name: `${businessName} (${contactName || "no contact"})`,
         email: whatsapp || trade || "-",
         cardTier: withCard ? cardTier : undefined,
+        model: pageModel ?? undefined,
         details: details.slice(0, 2000),
       });
     } catch {
@@ -268,6 +286,56 @@ export default function Services() {
                       className="min-h-24"
                       required
                     />
+                  </div>
+
+                  {/* Page model: the client picks the style of their page */}
+                  <div className="space-y-2 rounded-2xl border border-border/60 p-4">
+                    <div className="flex items-center gap-2">
+                      <Palette className="size-4 text-primary" />
+                      <Label className="font-semibold">{f.modelTitle}</Label>
+                    </div>
+                    <p className="text-xs leading-5 text-muted-foreground">{f.modelHelp}</p>
+                    <div className="mt-1 grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+                      {MODEL_ORDER.map((id, i) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setPageModel(id)}
+                          aria-pressed={pageModel === id}
+                          className={cn(
+                            "flex flex-col gap-2 rounded-xl border p-2 text-left transition-colors",
+                            pageModel === id
+                              ? "border-primary bg-primary/10"
+                              : "border-border/70 hover:bg-accent",
+                          )}
+                        >
+                          <span className="relative block">
+                            <ModelPreview model={id} className="rounded-lg" />
+                            {id === "editorial" && (
+                              <span className="absolute left-1.5 top-1.5 rounded-full bg-primary px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary-foreground">
+                                {f.recommended}
+                              </span>
+                            )}
+                          </span>
+                          <span className="flex items-baseline justify-between gap-1">
+                            <span
+                              className={cn(
+                                "text-xs font-semibold",
+                                pageModel === id ? "text-primary" : "text-foreground",
+                              )}
+                            >
+                              {MODELS[id].label}
+                            </span>
+                            <span className="text-[10px] font-medium tabular-nums text-muted-foreground">
+                              #{i + 1}
+                            </span>
+                          </span>
+                          <span className="text-[10px] leading-4 text-muted-foreground">
+                            {f.modelDescs[id]}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* NFC card: with / without — the page works either way */}

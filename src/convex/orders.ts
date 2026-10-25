@@ -18,8 +18,16 @@ export const createOrder = mutation({
     cardTier: v.optional(
       v.union(v.literal("standard"), v.literal("pro"), v.literal("independent")),
     ),
+    model: v.optional(
+      v.union(
+        v.literal("editorial"),
+        v.literal("authory"),
+        v.literal("corporate"),
+        v.literal("elegant"),
+      ),
+    ),
   },
-  handler: async (ctx, { pack, name, email, details, cardTier }) => {
+  handler: async (ctx, { pack, name, email, details, cardTier, model }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       throw new Error("Please sign in (or create your free 5-digit-ID account) before ordering.");
@@ -32,6 +40,7 @@ export const createOrder = mutation({
       email: email.trim() || user?.email || "-",
       details: details.trim(),
       cardTier,
+      model,
       status: "new",
     });
   },
