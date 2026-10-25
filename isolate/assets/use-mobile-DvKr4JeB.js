@@ -1,1 +1,0 @@
-import{r as n}from"./react-vendor-c8WFmkkH.js";const o=768;function c(){const[s,i]=n.useState(()=>typeof window<"u"&&window.innerWidth<o);return n.useEffect(()=>{const e=window.matchMedia(`(max-width: ${o-1}px)`),t=r=>i(r.matches);return e.addEventListener("change",t),()=>e.removeEventListener("change",t)},[]),s}export{c as u};
