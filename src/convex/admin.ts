@@ -98,9 +98,11 @@ export const adminCreatePage = mutation({
     // Optional: the client's account email (from the order). When it matches a
     // signed-up user, the page is linked to them so their portal shows it.
     clientEmail: v.optional(v.string()),
-    template: v.optional(v.string()), // standard | pro (default) | cover
+    // Page style: one of the four models (editorial | authory | corporate | elegant).
+    style: v.optional(v.string()),
+    template: v.optional(v.string()), // legacy field — kept for old data; new pages are always "pro"
   },
-  handler: async (ctx, { username, displayName, clientEmail, template }) => {
+  handler: async (ctx, { username, displayName, clientEmail, template, style }) => {
     const owner = await getOwner(ctx);
     if (!owner) throw new Error("Admin only");
 
@@ -125,6 +127,10 @@ export const adminCreatePage = mutation({
     }
     const chosenTemplate =
       template === "standard" || template === "cover" ? template : "pro";
+    const chosenStyle =
+      style === "authory" || style === "corporate" || style === "elegant"
+        ? style
+        : "editorial";
 
     const now = Date.now();
     return await ctx.db.insert("elioPages", {
@@ -132,7 +138,7 @@ export const adminCreatePage = mutation({
       username: value,
       displayName: displayName.trim() || value,
       accent: "#1e4fd8",
-      style: "noir",
+      style: chosenStyle,
       template: chosenTemplate,
       isPublished: false,
       items: [],

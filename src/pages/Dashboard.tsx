@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { CONCIERGE_WHATSAPP, waLink } from "@/lib/elio";
 import { useI18n } from "@/lib/i18n";
 import { photos } from "@/lib/photos";
+import { modelById } from "@/lib/portfolio-models";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import {
@@ -280,12 +281,10 @@ export default function Dashboard() {
                     <Layers className="size-3.5" /> {(page.items ?? []).length} {mp.items}
                   </span>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.05] px-3 py-1 text-xs text-muted-foreground">
-                    <Palette className="size-3.5" /> {mp.template}:{" "}
-                    {(page.template ?? "pro") === "standard"
-                      ? t.admin.templateStandard
-                      : page.template === "cover"
-                        ? t.admin.templateCover
-                        : t.admin.templatePro}
+                    <Palette className="size-3.5" /> {t.dashboard.sections.style}:{" "}
+                    <span className="font-medium text-foreground">
+                      {modelById(page.style).label}
+                    </span>
                   </span>
                 </div>
               </section>

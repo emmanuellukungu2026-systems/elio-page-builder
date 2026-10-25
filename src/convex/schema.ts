@@ -61,8 +61,8 @@ const schema = defineSchema(
       logoUrl: v.optional(v.string()),
       coverUrl: v.optional(v.string()),
       accent: v.optional(v.string()),
-      style: v.optional(v.string()), // noir | atelier | atoll | meridian
-      template: v.optional(v.string()), // standard (link-in-bio) | pro (full portfolio) | cover (giant headline)
+      style: v.optional(v.string()), // editorial | authory | corporate | elegant (page model)
+      template: v.optional(v.string()), // legacy (standard | pro | cover) — all pages render the portfolio now
 
       isPublished: v.optional(v.boolean()),
       publishedAt: v.optional(v.number()),

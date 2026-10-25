@@ -6,36 +6,6 @@ export type ElioItemId = Id<"elioPages">;
 /** WhatsApp number of the Elio concierge team. */
 export const CONCIERGE_WHATSAPP = "905338366127";
 
-/** Visual styles a business can pick for its public page. */
-export const PAGE_STYLES = [
-  {
-    id: "noir",
-    label: "Noir",
-    desc: "Dark, high-contrast, editorial.",
-    swatch: "linear-gradient(135deg, #0b0e1a, #1f2430)",
-  },
-  {
-    id: "atelier",
-    label: "Atelier",
-    desc: "Warm paper tones, serif accents.",
-    swatch: "linear-gradient(135deg, #f6f5f1, #e7d8bd)",
-  },
-  {
-    id: "atoll",
-    label: "Atoll",
-    desc: "Deep teal with crisp whites.",
-    swatch: "linear-gradient(135deg, #062a30, #0e6f7a)",
-  },
-  {
-    id: "meridian",
-    label: "Meridian",
-    desc: "Indigo glass with soft glow.",
-    swatch: "linear-gradient(135deg, #10132b, #4f46e5)",
-  },
-] as const;
-
-export type PageStyleId = (typeof PAGE_STYLES)[number]["id"];
-
 export const ACCENTS = ["#1e4fd8", "#4f7dff", "#0e7490", "#0e6f7a", "#4338ca", "#0b2a6b"];
 
 /** Emails allowed into the admin studio — the Aethel Technologies team. */
@@ -44,10 +14,6 @@ export const OWNER_EMAILS = [
   "emmanuellukungu80@gmail.com",
   "emmanuellukungu77@gmail.com",
 ];
-
-export function styleById(id?: string | null) {
-  return PAGE_STYLES.find((s) => s.id === id) ?? PAGE_STYLES[0];
-}
 
 /** Sections a business can add to its catalog. */
 export const SECTION_KINDS = [
@@ -141,7 +107,7 @@ export function buildBrief(input: {
   if (input.bio) lines.push(`*Pitch:* ${input.bio}`);
   if (input.story) lines.push(`*Story:* ${input.story}`);
   lines.push("");
-  lines.push(`*Look:* accent ${input.accent ?? "#1e4fd8"} · style ${input.style ?? "noir"}`);
+  lines.push(`*Look:* accent ${input.accent ?? "#1e4fd8"} · style ${input.style ?? "editorial"}`);
   if (input.logoUrl) lines.push(`*Logo:* ${input.logoUrl}`);
   if (input.coverUrl) lines.push(`*Cover:* ${input.coverUrl}`);
   lines.push("");

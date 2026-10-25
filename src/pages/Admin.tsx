@@ -1,6 +1,7 @@
 import { Atmosphere } from "@/components/Atmosphere";
 import { ElioMark } from "@/components/ElioMark";
 import { ImageUpload } from "@/components/ImageUpload";
+import { ModelPreview } from "@/components/ModelPreview";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { PageLoading } from "@/components/PageLoading";
 import { Badge } from "@/components/ui/badge";
@@ -12,13 +13,13 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import {
   ACCENTS,
-  PAGE_STYLES,
   SECTION_KINDS,
   OWNER_EMAILS,
   profileUrl,
   splitTags,
   waLink,
 } from "@/lib/elio";
+import { MODELS, MODEL_ORDER, type ModelId } from "@/lib/portfolio-models";
 import { useAuth } from "@/hooks/use-auth";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -196,7 +197,7 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
-  const [newTemplate, setNewTemplate] = useState<"standard" | "pro" | "cover">("pro");
+  const [newStyle, setNewStyle] = useState<ModelId>("editorial");
   const [creating, setCreating] = useState(false);
   const adminCreatePage = useMutation(api.admin.adminCreatePage);
   const usernameCheck = useQuery(
@@ -212,7 +213,7 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
       const id = await adminCreatePage({
         username: username.trim(),
         displayName: displayName.trim(),
-        template: newTemplate,
+        style: newStyle,
         ...(clientEmail.trim() ? { clientEmail: clientEmail.trim() } : {}),
       });
       toast.success(a.save);
@@ -240,7 +241,7 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
     setUsername(slug);
     setDisplayName(o.name);
     setClientEmail(o.email);
-    setNewTemplate("pro");
+    setNewStyle("editorial");
     setShowNew(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -346,25 +347,24 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
             </p>
           </div>
           <div className="mt-4 space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">{a.template}</Label>
-            <div className="flex flex-wrap gap-2">
-              {(["standard", "pro", "cover"] as const).map((tpl) => (
+            <Label className="text-xs font-medium text-muted-foreground">
+              {t.dashboard.sections.style}
+            </Label>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {MODEL_ORDER.map((id) => (
                 <button
-                  key={tpl}
+                  key={id}
                   type="button"
-                  onClick={() => setNewTemplate(tpl)}
+                  onClick={() => setNewStyle(id)}
                   className={cn(
-                    "flex-1 rounded-xl border px-3 py-2 text-xs font-medium transition-all",
-                    newTemplate === tpl
-                      ? "border-ember bg-ember/10 text-foreground"
+                    "rounded-xl border p-2 text-left transition-all",
+                    newStyle === id
+                      ? "border-ember bg-ember/10 ring-1 ring-ember/50"
                       : "border-border/60 text-muted-foreground hover:bg-white/[0.04]",
                   )}
                 >
-                  {({
-                    standard: a.templateStandard,
-                    pro: a.templatePro,
-                    cover: a.templateCover,
-                  })[tpl]}
+                  <ModelPreview model={id} className="rounded-lg" />
+                  <span className="mt-1.5 block text-xs font-medium">{MODELS[id].label}</span>
                 </button>
               ))}
             </div>
@@ -674,32 +674,6 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
           </Studio>
 
           <Studio title={a.look} desc={a.lookDesc}>
-            {/* Template picker — Standard (link-in-bio), Professional (full), Cover (giant headline) */}
-            <Field label={a.template}>
-              <div className="grid gap-2 sm:grid-cols-3">
-                {([
-                  { id: "standard", label: a.templateStandard, desc: a.templateStandardDesc },
-                  { id: "pro", label: a.templatePro, desc: a.templateProDesc },
-                  { id: "cover", label: a.templateCover, desc: a.templateCoverDesc },
-                ] as const).map((tpl) => (
-                  <button
-                    key={tpl.id}
-                    type="button"
-                    onClick={() => save({ template: tpl.id })}
-                    className={cn(
-                      "rounded-2xl border p-4 text-left transition-all",
-                      (page.template ?? "pro") === tpl.id
-                        ? "border-ember ring-1 ring-ember/50"
-                        : "border-border/60 hover:bg-white/[0.04]",
-                    )}
-                  >
-                    <span className="block text-sm font-semibold">{tpl.label}</span>
-                    <span className="mt-1 block text-xs leading-5 text-muted-foreground">{tpl.desc}</span>
-                  </button>
-                ))}
-              </div>
-            </Field>
-
             {/* Photo uploads — Convex Storage, owner-only */}
             <div className="grid gap-4 sm:grid-cols-2">
               <ImageUpload
@@ -758,20 +732,20 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
             </Field>
             <Field label={s.style}>
               <div className="grid gap-2 sm:grid-cols-4">
-                {PAGE_STYLES.map((st) => (
+                {MODEL_ORDER.map((id) => (
                   <button
-                    key={st.id}
+                    key={id}
                     type="button"
-                    onClick={() => save({ style: st.id })}
+                    onClick={() => save({ style: id })}
                     className={cn(
-                      "rounded-2xl border p-3 text-left transition-all",
-                      (page.style ?? "noir") === st.id
+                      "rounded-2xl border p-2 text-left transition-all",
+                      (page.style ?? "editorial") === id
                         ? "border-ember ring-1 ring-ember/50"
                         : "border-border/60 hover:bg-white/[0.04]",
                     )}
                   >
-                    <span className="block h-10 w-full rounded-lg" style={{ background: st.swatch }} />
-                    <span className="mt-2 block text-xs font-medium">{st.label}</span>
+                    <ModelPreview model={id} className="rounded-lg" />
+                    <span className="mt-2 block text-xs font-medium">{MODELS[id].label}</span>
                   </button>
                 ))}
               </div>

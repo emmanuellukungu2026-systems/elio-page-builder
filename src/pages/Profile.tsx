@@ -1,22 +1,16 @@
 import { Atmosphere } from "@/components/Atmosphere";
-import { CoverProfile } from "@/components/CoverProfile";
 import { ElioMark } from "@/components/ElioMark";
 import { PageLoading } from "@/components/PageLoading";
 import { ProProfile } from "@/components/ProProfile";
-import { StandardProfile } from "@/components/StandardProfile";
 import { api } from "@/convex/_generated/api";
 import { useI18n } from "@/lib/i18n";
 import { useQuery } from "convex/react";
 import { Link, useParams } from "react-router";
 
 /**
- * Public portfolio router. The template stored on the page decides the
- * experience:
- *  - "standard": one-screen link-in-bio (StandardProfile).
- *  - "pro": full portfolio — accent hero, projects/articles/services,
- *    horizontal snap panels on mobile, comments (ProProfile).
- *  - "cover": giant-headline panel lit by the client's accent, work below
- *    (CoverProfile).
+ * Public portfolio router. Every page renders the same section build
+ * (ProProfile); the `style` stored on the page picks the visual model
+ * (editorial | authory | corporate | elegant).
  */
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
@@ -45,16 +39,5 @@ export default function Profile() {
     );
   }
 
-  // Standard template: one-screen link-in-bio page.
-  if ((page.template ?? "pro") === "standard") {
-    return <StandardProfile page={page} />;
-  }
-
-  // Cover template: giant headline over an accent-lit panel.
-  if (page.template === "cover") {
-    return <CoverProfile page={page} />;
-  }
-
-  // Pro template: full portfolio (accent hero, horizontal panels on mobile).
   return <ProProfile page={page} />;
 }

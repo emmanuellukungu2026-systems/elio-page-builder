@@ -3,7 +3,8 @@ import { ElioMark } from "@/components/ElioMark";
 import { PageLoading } from "@/components/PageLoading";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
-import { styleById, waLink } from "@/lib/elio";
+import { waLink } from "@/lib/elio";
+import { modelById } from "@/lib/portfolio-models";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
@@ -44,8 +45,8 @@ export default function ItemDetail() {
 
   const { item, business } = data;
   const accent = business.accent ?? "#1e4fd8";
-  const style = styleById(business.style);
-  const serif = style.id === "atelier";
+  const style = modelById(business.style);
+  const serif = style.theme.display === "serif";
 
   return (
     <div className="relative min-h-screen">
