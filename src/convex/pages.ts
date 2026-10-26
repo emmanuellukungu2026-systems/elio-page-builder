@@ -31,6 +31,15 @@ export const getMyPage = query({
   },
 });
 
+/** Public platform counters — the landing hero shows how many people are on Elio. */
+export const platformStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query("users").collect();
+    return { users: users.filter((u) => u.isAnonymous !== true).length };
+  },
+});
+
 /** Check username availability (used live during onboarding). */
 export const checkUsername = query({
   args: { username: v.string() },

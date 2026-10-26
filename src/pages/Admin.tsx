@@ -4,8 +4,16 @@ import { ImageUpload } from "@/components/ImageUpload";
 import { ModelPreview } from "@/components/ModelPreview";
 import { NfcLinkCard } from "@/components/NfcLinkCard";
 import { PageLoading } from "@/components/PageLoading";
+import { ProProfile } from "@/components/ProProfile";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,6 +47,7 @@ import {
   Newspaper,
   Loader2,
   MessageCircle,
+  Monitor,
   Plus,
   ShieldAlert,
   ShieldCheck,
@@ -617,6 +626,8 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
   const adminUpdatePage = useMutation(api.admin.adminUpdatePage);
   const adminAddItem = useMutation(api.admin.adminAddItem);
   const [savedFlash, setSavedFlash] = useState(false);
+  // Full-page preview of the client's page, before it goes live.
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const save = async (patch: Record<string, unknown>) => {
     try {
@@ -863,6 +874,15 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
               </Button>
             </div>
 
+            {/* See exactly what a visitor gets — check it before publishing */}
+            <Button
+              variant="outline"
+              className="mt-3 h-10 w-full rounded-xl border-border/60 bg-white/[0.03]"
+              onClick={() => setPreviewOpen(true)}
+            >
+              <Monitor className="size-4" /> {a.preview}
+            </Button>
+
             {page.whatsapp && (
               <a
                 href={waLink(page.whatsapp, `Hello ${page.displayName} — your Elio page is ready for review: ${profileUrl(page.username)}`)}
@@ -885,6 +905,28 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
           </div>
         </div>
       </div>
+
+      {/* ================= Preview ================= */}
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent className="flex h-[90vh] w-[95vw] max-w-[1100px] flex-col gap-0 overflow-hidden p-0 sm:max-w-[1100px]">
+          <DialogHeader className="flex flex-row items-start justify-between gap-4 border-b border-border/60 bg-background px-5 py-4 pr-14 sm:px-6">
+            <div className="min-w-0">
+              <DialogTitle className="truncate font-display">{a.previewTitle}</DialogTitle>
+              <DialogDescription className="mt-1.5 truncate text-xs sm:text-sm">
+                {a.previewSub}
+              </DialogDescription>
+            </div>
+            <span className="hidden shrink-0 rounded-lg border border-border/60 bg-white/[0.03] px-2.5 py-1 font-mono text-xs text-muted-foreground sm:block">
+              /u/{page.username}
+            </span>
+          </DialogHeader>
+
+          {/* The real page component, exactly as it will render live */}
+          <div data-page-scroll className="flex-1 overflow-y-auto overflow-x-hidden bg-[#f4f2ee]">
+            <ProProfile page={page} />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

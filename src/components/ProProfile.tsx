@@ -465,6 +465,19 @@ function PortfolioNav({
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 16));
 
+  // Same signal when the page is rendered inside a scroll frame instead of the
+  // window — e.g. the studio's preview dialog (marked `data-page-scroll`).
+  useEffect(() => {
+    const onScroll = (e: Event) => {
+      const el = e.target as HTMLElement | null;
+      if (el && typeof el.hasAttribute === "function" && el.hasAttribute("data-page-scroll")) {
+        setScrolled(el.scrollTop > 16);
+      }
+    };
+    document.addEventListener("scroll", onScroll, true);
+    return () => document.removeEventListener("scroll", onScroll, true);
+  }, []);
+
   // Track which section is in view for the active indicator.
   useEffect(() => {
     const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(

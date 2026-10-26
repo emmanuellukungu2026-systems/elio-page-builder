@@ -74,6 +74,8 @@ export default function Landing() {
   // Signed-in visitors who already have a page get "Check your page" instead
   // of "Create your page" — it opens their live page.
   const myPage = useQuery(api.pages.getMyPage);
+  // Live platform counter shown in the hero badge, next to the Aethel mark.
+  const stats = useQuery(api.pages.platformStats);
   const pageHref = myPage ? `/u/${myPage.username}` : "/auth?returnTo=%2Fdashboard";
 
   const featureKeys = [
@@ -124,12 +126,13 @@ export default function Landing() {
               transition={{ duration: 0.7, ease: [0.21, 0.6, 0.35, 1] }}
               className="mx-auto flex size-48 flex-col items-center justify-center rounded-full bg-white/15 px-7 text-center ring-1 ring-white/25 backdrop-blur-md sm:size-64 sm:px-10"
             >
-              <AethelMark className="size-10 rounded-xl bg-white/95 p-1 sm:size-12 sm:rounded-2xl" />
-              <p className="mt-2.5 text-[11px] font-semibold leading-4 text-white sm:text-xs">
-                {t.hero.aethelLabel}
+              {/* White Aethel mark + the live number of people on the platform */}
+              <AethelMark className="size-9 brightness-0 invert drop-shadow-sm sm:size-12" />
+              <p className="mt-3.5 font-display text-3xl font-bold tabular-nums leading-none text-white sm:text-4xl">
+                {stats ? stats.users.toLocaleString() : "—"}
               </p>
-              <p className="mt-1.5 text-[10px] leading-[14px] text-white/70 sm:text-[11px] sm:leading-4">
-                {t.hero.aethelLine}
+              <p className="mt-2 text-[10px] font-medium leading-[13px] text-white/75 sm:text-xs">
+                {t.hero.usersLabel}
               </p>
             </motion.div>
 
