@@ -88,7 +88,56 @@ export const listOrders = query({
   },
 });
 
+/** Every comment on any client page — visitor messages + internal studio notes, newest first. */
+export const listAllComments = query({
+  args: {},
+  handler: async (ctx) => {
+    const owner = await getOwner(ctx);
+    if (!owner) return null;
+    const comments = await ctx.db.query("pageComments").collect();
+    return comments
+      .sort((a, b) => b._creationTime - a._creationTime)
+      .map((c) => ({
+        _id: c._id,
+        pageId: c.pageId,
+        authorName: c.authorName,
+        body: c.body,
+        internal: c.internal === true,
+        at: c._creationTime,
+      }));
+  },
+});
+
 /* ================= Page mutations ================= */
+
+/** Post an internal studio note on a page — never shown on the public page. */
+export const addPageComment = mutation({
+  args: { pageId: v.id("elioPages"), body: v.string() },
+  handler: async (ctx, { pageId, body }) => {
+    const owner = await getOwner(ctx);
+    if (!owner) throw new Error("Admin only");
+    const text = body.trim().slice(0, 800);
+    if (!text) throw new Error("Message is required");
+    const page = await ctx.db.get(pageId);
+    if (!page) throw new Error("Page not found");
+    await ctx.db.insert("pageComments", {
+      pageId,
+      authorName: "Aethel Studio",
+      body: text,
+      internal: true,
+    });
+  },
+});
+
+/** Remove a comment from a page (studio notes and visitor messages alike). */
+export const deletePageComment = mutation({
+  args: { commentId: v.id("pageComments") },
+  handler: async (ctx, { commentId }) => {
+    const owner = await getOwner(ctx);
+    if (!owner) throw new Error("Admin only");
+    await ctx.db.delete(commentId);
+  },
+});
 
 /** Create a client page from the admin studio (e.g. from an accepted brief). */
 export const adminCreatePage = mutation({

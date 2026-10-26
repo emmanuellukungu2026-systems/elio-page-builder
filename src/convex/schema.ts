@@ -91,11 +91,13 @@ const schema = defineSchema(
       .index("by_username", ["username"])
       .index("by_published", ["isPublished"]),
 
-    // Visitor messages on a page
+    // Visitor messages on a page (+ internal studio notes, flagged `internal`
+    // so they never appear on the public page)
     pageComments: defineTable({
       pageId: v.id("elioPages"),
       authorName: v.string(),
       body: v.string(),
+      internal: v.optional(v.boolean()),
     }).index("by_page", ["pageId"]),
 
     // Trace of concierge briefs (delivered via WhatsApp)

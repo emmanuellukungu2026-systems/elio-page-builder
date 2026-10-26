@@ -192,6 +192,9 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
   const pages = useQuery(api.admin.listAllPages);
   const orders = useQuery(api.admin.listOrders);
 
+  // The two studio sections: incoming orders, and the created pages
+  const [tab, setTab] = useState<"orders" | "pages">("orders");
+
   // New-page form (also fed by "create from this order")
   const [showNew, setShowNew] = useState(false);
   const [username, setUsername] = useState("");
@@ -243,6 +246,7 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
     setClientEmail(o.email);
     setNewStyle("editorial");
     setShowNew(true);
+    setTab("pages");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -268,7 +272,26 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
         <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{a.subtitle}</p>
       </section>
 
+      {/* ============ Two sections: orders received / created pages ============ */}
+      <nav className="flex flex-wrap gap-2" aria-label={a.title}>
+        <SectionTab
+          active={tab === "orders"}
+          onClick={() => setTab("orders")}
+          icon={<Inbox className="size-4" />}
+          label={a.tabOrders}
+          count={orders?.length}
+        />
+        <SectionTab
+          active={tab === "pages"}
+          onClick={() => setTab("pages")}
+          icon={<Store className="size-4" />}
+          label={a.tabPages}
+          count={pages?.length}
+        />
+      </nav>
+
       {/* ============ Orders ============ */}
+      {tab === "orders" && (
       <section>
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
@@ -293,7 +316,10 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
           </div>
         )}
       </section>
+      )}
 
+      {tab === "pages" && (
+        <>
       {/* ============ New page form ============ */}
       {showNew && (
         <section className="glass-strong rounded-3xl p-6">
@@ -402,6 +428,8 @@ function Console({ onOpen }: { onOpen: (id: Id<"elioPages">) => void }) {
           </div>
         )}
       </section>
+        </>
+      )}
     </div>
   );
 }
@@ -572,6 +600,9 @@ function PageCard({ page, onOpen }: { page: AdminPage; onOpen: () => void }) {
           <Trash2 className="size-3.5" />
         </Button>
       </div>
+
+      {/* Comment thread for this page */}
+      <PageComments pageId={page._id} className="mt-4" />
     </div>
   );
 }
@@ -848,6 +879,9 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
               <p className="font-display text-sm font-semibold">{a.nfcTitle}</p>
               <NfcLinkCard username={page.username} className="mt-3" />
             </div>
+
+            {/* Comment thread for this page */}
+            <PageComments pageId={page._id} className="mt-5" />
           </div>
         </div>
       </div>
@@ -946,6 +980,157 @@ function AdminItemCard({ item, pageId }: { item: AdminPage["items"][number]; pag
           <Field label={i18.body}>
             <Textarea defaultValue={item.body ?? ""} key={item.id + "-b"} rows={6} placeholder={i18.bodyPh} onBlur={(e) => update({ body: e.target.value })} />
           </Field>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ================= Section tab (orders / pages) ================= */
+function SectionTab({
+  active,
+  onClick,
+  icon,
+  label,
+  count,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+  count?: number;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
+        active
+          ? "bg-ember text-white"
+          : "border border-border/60 bg-white/[0.03] text-muted-foreground hover:bg-white/[0.06] hover:text-foreground",
+      )}
+    >
+      {icon}
+      {label}
+      {count !== undefined && (
+        <span className={cn("rounded-md px-1.5 py-0.5 text-xs", active ? "bg-white/20" : "bg-white/[0.06]")}>{count}</span>
+      )}
+    </button>
+  );
+}
+
+/* ================= Per-page comment thread ================= */
+function PageComments({ pageId, className }: { pageId: Id<"elioPages">; className?: string }) {
+  const { t } = useI18n();
+  const a = t.admin;
+  const comments = useQuery(api.admin.listAllComments);
+  const addPageComment = useMutation(api.admin.addPageComment);
+  const deletePageComment = useMutation(api.admin.deletePageComment);
+  const [open, setOpen] = useState(false);
+  const [body, setBody] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const thread = (comments ?? []).filter((c) => c.pageId === pageId);
+
+  const send = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!body.trim()) return;
+    setBusy(true);
+    try {
+      await addPageComment({ pageId, body });
+      setBody("");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : a.saveError);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className={cn("rounded-2xl border border-border/60 bg-white/[0.02] p-4", className)}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-2 text-left"
+      >
+        <span className="flex items-center gap-2 text-sm font-medium">
+          <MessageCircle className="size-4 text-ember" /> {a.commentsTitle}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <Badge variant="secondary" className="rounded-lg bg-white/[0.06]">
+            {comments === undefined ? "…" : thread.length}
+          </Badge>
+          {open ? (
+            <X className="size-4 text-muted-foreground" />
+          ) : (
+            <Plus className="size-4 text-muted-foreground" />
+          )}
+        </span>
+      </button>
+
+      {open && (
+        <div className="mt-4 space-y-3">
+          <form onSubmit={send} className="flex items-end gap-2">
+            <Textarea
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              placeholder={a.commentsPh}
+              rows={2}
+              className="flex-1 bg-white/[0.03]"
+            />
+            <Button type="submit" size="sm" className="btn-glow rounded-xl" disabled={busy || !body.trim()}>
+              {busy ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />} {a.commentSend}
+            </Button>
+          </form>
+
+          {thread.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-border/70 p-4 text-center text-xs text-muted-foreground">
+              {a.commentsEmpty}
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {thread.map((c) => (
+                <li key={c._id} className="rounded-xl border border-border/60 bg-white/[0.02] p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <span className="truncate text-xs font-medium">{c.authorName}</span>
+                      {c.internal && (
+                        <Badge
+                          variant="secondary"
+                          className="shrink-0 rounded-md bg-ember/10 px-1.5 py-0 text-[10px] text-ember"
+                        >
+                          {a.commentStudio}
+                        </Badge>
+                      )}
+                    </span>
+                    <span className="flex shrink-0 items-center gap-1">
+                      <span className="text-[11px] text-muted-foreground">
+                        {new Date(c.at).toLocaleDateString(undefined, { day: "numeric", month: "short" })}
+                      </span>
+                      <Button
+                        size="icon-sm"
+                        variant="ghost"
+                        className="text-muted-foreground hover:text-destructive"
+                        onClick={() => {
+                          if (window.confirm(a.deleteConfirm)) {
+                            deletePageComment({ commentId: c._id }).catch((err) =>
+                              toast.error(err instanceof Error ? err.message : a.saveError),
+                            );
+                          }
+                        }}
+                      >
+                        <Trash2 className="size-3.5" />
+                      </Button>
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm leading-5 text-foreground/85">{c.body}</p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </div>

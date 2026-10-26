@@ -185,6 +185,7 @@ export const listComments = query({
       .withIndex("by_page", (q) => q.eq("pageId", page._id))
       .collect();
     return comments
+      .filter((c) => c.internal !== true) // studio notes stay private
       .sort((a, b) => b._creationTime - a._creationTime)
       .map((c) => ({ _id: c._id, authorName: c.authorName, body: c.body, at: c._creationTime }));
   },
