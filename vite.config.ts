@@ -96,9 +96,10 @@ export default defineConfig({
     // Bind to all interfaces so the browser runtime's server-ready event fires.
     host: true,
     port: 5173,
-    // Keep HMR on, but disable full-screen error overlay
-    hmr: {
-      overlay: false,
-    },
+    // HMR must stay disabled in this environment: React Fast Refresh was
+    // committing deletions against a stale DOM (Node.removeChild ... is not a
+    // child of this node) on every file edit, which surfaced as a build error.
+    // With HMR off the preview picks changes up on a full reload instead.
+    hmr: false,
   },
 });
