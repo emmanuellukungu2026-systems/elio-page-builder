@@ -923,7 +923,7 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
 
           {/* The real page component, exactly as it will render live */}
           <div data-page-scroll className="flex-1 overflow-y-auto overflow-x-hidden bg-[#f4f2ee]">
-            <ProProfile page={page} />
+            <ProProfile page={page} embedded />
           </div>
         </DialogContent>
       </Dialog>

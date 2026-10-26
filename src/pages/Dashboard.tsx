@@ -2,6 +2,7 @@ import { Atmosphere } from "@/components/Atmosphere";
 import { CardFit, IndependentCard, ShowcaseCards, StandardCard } from "@/components/CardOrdering";
 import { AethelMark } from "@/components/AethelMark";
 import { ElioMark } from "@/components/ElioMark";
+import { PageInbox } from "@/components/Inbox";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
@@ -53,6 +54,9 @@ export default function Dashboard() {
   const mp = t.dashboard.mypage;
   const page = useQuery(api.pages.getMyPage);
   const orders = useQuery(api.orders.myOrders);
+  const inbox = useQuery(api.messages.inbox);
+  const inboxCount = inbox?.conversations.length ?? 0;
+  const inboxUnread = inbox?.unread ?? 0;
 
   const [modText, setModText] = useState("");
   const [modSending, setModSending] = useState(false);
@@ -109,6 +113,26 @@ export default function Dashboard() {
             </span>
           </Link>
           <div className="flex shrink-0 items-center gap-1.5">
+            {inboxCount > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="relative rounded-xl"
+                onClick={() =>
+                  document
+                    .getElementById("inbox")
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
+              >
+                <MessageCircle className="size-4" />
+                <span className="hidden sm:inline">{t.dashboard.inbox.title}</span>
+                {inboxUnread > 0 && (
+                  <span className="ml-1 inline-flex min-w-4 items-center justify-center rounded-full bg-ember px-1 text-[10px] font-bold leading-4 text-white">
+                    {inboxUnread}
+                  </span>
+                )}
+              </Button>
+            )}
             <Button variant="ghost" size="sm" className="rounded-xl" onClick={() => navigate("/directory")}>
               {t.nav.directory}
             </Button>
@@ -394,6 +418,9 @@ export default function Dashboard() {
                 </div>
               )}
             </section>
+
+            {/* Private messages started from the public page */}
+            <PageInbox />
           </>
         )}
 

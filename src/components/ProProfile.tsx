@@ -1,4 +1,5 @@
 import { ElioMark } from "@/components/ElioMark";
+import { ProfileChat } from "@/components/ProfileChat";
 import { ProfileComments } from "@/components/ProfileComments";
 import { Reveal } from "@/components/Reveal";
 import type { Doc } from "@/convex/_generated/dataModel";
@@ -110,7 +111,14 @@ type Item = Doc<"elioPages">["items"][number];
  * page; the sticky nav tracks the active section and collapses to an animated
  * sheet on mobile.
  */
-export function ProProfile({ page }: { page: ProPage }) {
+export function ProProfile({
+  page,
+  embedded = false,
+}: {
+  page: ProPage;
+  /** Inside the studio preview frame there is no floating chat launcher. */
+  embedded?: boolean;
+}) {
   const { t } = useI18n();
   const w = t.portfolio as PortfolioDict;
   const accent = page.accent ?? "#1e4fd8";
@@ -431,6 +439,14 @@ export function ProProfile({ page }: { page: ProPage }) {
           </p>
         </div>
       </footer>
+
+      {/* Private messaging — write straight to the owner from the profile. */}
+      <ProfileChat
+        username={page.username}
+        displayName={page.displayName}
+        accent={accent}
+        embedded={embedded}
+      />
     </div>
   );
 }

@@ -100,6 +100,31 @@ const schema = defineSchema(
       internal: v.optional(v.boolean()),
     }).index("by_page", ["pageId"]),
 
+    // Private conversations between a page's visitors and its owner.
+    // `visitorToken` is a secret handed to the visitor's browser so an
+    // anonymous visitor can come back and read the owner's replies.
+    conversations: defineTable({
+      pageId: v.id("elioPages"),
+      visitorName: v.string(),
+      visitorContact: v.optional(v.string()),
+      visitorToken: v.string(),
+      lastBody: v.string(),
+      lastAt: v.number(),
+      lastFrom: v.union(v.literal("visitor"), v.literal("owner")),
+      unread: v.number(), // messages waiting for the owner
+    })
+      .index("by_page", ["pageId"])
+      .index("by_page_time", ["pageId", "lastAt"])
+      .index("by_token", ["visitorToken"]),
+
+    messages: defineTable({
+      conversationId: v.id("conversations"),
+      from: v.union(v.literal("visitor"), v.literal("owner")),
+      body: v.string(),
+      at: v.number(),
+      readAt: v.optional(v.number()),
+    }).index("by_conversation", ["conversationId"]),
+
     // Trace of concierge briefs (delivered via WhatsApp)
     serviceOrders: defineTable({
       userId: v.optional(v.id("users")),
