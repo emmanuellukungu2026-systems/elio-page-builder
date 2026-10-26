@@ -445,3 +445,58 @@
     text-align: center;
   }
 }
+
+/* ============ Elio mascot + guided tour ============ */
+/* The mascot is pure SVG, so the blink and the wave need an explicit
+   fill-box origin; everything else is a plain vertical bob. */
+@keyframes elio-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes elio-blink {
+  0%,
+  91%,
+  100% {
+    transform: scaleY(1);
+  }
+  94% {
+    transform: scaleY(0.08);
+  }
+}
+@keyframes elio-wave {
+  0%,
+  100% {
+    transform: rotate(-14deg);
+  }
+  50% {
+    transform: rotate(20deg);
+  }
+}
+/* Marching dashes: the pattern is 10 + 9, so -38 is exactly two loops. */
+@keyframes tour-dash {
+  to {
+    stroke-dashoffset: -38;
+  }
+}
+
+.elio-mascot__body {
+  animation: elio-bob 3.6s ease-in-out infinite;
+}
+.elio-mascot__eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: elio-blink 5.4s ease-in-out infinite;
+}
+.elio-mascot__wave {
+  transform-box: fill-box;
+  transform-origin: 89% 90%;
+  animation: elio-wave 1.15s ease-in-out infinite;
+}
+.tour-dash {
+  animation: tour-dash 1.4s linear infinite;
+}

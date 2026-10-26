@@ -726,8 +726,9 @@ const en = {
     ],
   },
   mascot: {
-    welcome: "Psst — new here? Let me show you around Elio Pages in 5 quick steps!",
+    welcome: "Psst — new here? Follow me and I'll show you how Elio works, one step at a time!",
     welcomePage: "Hey! I'm the page guide — 5 quick steps and you'll know everything about this portfolio.",
+    start: "Let's go",
     next: "Next",
     back: "Back",
     skip: "Skip tour",
@@ -756,6 +757,32 @@ const en = {
       {
         title: "Tap, scan, meet",
         text: "Your finished page ships on a physical NFC card. One tap on any phone opens it. Ready to take the tour for real?",
+      },
+    ],
+    tourSteps: [
+      {
+        title: "One page, one link",
+        text: "This is where it starts: your profile, your work and your contact details all live behind a single address you can share anywhere.",
+      },
+      {
+        title: "How Elio works",
+        text: "Three moves: create your page (or let the studio build it), share the link or the QR code, then hand people your NFC card. That's the whole product.",
+      },
+      {
+        title: "Pick your style",
+        text: "Four ready-made styles — Editorial, Classic, Minimal and Dark Elegant. Choose one when you order and we apply it to your page.",
+      },
+      {
+        title: "Your NFC card",
+        text: "Order the physical card that carries your link: Standard, Pro or Independent, with your QR code printed on it.",
+      },
+      {
+        title: "One tap, everything opens",
+        text: "Hold any phone near the card — or scan the QR code — and your page opens right away. No app, no typing.",
+      },
+      {
+        title: "Ready to start?",
+        text: "Create your page in two minutes, or send the brief and the Aethel team builds it for you. Free to start.",
       },
     ],
   },
@@ -1477,8 +1504,9 @@ const fr: Dict = {
     ],
   },
   mascot: {
-    welcome: "Psst — nouveau ici ? Je vous fais visiter Elio Pages en 5 étapes rapides !",
+    welcome: "Psst — nouveau ici ? Suis-moi, je t'explique comment Elio fonctionne, étape par étape !",
     welcomePage: "Salut ! Je suis le guide de la page — 5 petites étapes et vous saurez tout sur ce portfolio.",
+    start: "C'est parti",
     next: "Suivant",
     back: "Retour",
     skip: "Passer la visite",
@@ -1507,6 +1535,32 @@ const fr: Dict = {
       {
         title: "Tap, scan, rencontre",
         text: "Ta page finie arrive sur une carte NFC physique. Un tap sur n'importe quel téléphone l'ouvre. Prêt à faire la visite pour de vrai ?",
+      },
+    ],
+    tourSteps: [
+      {
+        title: "Une page, un lien",
+        text: "Tout commence ici : ton profil, ton travail et tes coordonnées tiennent sur une seule adresse que tu peux partager partout.",
+      },
+      {
+        title: "Comment Elio fonctionne",
+        text: "Trois gestes : crée ta page (ou laisse le studio la faire), partage le lien ou le QR code, puis tends ta carte NFC. C'est tout le produit.",
+      },
+      {
+        title: "Choisis ton style",
+        text: "Quatre styles prêts — Editorial, Classic, Minimal et Dark Elegant. Tu en choisis un à la commande, on l'applique à ta page.",
+      },
+      {
+        title: "Ta carte NFC",
+        text: "Commande la carte physique qui porte ton lien : Standard, Pro ou Indépendant, avec ton QR code imprimé dessus.",
+      },
+      {
+        title: "Un tap, tout s'ouvre",
+        text: "Approche un téléphone de la carte — ou scanne le QR code — et ta page s'ouvre aussitôt. Sans appli, sans saisie.",
+      },
+      {
+        title: "Prêt à commencer ?",
+        text: "Crée ta page en deux minutes, ou envoie le brief et l'équipe Aethel la construit pour toi. Gratuit pour démarrer.",
       },
     ],
   },
@@ -2226,8 +2280,9 @@ const tr: Dict = {
     ],
   },
   mascot: {
-    welcome: "Psst — burada mısın? Elio Pages'i 5 hızlı adımda gezdireyim!",
+    welcome: "Psst — burada mısın? Bana gel, Elio'nun nasıl çalıştığını adım adım göstereyim!",
     welcomePage: "Selam! Sayfa rehberiyim — 5 kısa adımda bu portföyü öğreneceksin.",
+    start: "Başlayalım",
     next: "İleri",
     back: "Geri",
     skip: "Turu atla",
@@ -2256,6 +2311,32 @@ const tr: Dict = {
       {
         title: "Dokun, tara, tanış",
         text: "Biten sayfan fiziksel bir NFC karta gelir. Herhangi bir telefona dokunmak açar. Turu gerçekten atmaya hazır mısın?",
+      },
+    ],
+    tourSteps: [
+      {
+        title: "Tek sayfa, tek bağlantı",
+        text: "Her şey burada başlar: profilin, işlerin ve iletişim bilgilerin tek bir adreste durur, istediğin her yerde paylaşırsın.",
+      },
+      {
+        title: "Elio nasıl çalışır",
+        text: "Üç adım: sayfanı oluştur (ya da stüdyo yapsın), bağlantıyı ya da QR kodu paylaş, sonra NFC kartını ver. Ürünün tamamı bu.",
+      },
+      {
+        title: "Stilini seç",
+        text: "Dört hazır stil — Editorial, Classic, Minimal ve Dark Elegant. Siparişte seçersin, sayfana biz uygularız.",
+      },
+      {
+        title: "NFC kartın",
+        text: "Bağlantını taşıyan fiziksel kartı sipariş et: Standard, Pro veya Independent — QR kodun basılı gelir.",
+      },
+      {
+        title: "Tek dokunuş, her şey açılır",
+        text: "Telefonu karta yaklaştır — ya da QR kodu tara — sayfan hemen açılır. Uygulama yok, yazma yok.",
+      },
+      {
+        title: "Hazır mısın?",
+        text: "Sayfanı iki dakikada oluştur ya da brifi gönder, Aethel ekibi senin için kursun. Başlamak ücretsiz.",
       },
     ],
   },

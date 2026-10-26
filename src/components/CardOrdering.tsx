@@ -482,6 +482,7 @@ export function CardOrdering({ className }: { className?: string }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.5 }}
+        data-tour="cards"
         className="mx-auto max-w-2xl text-center"
       >
         <p className="text-sm font-medium uppercase tracking-[0.2em] text-ember">{c.kicker}</p>

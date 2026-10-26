@@ -165,12 +165,13 @@ export default function Landing() {
               {t.hero.subtitle}
             </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.42, ease: [0.21, 0.6, 0.35, 1] }}
-              className="mt-9 flex flex-wrap items-center justify-center gap-3"
-            >
+          <motion.div
+            data-tour="hero-cta"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.42, ease: [0.21, 0.6, 0.35, 1] }}
+            className="mt-9 flex flex-wrap items-center justify-center gap-3"
+          >
               <Button
                 size="lg"
                 className="h-12 rounded-2xl bg-white px-7 text-base font-semibold text-[#0b1020] shadow-lg hover:bg-white/90"
@@ -248,7 +249,7 @@ export default function Landing() {
             />
           </figure>
         </Reveal>
-        <div className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-3">
+        <div data-tour="how" className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-3">
           {t.how.items.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08}>
               <div className="h-full border-t border-border/70 pt-5">
@@ -363,7 +364,7 @@ export default function Landing() {
           </p>
         </Reveal>
 
-        <div className="mx-auto mt-12 grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div data-tour="models" className="mx-auto mt-12 grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {MODEL_ORDER.map((id, i) => (
             <Reveal key={id} delay={i * 0.07}>
               <Link
@@ -436,7 +437,7 @@ export default function Landing() {
           </Reveal>
 
           <Reveal delay={0.15} className="mx-auto w-full max-w-sm">
-            <div className="[perspective:1000px]">
+            <div data-tour="nfc" className="[perspective:1000px]">
               <TiltCard max={6}>
                 <NfcLinkCard username="atelier-kivu" />
               </TiltCard>
@@ -609,6 +610,7 @@ export default function Landing() {
       {/* ================= FINAL CTA ================= */}
       <section className="relative px-4 pb-8 pt-10 sm:px-6">
         <Reveal className="mx-auto max-w-4xl">            <div
+              data-tour="final"
               className="relative overflow-hidden rounded-2xl px-6 py-14 text-center sm:px-12"
               style={adPanelStyle}
             >
