@@ -4,12 +4,19 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
 import { useI18n } from "@/lib/i18n";
+import { alpha, P } from "@/lib/page-theme";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { Loader2, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+
+/* Page tokens — the palette of whichever model the page picked. */
+const INK = P.ink;
+const MUTED = P.muted;
+const LINE = P.line;
+const CARD = P.surf;
 
 /**
  * Visitor comments on a portfolio page. `onAccent` renders the light-on-dark
@@ -52,30 +59,42 @@ export function ProfileComments({
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: 0.2 }}
-      className={cn("rounded-3xl p-6 sm:p-8", onAccent ? "bg-white/[0.05] ring-1 ring-white/10" : "glass")}
+      className={cn(
+        "rounded-3xl p-6 sm:p-8",
+        onAccent ? "bg-white/[0.05] ring-1 ring-white/10" : "border",
+      )}
+      style={onAccent ? undefined : { background: CARD, borderColor: LINE }}
     >
       <div className="flex items-center gap-3">
         <div
           className="flex size-10 items-center justify-center rounded-xl"
-          style={{ background: onAccent ? "rgba(255,255,255,0.12)" : `${accent}1f`, color: onAccent ? "#fff" : accent }}
+          style={{ background: onAccent ? "rgba(255,255,255,0.12)" : alpha(accent, 12), color: onAccent ? "#fff" : accent }}
         >
           <MessageCircle className="size-5" />
         </div>
         <div>
-          <h2 className={cn("font-display text-lg font-semibold", onAccent && "text-white")}>{p.commentsTitle}</h2>
-          <p className={cn("text-xs", onAccent ? "text-white/60" : "text-muted-foreground")}>{p.connect}</p>
+          <h2
+            className="font-display text-lg font-semibold"
+            style={onAccent ? undefined : { color: INK }}
+          >
+            {p.commentsTitle}
+          </h2>
+          <p className="text-xs" style={onAccent ? undefined : { color: MUTED }}>
+            {p.connect}
+          </p>
         </div>
       </div>
 
       <form onSubmit={submit} className="mt-5 space-y-3">
         <div className="grid gap-3 sm:grid-cols-[1fr_2fr]">
           <div className="space-y-1.5">
-            <Label className={cn("text-xs", onAccent ? "text-white/60" : "text-muted-foreground")}>{p.comment}</Label>
+            <Label className="text-xs" style={onAccent ? undefined : { color: MUTED }}>{p.comment}</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Nadia / Atelier Kivu"
-              className={onAccent ? "bg-white/10 text-white placeholder:text-white/40" : "bg-white/[0.04]"}
+              className={cn("h-10 bg-[color:var(--p-bg)]", onAccent && "bg-white/10 text-white placeholder:text-white/40")}
+              style={onAccent ? undefined : { color: INK }}
             />
           </div>
           <div className="space-y-1.5">
@@ -85,7 +104,8 @@ export function ProfileComments({
               onChange={(e) => setBody(e.target.value)}
               placeholder={p.commentPh}
               rows={2}
-              className={onAccent ? "bg-white/10 text-white placeholder:text-white/40" : "bg-white/[0.04]"}
+              className={cn("resize-none bg-[color:var(--p-bg)]", onAccent && "bg-white/10 text-white placeholder:text-white/40")}
+              style={onAccent ? undefined : { color: INK }}
             />
           </div>
         </div>
@@ -94,7 +114,11 @@ export function ProfileComments({
             type="submit"
             size="sm"
             className="rounded-xl"
-            style={onAccent ? { background: "#fff", color: "#111318" } : undefined}
+            style={
+              onAccent
+                ? { background: "#fff", color: "#111318" }
+                : { background: accent, color: "#fff" }
+            }
             disabled={sending}
           >
             {sending ? <Loader2 className="size-4 animate-spin" /> : <MessageCircle className="size-4" />}
@@ -105,11 +129,11 @@ export function ProfileComments({
 
       <div className="mt-6 space-y-3">
         {comments === undefined ? null : comments.length === 0 ? (
-          <p
-            className={cn(
-              "rounded-2xl border border-dashed p-5 text-center text-sm",
-              onAccent ? "border-white/25 text-white/60" : "border-border/70 text-muted-foreground",
-            )}
+          <p              className={cn(
+                "rounded-2xl border border-dashed p-5 text-center text-sm",
+                onAccent ? "border-white/25 text-white/60" : "",
+              )}
+              style={onAccent ? undefined : { borderColor: alpha(LINE, 70), color: MUTED }}
           >
             {p.commentsEmpty}
           </p>
@@ -119,12 +143,17 @@ export function ProfileComments({
               key={c._id}
               className={cn(
                 "rounded-2xl border p-4",
-                onAccent ? "border-white/10 bg-white/[0.04]" : "border-border/60 bg-white/[0.02]",
+                onAccent ? "border-white/10 bg-white/[0.04]" : "",
               )}
+              style={
+                onAccent ? undefined : { borderColor: alpha(LINE, 80), background: alpha(MUTED, 6) }
+              }
             >
               <div className="flex items-center justify-between">
-                <p className={cn("text-sm font-medium", onAccent && "text-white")}>{c.authorName}</p>
-                <p className={cn("text-[11px]", onAccent ? "text-white/50" : "text-muted-foreground")}>
+                <p className="text-sm font-medium" style={onAccent ? undefined : { color: INK }}>
+                  {c.authorName}
+                </p>
+                <p className="text-[11px]" style={onAccent ? undefined : { color: MUTED }}>
                   {new Date(c.at).toLocaleDateString(undefined, {
                     day: "numeric",
                     month: "short",
@@ -132,7 +161,12 @@ export function ProfileComments({
                   })}
                 </p>
               </div>
-              <p className={cn("mt-1.5 text-sm leading-6", onAccent ? "text-white/85" : "text-foreground/85")}>{c.body}</p>
+              <p
+                className="mt-1.5 text-sm leading-6"
+                style={onAccent ? undefined : { color: MUTED }}
+              >
+                {c.body}
+              </p>
             </div>
           ))
         )}

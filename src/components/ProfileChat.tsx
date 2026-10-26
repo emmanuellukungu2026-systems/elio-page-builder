@@ -11,12 +11,18 @@ import { Loader2, MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-/* Editorial tokens shared with ProProfile. */
-const INK = "#151a2b";
-const MUTED = "#5b6479";
-const CORAL = "#ef4b34";
-const LINE = "rgba(21, 26, 43, 0.09)";
-const PURPLE_DOT = "#6b39d6";
+/* Page tokens — they resolve against the palette of whichever model the page
+ * picked, set as custom properties on the page root by ProProfile. */
+import { P } from "@/lib/page-theme";
+
+const BG = P.bg;
+const INK = P.ink;
+const MUTED = P.muted;
+const CORAL = P.acc;
+const LINE = P.line;
+const CARD = P.surf;
+const ON = P.on;
+const PURPLE_DOT = P.dec;
 
 const tokenKey = (username: string) => `elio-chat:${username}`;
 const seenKey = (username: string) => `elio-chat-seen:${username}`;
@@ -154,9 +160,9 @@ export function ProfileChat({
         aria-label={open ? c.close : c.open}
         aria-expanded={open}
         className={cn(
-          "fixed bottom-5 right-5 z-[60] inline-flex h-14 items-center gap-2 rounded-full px-5 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(21,26,43,0.25)] transition-transform hover:-translate-y-0.5 active:scale-95 sm:bottom-6 sm:right-6",
+          "fixed bottom-5 right-5 z-[60] inline-flex h-14 items-center gap-2 rounded-full px-5 text-sm font-semibold shadow-[0_10px_30px_rgba(21,26,43,0.25)] transition-transform hover:-translate-y-0.5 active:scale-95 sm:bottom-6 sm:right-6",
         )}
-        style={{ background: CORAL }}
+        style={{ background: CORAL, color: ON }}
       >
         {open ? <X className="size-5" /> : <MessageCircle className="size-5" />}
         <span className="hidden sm:inline">{open ? c.close : c.open}</span>
@@ -179,14 +185,14 @@ export function ProfileChat({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? undefined : { opacity: 0, y: 18, scale: 0.97 }}
             transition={{ duration: 0.24, ease: [0.21, 0.6, 0.35, 1] }}
-            className="fixed bottom-24 left-4 right-4 z-[60] flex max-h-[72vh] flex-col overflow-hidden rounded-3xl border bg-white shadow-[0_24px_60px_rgba(21,26,43,0.25)] sm:left-auto sm:right-6 sm:w-[23rem] sm:bottom-28"
-            style={{ borderColor: LINE }}
+            className="fixed bottom-24 left-4 right-4 z-[60] flex max-h-[72vh] flex-col overflow-hidden rounded-3xl border shadow-[0_24px_60px_rgba(21,26,43,0.25)] sm:left-auto sm:right-6 sm:w-[23rem] sm:bottom-28"
+            style={{ borderColor: LINE, background: CARD }}
           >
             {/* header */}
             <div className="flex items-center gap-3 border-b px-4 py-3.5" style={{ borderColor: LINE }}>
               <span
-                className="flex size-10 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold text-white"
-                style={{ background: accent }}
+                className="flex size-10 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold"
+                style={{ background: accent, color: ON }}
               >
                 {displayName.slice(0, 2).toUpperCase()}
               </span>
@@ -202,7 +208,7 @@ export function ProfileChat({
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label={c.close}
-                className="ml-auto flex size-8 items-center justify-center rounded-lg transition-colors hover:bg-black/[0.05]"
+                className="ml-auto flex size-8 items-center justify-center rounded-lg transition-colors hover:bg-[color:var(--p-hover)]"
                 style={{ color: MUTED }}
               >
                 <X className="size-4" />
@@ -231,7 +237,7 @@ export function ProfileChat({
                       onChange={(e) => setName(e.target.value)}
                       placeholder={c.namePh}
                       maxLength={60}
-                      className="h-10 bg-[#f4f2ee] text-sm"
+                      className="h-10 bg-[color:var(--p-bg)] text-sm"
                       style={{ color: INK }}
                     />
                   </div>
@@ -244,7 +250,7 @@ export function ProfileChat({
                       onChange={(e) => setContact(e.target.value)}
                       placeholder={c.contactPh}
                       maxLength={120}
-                      className="h-10 bg-[#f4f2ee] text-sm"
+                      className="h-10 bg-[color:var(--p-bg)] text-sm"
                       style={{ color: INK }}
                     />
                   </div>
@@ -258,7 +264,7 @@ export function ProfileChat({
                       placeholder={c.bodyPh}
                       rows={3}
                       maxLength={2000}
-                      className="resize-none bg-[#f4f2ee] text-sm"
+                      className="resize-none bg-[color:var(--p-bg)] text-sm"
                       style={{ color: INK }}
                     />
                   </div>
@@ -293,8 +299,8 @@ export function ProfileChat({
                       )}
                       style={
                         m.from === "visitor"
-                          ? { background: "#f4f2ee", color: INK, border: `1px solid ${LINE}` }
-                          : { background: CORAL, color: "#fff" }
+                          ? { background: BG, color: INK, border: `1px solid ${LINE}` }
+                          : { background: CORAL, color: ON }
                       }
                     >
                       {m.body}
@@ -323,7 +329,7 @@ export function ProfileChat({
                   onChange={(e) => setReplyText(e.target.value)}
                   placeholder={c.replyPh}
                   maxLength={2000}
-                  className="h-10 flex-1 bg-[#f4f2ee] text-sm"
+                  className="h-10 flex-1 bg-[color:var(--p-bg)] text-sm"
                   style={{ color: INK }}
                 />
                 <Button
@@ -331,8 +337,8 @@ export function ProfileChat({
                   size="icon"
                   disabled={sending || !replyText.trim()}
                   aria-label={c.send}
-                  className="size-10 shrink-0 rounded-xl text-white"
-                  style={{ background: CORAL }}
+                  className="size-10 shrink-0 rounded-xl"
+                  style={{ background: CORAL, color: ON }}
                 >
                   {sending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
                 </Button>
@@ -349,8 +355,8 @@ export function ProfileChat({
                   type="submit"
                   form="elio-chat-start"
                   disabled={sending}
-                  className="h-10 w-full rounded-xl text-white"
-                  style={{ background: CORAL }}
+                  className="h-10 w-full rounded-xl"
+                  style={{ background: CORAL, color: ON }}
                 >
                   {sending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
                   {sending ? c.sending : c.send}

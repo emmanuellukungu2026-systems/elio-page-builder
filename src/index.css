@@ -234,6 +234,16 @@
   font-family: "Georgia", "Times New Roman", serif;
 }
 
+/* Page models: the serif models (Corporate, Dark) swap the display face for
+   the whole page — every heading and `.font-display` element. */
+[data-p-display="serif"] .font-display,
+[data-p-display="serif"] h1,
+[data-p-display="serif"] h2,
+[data-p-display="serif"] h3,
+[data-p-display="serif"] h4 {
+  font-family: "Georgia", "Times New Roman", Times, serif;
+}
+
 /* ============ /Elio glass theme ============ */
 
 @layer base {

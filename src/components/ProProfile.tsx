@@ -5,6 +5,8 @@ import { Reveal } from "@/components/Reveal";
 import type { Doc } from "@/convex/_generated/dataModel";
 import { waLink } from "@/lib/elio";
 import { useI18n } from "@/lib/i18n";
+import { alpha, P, pageThemeStyle, pageVars, readableOn } from "@/lib/page-theme";
+import { modelById } from "@/lib/portfolio-models";
 import { cn } from "@/lib/utils";
 import {
   animate,
@@ -34,22 +36,27 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router";
 
 /* ------------------------------------------------------------------ *
- * Art direction — a warm, bright editorial portfolio (reference:
- * "William Harry"). One confident coral for primary actions, a purple
- * counterpoint for the geometric decor, deep-navy ink on off-white.
+ * Art direction — driven by the page's chosen model (see
+ * `@/lib/portfolio-models`). These tokens resolve against the custom
+ * properties set on the page root by `pageThemeStyle`, so the nav, hero,
+ * cards, chat and comments all repaint with the selected model's palette
+ * and display face — live, studio preview included.
  * ------------------------------------------------------------------ */
-const BG = "#f4f2ee";
-const INK = "#151a2b";
-const MUTED = "#5b6479";
-const CORAL = "#ef4b34";
-const PURPLE = "#6b39d6";
-const LINE = "rgba(21, 26, 43, 0.09)";
-const CARD = "#ffffff";
+const BG = P.bg;
+const INK = P.ink;
+const MUTED = P.muted;
+const CORAL = P.acc;
+const PURPLE = P.dec;
+const LINE = P.line;
+const CARD = P.surf;
+const ON = P.on;
 
-/* White surface shared by cards, bands and the nav once it is scrolled. */
-const surface =
-  "rounded-3xl border bg-white shadow-[0_1px_2px_rgba(21,26,43,0.05)]";
-const surfaceLine = { borderColor: LINE };
+/* Surface shared by cards, bands and the nav once it is scrolled. */
+const surface = "rounded-3xl border shadow-[0_1px_2px_rgba(21,26,43,0.05)]";
+const surfaceLine = { borderColor: LINE, background: CARD };
+
+/* Accent written at page creation, before models owned the palette. */
+const LEGACY_ACCENT = "#1e4fd8";
 const EASE: [number, number, number, number] = [0.21, 0.6, 0.35, 1];
 
 /** Dict shape of the portfolio strings (mirrors t.portfolio). */
@@ -87,6 +94,7 @@ type PortfolioDict = {
 /** Structural shape — accepts the public page object as returned by Convex. */
 export type ProPage = Pick<
   Doc<"elioPages">,
+  | "style"
   | "username"
   | "displayName"
   | "items"
@@ -121,7 +129,14 @@ export function ProProfile({
 }) {
   const { t } = useI18n();
   const w = t.portfolio as PortfolioDict;
-  const accent = page.accent ?? "#1e4fd8";
+  const model = modelById(page.style);
+  // The chosen model owns the palette; an accent picked in the studio still wins.
+  const customAccent =
+    page.accent && page.accent !== LEGACY_ACCENT ? page.accent : undefined;
+  const theme = customAccent
+    ? { ...model.theme, accent: customAccent, onAccent: readableOn(customAccent) }
+    : model.theme;
+  const accent = theme.accent;
   const waMessage = `Hello ${page.displayName} — found you through your Elio page.`;
 
   const projects = (page.items ?? []).filter((it) => it.kind === "project");
@@ -146,7 +161,7 @@ export function ProProfile({
     .slice(0, 8);
 
   return (
-    <div className="relative min-h-screen" style={{ background: BG, color: INK }}>
+    <div className="relative min-h-screen" data-p-display={theme.display} style={pageThemeStyle(theme)}>
       <PortfolioNav page={page} accent={accent} w={w} />
 
       <main id="main">
@@ -204,7 +219,7 @@ export function ProProfile({
                   className="hidden h-full min-h-56 rounded-3xl lg:block"
                   style={{
                     border: `1px solid ${LINE}`,
-                    background: `linear-gradient(150deg, ${CORAL}1f, ${PURPLE}1f)`,
+                    background: `linear-gradient(150deg, ${alpha(CORAL, 12)}, ${alpha(PURPLE, 12)})`,
                   }}
                 />
               )}
@@ -221,7 +236,7 @@ export function ProProfile({
                   <span
                     key={s}
                     className="rounded-full px-4 py-2 text-sm font-medium"
-                    style={{ background: `${PURPLE}12`, color: PURPLE }}
+                    style={{ background: alpha(CORAL, 10), color: CORAL }}
                   >
                     {s}
                   </span>
@@ -288,7 +303,7 @@ export function ProProfile({
                   >
                     <span
                       className="absolute -left-[5px] top-1.5 size-2.5 rounded-full"
-                      style={{ background: CORAL, boxShadow: `0 0 0 4px ${CORAL}22` }}
+                      style={{ background: CORAL, boxShadow: `0 0 0 4px ${alpha(CORAL, 14)}` }}
                     />
                     {(item.startDate || item.endDate) && (
                       <p className="text-xs font-semibold" style={{ color: accent }}>
@@ -366,7 +381,7 @@ export function ProProfile({
             <Reveal>
               <div
                 className="relative overflow-hidden rounded-3xl p-8 sm:p-10"
-                style={{ background: CORAL }}
+                style={{ background: CORAL, color: ON }}
               >
                 <div
                   aria-hidden="true"
@@ -376,21 +391,21 @@ export function ProProfile({
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute -bottom-20 -left-10 size-40 rotate-12 rounded-3xl"
-                  style={{ background: "#ffffff", opacity: 0.12 }}
+                  style={{ background: ON, opacity: 0.12 }}
                 />
                 <div className="relative">
-                  <h3 className="font-display text-2xl font-bold text-white sm:text-3xl">
+                  <h3 className="font-display text-2xl font-bold sm:text-3xl">
                     {w.workTogether}
                   </h3>
-                  <p className="mt-3 max-w-sm text-white/85">{w.workTogetherText}</p>
+                  <p className="mt-3 max-w-sm opacity-85">{w.workTogetherText}</p>
                   <div className="mt-7 flex flex-wrap items-center gap-3">
                     {page.whatsapp && (
                       <a
                         href={waLink(page.whatsapp, waMessage)}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex h-12 items-center gap-2 rounded-2xl bg-white px-6 text-sm font-semibold shadow-lg transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
-                        style={{ color: CORAL }}
+                        className="inline-flex h-12 items-center gap-2 rounded-2xl px-6 text-sm font-semibold shadow-lg transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+                        style={{ background: ON, color: CORAL }}
                       >
                         <MessageCircle className="size-4" /> {w.contactMe}
                       </a>
@@ -398,7 +413,8 @@ export function ProProfile({
                     {page.email && (
                       <a
                         href={`mailto:${page.email}`}
-                        className="inline-flex h-12 items-center gap-2 rounded-2xl border border-white/40 px-6 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                        className="inline-flex h-12 items-center gap-2 rounded-2xl border px-6 text-sm font-semibold transition-colors hover:opacity-80"
+                        style={{ borderColor: alpha(ON, 45) }}
                       >
                         <Mail className="size-4" /> {page.email}
                       </a>
@@ -419,8 +435,8 @@ export function ProProfile({
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-5 py-10 text-center sm:flex-row sm:justify-between sm:text-left">
           <div className="flex items-center gap-2.5">
             <span
-              className="flex size-9 items-center justify-center rounded-xl font-display text-xs font-bold text-white"
-              style={{ background: INK }}
+              className="flex size-9 items-center justify-center rounded-xl font-display text-xs font-bold"
+              style={{ background: INK, color: BG }}
             >
               {page.displayName.slice(0, 2).toUpperCase()}
             </span>
@@ -544,12 +560,17 @@ function PortfolioNav({
           "mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 transition-all duration-300 sm:px-6",
           scrolled ? "py-2.5" : "py-4",
         )}
+        style={
+          scrolled
+            ? { background: alpha(CARD, 92), backdropFilter: "blur(12px)" }
+            : undefined
+        }
       >
         <a
           href="#main"
           className={cn(
             "flex items-center gap-2.5 rounded-2xl px-2 py-1.5 transition-all duration-300",
-            scrolled && "bg-white shadow-[0_1px_2px_rgba(21,26,43,0.05)] ring-1",
+            scrolled && "shadow-[0_1px_2px_rgba(21,26,43,0.05)] ring-1",
           )}
           style={scrolled ? surfaceLine : undefined}
         >
@@ -561,8 +582,8 @@ function PortfolioNav({
             />
           ) : (
             <span
-              className="flex size-8 items-center justify-center rounded-full font-display text-[10px] font-bold text-white"
-              style={{ background: accent }}
+              className="flex size-8 items-center justify-center rounded-full font-display text-[10px] font-bold"
+              style={{ background: accent, color: ON }}
             >
               {page.displayName.slice(0, 2).toUpperCase()}
             </span>
@@ -602,8 +623,8 @@ function PortfolioNav({
         <div className="flex items-center gap-2">
           <a
             href="#contact"
-            className="hidden h-10 items-center rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 sm:inline-flex"
-            style={{ background: CORAL }}
+            className="hidden h-10 items-center rounded-xl px-5 text-sm font-semibold shadow-sm transition-transform hover:-translate-y-0.5 sm:inline-flex"
+            style={{ background: CORAL, color: ON }}
           >
             {w.contactMe}
           </a>
@@ -629,7 +650,7 @@ function PortfolioNav({
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? undefined : { opacity: 0, y: -8 }}
             transition={{ duration: 0.22, ease: [0.21, 0.6, 0.35, 1] }}
-            className="mx-3 mb-2 rounded-2xl border bg-white p-3 shadow-lg lg:hidden"
+            className="mx-3 mb-2 rounded-2xl border p-3 shadow-lg lg:hidden"
             style={surfaceLine}
           >
             {SECTIONS.map((s) => (
@@ -637,7 +658,7 @@ function PortfolioNav({
                 key={s.id}
                 href={`#${s.id}`}
                 onClick={() => setOpen(false)}
-                className="block rounded-xl px-3 py-2.5 text-sm transition-colors hover:bg-black/[0.03]"
+                className="block rounded-xl px-3 py-2.5 text-sm transition-colors hover:bg-[color:var(--p-hover)]"
                 style={{ color: active === s.id ? INK : MUTED }}
               >
                 {label(s.key)}
@@ -671,6 +692,35 @@ function PortfolioHero({
   const reduce = useReducedMotion();
   const tagline = page.headline || page.trade || w.tagline;
 
+  /*
+   * Model-specific hero composition — the sections themselves never change,
+   * only how the cover is staged:
+   *   editorial — portrait over coral/purple geometric decor (default)
+   *   authory   — full-width cover band, centred portrait, no floating cards
+   *   corporate — navy panel with a serif headline and the portrait on it
+   *   elegant   — same composition as editorial, on the dark canvas
+   */
+  const model = modelById(page.style);
+  const theme = model.theme;
+  const isCover = model.id === "authory";
+  const isPanel = model.id === "corporate";
+
+  /* Re-tuned tokens for the Corporate hero: a navy block the copy sits on. */
+  const panelVars = isPanel
+    ? {
+        ...pageVars(theme, true),
+        ["--p-bg" as string]: theme.accent,
+        ["--p-ink" as string]: theme.bg,
+        ["--p-muted" as string]: alpha(theme.bg, 76),
+        ["--p-line" as string]: alpha(theme.bg, 24),
+        ["--p-surf" as string]: alpha(theme.bg, 10),
+        ["--p-acc" as string]: theme.decor,
+        ["--p-dec" as string]: theme.decor,
+        ["--p-on" as string]: "#1f2430",
+        ["--p-hover" as string]: alpha(theme.bg, 10),
+      }
+    : undefined;
+
   /* Subtle mouse parallax on the decor (desktop pointers only). */
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -703,9 +753,49 @@ function PortfolioHero({
       }}
       className="relative overflow-hidden"
     >
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-16 pt-10 sm:px-6 sm:pt-16 lg:grid-cols-[1.02fr_0.98fr] lg:gap-8 lg:pb-24 lg:pt-16">
+      {/* Cover band — the Authory model opens with the owner's cover photo. */}
+      {isCover && (
+        <div className="relative h-44 w-full overflow-hidden sm:h-60">
+          {page.coverUrl ? (
+            <img
+              src={page.coverUrl}
+              alt=""
+              className="size-full object-cover"
+            />
+          ) : (
+            <div
+              className="size-full"
+              style={{ background: `linear-gradient(120deg, ${PURPLE}, ${CORAL})` }}
+            />
+          )}
+        </div>
+      )}
+      {isPanel && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-3 top-3 bottom-3 rounded-[2rem] sm:inset-x-6"
+          style={{ background: theme.accent }}
+        />
+      )}
+      <div
+        className={cn(
+          "relative mx-auto max-w-6xl items-center pb-16",
+          isCover
+            ? "flex w-full flex-col gap-6 px-5 pt-6 sm:px-6"
+            : isPanel
+              ? "grid gap-10 px-8 pt-14 sm:px-12 sm:pt-16 lg:grid-cols-[1.02fr_0.98fr] lg:gap-8 lg:pt-20 lg:pb-24"
+              : "grid gap-10 px-5 pt-10 sm:px-6 sm:pt-16 lg:grid-cols-[1.02fr_0.98fr] lg:gap-8 lg:pt-16 lg:pb-24",
+        )}
+        style={panelVars}
+      >
         {/* ---------- Left: greeting, name, pitch, CTAs ---------- */}
-        <div className="order-2 text-center lg:order-1 lg:text-left">
+        <div
+          className={cn(
+            "order-2 text-center lg:order-1",
+            !isCover && "lg:text-left",
+            isCover && "w-full",
+          )}
+        >
           <motion.p
             {...enter(0)}
             className="font-display text-lg font-bold sm:text-xl"
@@ -741,30 +831,33 @@ function PortfolioHero({
 
           <motion.div
             {...enter(0.3)}
-            className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+            className={cn(
+              "mt-8 flex flex-wrap items-center justify-center gap-3",
+              !isCover && "lg:justify-start",
+            )}
           >
             {page.whatsapp ? (
               <a
                 href={waLink(page.whatsapp, waMessage)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-2xl px-7 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
-                style={{ background: CORAL }}
+                className="inline-flex h-12 items-center gap-2 rounded-2xl px-7 text-sm font-semibold shadow-lg transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+                style={{ background: CORAL, color: ON }}
               >
                 {w.hireMe} <ArrowRight className="size-4" />
               </a>
             ) : (
               <a
                 href="#contact"
-                className="inline-flex h-12 items-center gap-2 rounded-2xl px-7 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-0.5"
-                style={{ background: CORAL }}
+                className="inline-flex h-12 items-center gap-2 rounded-2xl px-7 text-sm font-semibold shadow-lg transition-transform hover:-translate-y-0.5"
+                style={{ background: CORAL, color: ON }}
               >
                 {w.hireMe} <ArrowRight className="size-4" />
               </a>
             )}
             <a
               href="#about"
-              className="inline-flex h-12 items-center rounded-2xl px-7 text-sm font-semibold ring-1 transition-colors hover:bg-black/[0.03]"
+              className="inline-flex h-12 items-center rounded-2xl px-7 text-sm font-semibold ring-1 transition-colors hover:bg-[color:var(--p-hover)]"
               style={{ color: INK, borderColor: LINE, background: CARD }}
             >
               {w.knowMore}
@@ -774,7 +867,10 @@ function PortfolioHero({
           {/* Professional information */}
           <motion.div
             {...enter(0.36)}
-            className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs lg:justify-start"
+            className={cn(
+              "mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs",
+              !isCover && "lg:justify-start",
+            )}
             style={{ color: MUTED }}
           >
             {page.location && (
@@ -804,49 +900,72 @@ function PortfolioHero({
           initial={reduce ? false : { opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.21, 0.6, 0.35, 1] }}
-          className="relative order-1 mx-auto w-full max-w-sm lg:order-2 lg:max-w-none"
+          className={cn(
+            "relative mx-auto w-full max-w-sm",
+            isCover
+              ? "order-first z-10 -mt-20 w-40 max-w-none sm:w-48"
+              : "order-1 lg:order-2 lg:max-w-none",
+          )}
         >
-          {/* Coral angular block behind the portrait */}
-          <motion.div
-            aria-hidden="true"
-            style={{ x: coralX, y: coralY, background: CORAL }}
-            className="absolute left-1/2 top-1/2 -z-0 h-[80%] w-[74%] -translate-x-1/2 -translate-y-1/2 rotate-12 rounded-[2.5rem]"
-          />
-          {/* Purple counter-shape */}
-          <motion.div
-            aria-hidden="true"
-            style={{ x: purpleX, y: purpleY, background: PURPLE }}
-            className="absolute -left-3 top-4 -z-0 h-24 w-24 -rotate-12 rounded-3xl sm:h-32 sm:w-32"
-          />
-          {/* Dot cluster */}
-          <motion.div
-            aria-hidden="true"
-            style={{ x: purpleX, y: coralY }}
-            className="absolute -right-2 bottom-16 -z-0 grid grid-cols-3 gap-1.5"
-          >
-            {Array.from({ length: 9 }).map((_, i) => (
-              <span
-                key={i}
-                className="size-1.5 rounded-full"
-                style={{ background: PURPLE, opacity: 0.6 }}
+          {/* Coral / accent angular block behind the portrait */}
+          {!isCover && (
+            <>
+              <motion.div
+                aria-hidden="true"
+                style={{ x: coralX, y: coralY, background: CORAL }}
+                className="absolute left-1/2 top-1/2 -z-0 h-[80%] w-[74%] -translate-x-1/2 -translate-y-1/2 rotate-12 rounded-[2.5rem]"
               />
-            ))}
-          </motion.div>
+              {/* Purple counter-shape */}
+              <motion.div
+                aria-hidden="true"
+                style={{ x: purpleX, y: purpleY, background: PURPLE }}
+                className="absolute -left-3 top-4 -z-0 h-24 w-24 -rotate-12 rounded-3xl sm:h-32 sm:w-32"
+              />
+              {/* Dot cluster */}
+              <motion.div
+                aria-hidden="true"
+                style={{ x: purpleX, y: coralY }}
+                className="absolute -right-2 bottom-16 -z-0 grid grid-cols-3 gap-1.5"
+              >
+                {Array.from({ length: 9 }).map((_, i) => (
+                  <span
+                    key={i}
+                    className="size-1.5 rounded-full"
+                    style={{ background: PURPLE, opacity: 0.6 }}
+                  />
+                ))}
+              </motion.div>
+            </>
+          )}
 
           {/* Portrait */}
-          <div className="relative z-10 mx-auto w-[80%] max-w-xs sm:w-[72%]">
+          <div
+            className={cn(
+              "relative z-10 mx-auto w-full",
+              isCover ? "max-w-none" : "max-w-xs sm:w-[72%]",
+            )}
+          >
             {page.logoUrl ? (
               <img
                 src={page.logoUrl}
                 alt={page.displayName}
-                className="aspect-[4/5] w-full rounded-[2rem] object-cover shadow-[0_24px_48px_-24px_rgba(21,26,43,0.45)] ring-4 ring-white"
+                className={cn(
+                  "w-full object-cover shadow-[0_24px_48px_-24px_rgba(21,26,43,0.45)] ring-4 ring-white",
+                  isCover ? "aspect-square rounded-full" : "aspect-[4/5] rounded-[2rem]",
+                )}
               />
             ) : (
               <div
-                className="flex aspect-[4/5] w-full items-center justify-center rounded-[2rem] shadow-[0_24px_48px_-24px_rgba(21,26,43,0.4)] ring-4 ring-white"
-                style={{ background: `linear-gradient(150deg, ${INK}, ${PURPLE})` }}
+                className={cn(
+                  "flex w-full items-center justify-center shadow-[0_24px_48px_-24px_rgba(21,26,43,0.4)] ring-4 ring-white",
+                  isCover ? "aspect-square rounded-full" : "aspect-[4/5] rounded-[2rem]",
+                )}
+                style={{
+                  background: `linear-gradient(150deg, ${alpha(CORAL, 16)}, ${alpha(PURPLE, 16)})`,
+                  color: INK,
+                }}
               >
-                <span className="font-display text-6xl font-bold text-white">
+                <span className="font-display text-6xl font-bold">
                   {page.displayName.slice(0, 1)}
                 </span>
               </div>
@@ -854,29 +973,31 @@ function PortfolioHero({
           </div>
 
           {/* Floating stat card */}
-          <motion.div
-            initial={reduce ? false : { opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="absolute -left-1 bottom-10 z-20 sm:left-0"
-          >
+          {!isCover && (
             <motion.div
-              animate={reduce ? undefined : { y: [0, -10, 0] }}
-              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-              className="rounded-2xl border bg-white px-4 py-3 shadow-xl"
-              style={surfaceLine}
+              initial={reduce ? false : { opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="absolute -left-1 bottom-10 z-20 sm:left-0"
             >
-              <p className="font-display text-2xl font-bold" style={{ color: INK }}>
-                {projectCount}
-              </p>
-              <p className="text-[11px] font-medium" style={{ color: MUTED }}>
-                {w.projects}
-              </p>
+              <motion.div
+                animate={reduce ? undefined : { y: [0, -10, 0] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                className="rounded-2xl border px-4 py-3 shadow-xl"
+                style={surfaceLine}
+              >
+                <p className="font-display text-2xl font-bold" style={{ color: INK }}>
+                  {projectCount}
+                </p>
+                <p className="text-[11px] font-medium" style={{ color: MUTED }}>
+                  {w.projects}
+                </p>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          )}
 
           {/* Floating featured-work card */}
-          {featured && (
+          {!isCover && featured && (
             <motion.div
               initial={reduce ? false : { opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -886,7 +1007,7 @@ function PortfolioHero({
               <motion.div
                 animate={reduce ? undefined : { y: [0, 10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-                className="flex max-w-[190px] items-center gap-2.5 rounded-2xl border bg-white p-2.5 pr-3.5 shadow-xl"
+                className="flex max-w-[190px] items-center gap-2.5 rounded-2xl border p-2.5 pr-3.5 shadow-xl"
                 style={surfaceLine}
               >
               {featured.imageUrl ? (
@@ -898,7 +1019,7 @@ function PortfolioHero({
               ) : (
                 <span
                   className="flex size-11 shrink-0 items-center justify-center rounded-xl"
-                  style={{ background: `${CORAL}1a`, color: CORAL }}
+                  style={{ background: alpha(CORAL, 10), color: CORAL }}
                 >
                   <Sparkles className="size-5" />
                 </span>
@@ -1072,8 +1193,8 @@ function ProjectCard({
           />
           {featuredBadge && (
             <span
-              className="absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white"
-              style={{ background: CORAL }}
+              className="absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
+              style={{ background: CORAL, color: ON }}
             >
               {w.featured}
             </span>

@@ -27,7 +27,7 @@ import {
   splitTags,
   waLink,
 } from "@/lib/elio";
-import { MODELS, MODEL_ORDER, type ModelId } from "@/lib/portfolio-models";
+import { MODELS, MODEL_ORDER, modelById, type ModelId } from "@/lib/portfolio-models";
 import { useAuth } from "@/hooks/use-auth";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -922,7 +922,11 @@ function Editor({ pageId, onBack }: { pageId: Id<"elioPages">; onBack: () => voi
           </DialogHeader>
 
           {/* The real page component, exactly as it will render live */}
-          <div data-page-scroll className="flex-1 overflow-y-auto overflow-x-hidden bg-[#f4f2ee]">
+          <div
+            data-page-scroll
+            className="flex-1 overflow-y-auto overflow-x-hidden"
+            style={{ background: modelById(page.style).theme.bg }}
+          >
             <ProProfile page={page} embedded />
           </div>
         </DialogContent>

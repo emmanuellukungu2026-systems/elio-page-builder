@@ -25,6 +25,8 @@ export type ModelTheme = {
   line: string;
   /** Card / panel surface. */
   surface: string;
+  /** Text colour that sits on top of `accent` fills (buttons, badges, chips). */
+  onAccent: string;
   /** Display face: a serif for editorial gravitas, sans otherwise. */
   display: "sans" | "serif";
 };
@@ -48,6 +50,7 @@ export const MODELS: Record<
       decor: "#6b39d6",
       line: "rgba(21, 26, 43, 0.09)",
       surface: "#ffffff",
+      onAccent: "#ffffff",
       display: "sans",
     },
   },
@@ -65,6 +68,7 @@ export const MODELS: Record<
       decor: "#93c5fd",
       line: "rgba(28, 32, 36, 0.10)",
       surface: "#f7f8fa",
+      onAccent: "#ffffff",
       display: "sans",
     },
   },
@@ -82,6 +86,7 @@ export const MODELS: Record<
       decor: "#c9a66b",
       line: "rgba(31, 36, 48, 0.12)",
       surface: "#ffffff",
+      onAccent: "#ffffff",
       display: "serif",
     },
   },
@@ -99,6 +104,7 @@ export const MODELS: Record<
       decor: "#2a2a2c",
       line: "rgba(244, 242, 238, 0.12)",
       surface: "#161617",
+      onAccent: "#14110c",
       display: "serif",
     },
   },
