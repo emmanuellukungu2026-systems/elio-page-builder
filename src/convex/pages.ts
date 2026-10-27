@@ -148,6 +148,83 @@ export const getPublicPage = query({
   },
 });
 
+/**
+ * Count a visit on a public page. Deduped per browser session (30 min) so a
+ * refresh loop doesn't inflate the owner's stats. Public — no auth required.
+ */
+export const recordView = mutation({
+  args: { username: v.string(), viewerKey: v.string() },
+  handler: async (ctx, { username, viewerKey }) => {
+    const value = normalizeUsername(username);
+    const page = await ctx.db
+      .query("elioPages")
+      .withIndex("by_username", (q) => q.eq("username", value))
+      .first();
+    if (!page || page.isPublished !== true) return;
+
+    const key = viewerKey.trim().slice(0, 64);
+    if (!key) return;
+
+    const now = Date.now();
+    const recent = await ctx.db
+      .query("pageViews")
+      .withIndex("by_page_viewer", (q) =>
+        q.eq("pageId", page._id).eq("viewerKey", key),
+      )
+      .order("desc")
+      .first();
+    if (recent && now - recent.viewedAt < 30 * 60 * 1000) return;
+
+    await ctx.db.insert("pageViews", { pageId: page._id, viewerKey: key, viewedAt: now });
+    await ctx.db.patch(page._id, { viewCount: (page.viewCount ?? 0) + 1 });
+  },
+});
+
+/**
+ * Owner-only stats for the post-login dashboard: view counters and the raw
+ * signals behind the "is my page healthy" checklist.
+ */
+export const myPageStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) return null;
+    const page = await ctx.db
+      .query("elioPages")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .first();
+    if (!page) return null;
+
+    // Most recent visits (client groups them into today / this week in its
+    // own timezone — the server may sit in another one).
+    const views = await ctx.db
+      .query("pageViews")
+      .withIndex("by_page", (q) => q.eq("pageId", page._id))
+      .order("desc")
+      .take(300);
+
+    const comments = await ctx.db
+      .query("pageComments")
+      .withIndex("by_page", (q) => q.eq("pageId", page._id))
+      .collect();
+
+    const conversations = await ctx.db
+      .query("conversations")
+      .withIndex("by_page", (q) => q.eq("pageId", page._id))
+      .collect();
+
+    return {
+      viewCount: page.viewCount ?? 0,
+      recentViewTimes: views.map((v) => v.viewedAt),
+      comments: comments.filter((c) => c.internal !== true).length,
+      conversations: conversations.length,
+      unread: conversations.reduce((n, c) => n + c.unread, 0),
+      updatedAt: page.updatedAt,
+      publishedAt: page.publishedAt,
+    };
+  },
+});
+
 /** One catalog item from a published page — the detail view. */
 export const getPublicItem = query({
   args: { username: v.string(), itemId: v.string() },

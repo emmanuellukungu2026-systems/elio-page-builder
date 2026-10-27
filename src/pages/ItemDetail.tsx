@@ -4,6 +4,7 @@ import { PageLoading } from "@/components/PageLoading";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { waLink } from "@/lib/elio";
+import { useCountView } from "@/hooks/use-count-view";
 import { modelById } from "@/lib/portfolio-models";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,8 @@ export default function ItemDetail() {
   const data = useQuery(api.pages.getPublicItem, { username: username ?? "", itemId: itemId ?? "" });
   const { t } = useI18n();
   const d = t.itemDetail;
+  // Visiting an item counts as a visit on the owner's page (once data loads).
+  useCountView(username ?? "", data != null);
 
   if (data === undefined) {
     return <PageLoading />;

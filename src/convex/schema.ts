@@ -67,6 +67,7 @@ const schema = defineSchema(
       isPublished: v.optional(v.boolean()),
       publishedAt: v.optional(v.number()),
       updatedAt: v.optional(v.number()),
+      viewCount: v.optional(v.number()), // total visits counted on the public page
 
       items: v.array(
         v.object({
@@ -90,6 +91,16 @@ const schema = defineSchema(
       .index("by_user", ["userId"])
       .index("by_username", ["username"])
       .index("by_published", ["isPublished"]),
+
+    // One counted visit on a public page, deduped per viewer session so a
+    // refresh loop doesn't inflate the owner's stats.
+    pageViews: defineTable({
+      pageId: v.id("elioPages"),
+      viewerKey: v.string(), // anonymous browser session id
+      viewedAt: v.number(),
+    })
+      .index("by_page", ["pageId"])
+      .index("by_page_viewer", ["pageId", "viewerKey"]),
 
     // Visitor messages on a page (+ internal studio notes, flagged `internal`
     // so they never appear on the public page)

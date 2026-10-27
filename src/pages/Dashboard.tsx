@@ -18,6 +18,8 @@ import {
   ArrowUpRight,
   CalendarDays,
   CheckCircle2,
+  Circle,
+  Eye,
   Instagram,
   Layers,
   Linkedin,
@@ -31,6 +33,7 @@ import {
   Radio,
   Send,
   Store,
+  TrendingUp,
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
@@ -52,9 +55,11 @@ export default function Dashboard() {
   const c = t.dashboard.client;
   const card = t.dashboard.card;
   const mp = t.dashboard.mypage;
+  const h = t.dashboard.health;
   const page = useQuery(api.pages.getMyPage);
   const orders = useQuery(api.orders.myOrders);
   const inbox = useQuery(api.messages.inbox);
+  const stats = useQuery(api.pages.myPageStats);
   const inboxCount = inbox?.conversations.length ?? 0;
   const inboxUnread = inbox?.unread ?? 0;
 
@@ -100,6 +105,40 @@ export default function Dashboard() {
       setModSending(false);
     }
   };
+
+  // ---- Page health: view counters (grouped in the visitor's timezone) ----
+  const recentViews = stats?.recentViewTimes ?? [];
+  const dayStart = new Date();
+  dayStart.setHours(0, 0, 0, 0);
+  const viewsToday = recentViews.filter((ts) => ts >= dayStart.getTime()).length;
+  const viewsWeek = recentViews.filter((ts) => ts >= Date.now() - 7 * 24 * 60 * 60 * 1000).length;
+
+  // ---- Readiness checklist: the signals that make a page work well ----
+  const pageItems = page?.items ?? [];
+  const checks: { ok: boolean; label: string; hint: string }[] = [
+    {
+      ok: !!(page?.trade || page?.headline) && !!page?.location,
+      label: h.cIdentity,
+      hint: h.hIdentity,
+    },
+    { ok: !!page?.bio || !!page?.story, label: h.cStory, hint: h.hStory },
+    {
+      ok: !!(page?.email || page?.whatsapp || page?.instagram || page?.linkedin),
+      label: h.cContact,
+      hint: h.hContact,
+    },
+    { ok: pageItems.length >= 3, label: h.cContent, hint: h.hContent },
+    {
+      ok: pageItems.some((it) => !!it.imageUrl),
+      label: h.cImages,
+      hint: h.hImages,
+    },
+  ];
+  const passed = checks.filter((c) => c.ok).length;
+  const score = Math.round((passed / checks.length) * 100);
+
+  const fmtDate = (ts?: number) =>
+    ts ? new Date(ts).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : "—";
 
   return (
     <div className="relative min-h-screen">
@@ -313,6 +352,146 @@ export default function Dashboard() {
                 </div>
               </section>
             </div>
+
+            {/* ============ PAGE HEALTH — views, status, checklist ============ */}
+            <section className="mt-8">
+              <h2 className="font-display text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {h.title}
+              </h2>
+              <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground">{h.sub}</p>
+
+              {/* Counters */}
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {[
+                  { icon: Eye, label: h.views, value: stats?.viewCount ?? 0 },
+                  { icon: CalendarDays, label: h.today, value: viewsToday },
+                  { icon: TrendingUp, label: h.week, value: viewsWeek },
+                  { icon: Layers, label: h.items, value: pageItems.length },
+                ].map((s) => (
+                  <div key={s.label} className="glass rounded-3xl p-5">
+                    <span className="flex size-9 items-center justify-center rounded-xl bg-ember/15 text-ember">
+                      <s.icon className="size-4" />
+                    </span>
+                    <p className="mt-4 font-display text-2xl font-bold tracking-tight">
+                      {s.value.toLocaleString()}
+                    </p>
+                    <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+              {stats != null && stats.viewCount === 0 && (
+                <p className="mt-3 text-sm text-muted-foreground">{h.noViews}</p>
+              )}
+
+              <div className="mt-4 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+                {/* Status + live signals */}
+                <section className="glass-strong rounded-3xl p-6 sm:p-7">
+                  <div className="flex items-start gap-3">
+                    <span
+                      className={cn(
+                        "flex size-9 shrink-0 items-center justify-center rounded-xl",
+                        page.isPublished
+                          ? "bg-emerald-500/15 text-emerald-500"
+                          : "bg-amber-500/15 text-amber-500",
+                      )}
+                    >
+                      {page.isPublished ? (
+                        <CheckCircle2 className="size-4" />
+                      ) : (
+                        <Circle className="size-4" />
+                      )}
+                    </span>
+                    <div>
+                      <h3 className="font-display text-base font-semibold">
+                        {page.isPublished ? h.live : h.draft}
+                      </h3>
+                      <p className="mt-0.5 text-sm leading-6 text-muted-foreground">
+                        {page.isPublished ? h.liveHint : h.draftHint}
+                      </p>
+                    </div>
+                  </div>
+                  <dl className="mt-5 space-y-3 border-t border-border/60 pt-4 text-sm">
+                    <div className="flex items-center justify-between gap-4">
+                      <dt className="text-muted-foreground">{h.link}</dt>
+                      <dd className="truncate font-mono text-xs">/u/{page.username}</dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <dt className="text-muted-foreground">{h.updated}</dt>
+                      <dd className="text-xs font-medium">{fmtDate(stats?.updatedAt)}</dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <dt className="text-muted-foreground">{h.messages}</dt>
+                      <dd className="text-xs font-medium">
+                        {stats?.conversations ?? 0}
+                        {(stats?.unread ?? 0) > 0 && (
+                          <span className="ml-1.5 rounded-full bg-ember/15 px-2 py-0.5 text-[11px] font-semibold text-ember">
+                            {stats?.unread} {h.unread}
+                          </span>
+                        )}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <dt className="text-muted-foreground">{h.comments}</dt>
+                      <dd className="text-xs font-medium">{stats?.comments ?? 0}</dd>
+                    </div>
+                  </dl>
+                </section>
+
+                {/* Readiness checklist */}
+                <section className="glass-strong rounded-3xl p-6 sm:p-7">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="font-display text-base font-semibold">{h.checklist}</h3>
+                      <p className="mt-0.5 text-sm text-muted-foreground">{h.checklistSub}</p>
+                    </div>
+                    <span className="font-display text-xl font-bold text-ember">
+                      {score}%
+                    </span>
+                  </div>
+                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/[0.08] dark:bg-white/[0.08]">
+                    <div
+                      className="h-full rounded-full bg-ember transition-all duration-500"
+                      style={{ width: `${score}%` }}
+                    />
+                  </div>
+                  <ul className="mt-5 space-y-3.5">
+                    {checks.map((c) => (
+                      <li key={c.label} className="flex items-start gap-2.5">
+                        <span
+                          className={cn(
+                            "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full",
+                            c.ok
+                              ? "bg-emerald-500/15 text-emerald-500"
+                              : "bg-amber-500/15 text-amber-500",
+                          )}
+                        >
+                          {c.ok ? (
+                            <CheckCircle2 className="size-3.5" />
+                          ) : (
+                            <Circle className="size-3.5" />
+                          )}
+                        </span>
+                        <div className="min-w-0">
+                          <p
+                            className={cn(
+                              "text-sm font-medium",
+                              !c.ok && "text-muted-foreground",
+                            )}
+                          >
+                            {c.label}
+                          </p>
+                          {!c.ok && (
+                            <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
+                              {c.hint}
+                            </p>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </div>
+            </section>
 
             {/* Your NFC card — the exact model chosen during the order */}
             {latestOrder && (

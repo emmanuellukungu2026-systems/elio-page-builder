@@ -5,6 +5,7 @@ import { Reveal } from "@/components/Reveal";
 import type { Doc } from "@/convex/_generated/dataModel";
 import { waLink } from "@/lib/elio";
 import { useI18n } from "@/lib/i18n";
+import { useCountView } from "@/hooks/use-count-view";
 import { alpha, P, pageThemeStyle, pageVars, readableOn } from "@/lib/page-theme";
 import { modelById } from "@/lib/portfolio-models";
 import { cn } from "@/lib/utils";
@@ -129,6 +130,8 @@ export function ProProfile({
 }) {
   const { t } = useI18n();
   const w = t.portfolio as PortfolioDict;
+  // Count this visit on the owner's stats — never inside the studio preview.
+  useCountView(page.username, !embedded);
   const model = modelById(page.style);
   // The chosen model owns the palette; an accent picked in the studio still wins.
   const customAccent =
