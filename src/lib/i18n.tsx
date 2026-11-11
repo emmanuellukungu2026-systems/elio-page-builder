@@ -88,6 +88,29 @@ const en = {
       },
     ],
   },
+  story: {
+    kicker: "See it happen",
+    title: "He builds his page. His friend gets it in one tap.",
+    sub: "The whole product in four moves: create the page, write it on the card, tap the card on a phone, and the page opens.",
+    steps: [
+      {
+        title: "He creates his page",
+        text: "Photos, projects and contact details on one link. No code, no designer.",
+      },
+      {
+        title: "The page goes on the card",
+        text: "His link is written on the NFC card he hands out.",
+      },
+      {
+        title: "His friend taps",
+        text: "One tap with the phone. No app to install, nothing to type.",
+      },
+      {
+        title: "The page opens",
+        text: "The friend sees the work and can message him right away.",
+      },
+    ],
+  },
   features: {
     kicker: "The catalog",
     title: "Everything a client needs to choose you.",
@@ -985,6 +1008,29 @@ const fr: Dict = {
       },
     ],
   },
+  story: {
+    kicker: "La démo",
+    title: "Il crée sa page. Son ami l'a en un geste.",
+    sub: "Tout le produit en quatre temps : créer la page, l'écrire sur la carte, taper la carte sur un téléphone, et la page s'ouvre.",
+    steps: [
+      {
+        title: "Il crée sa page",
+        text: "Photos, projets et coordonnées sur un seul lien. Sans code, sans designer.",
+      },
+      {
+        title: "La page passe sur la carte",
+        text: "Son lien est écrit sur la carte NFC qu'il tend à ses clients.",
+      },
+      {
+        title: "Son ami tape",
+        text: "Un geste avec le téléphone. Rien à installer, rien à taper.",
+      },
+      {
+        title: "La page s'ouvre",
+        text: "L'ami voit le travail et peut lui écrire tout de suite.",
+      },
+    ],
+  },
   features: {
     kicker: "Le catalogue",
     title: "Tout ce qu'il faut à un client pour vous choisir.",
@@ -1877,6 +1923,29 @@ const tr: Dict = {
       {
         title: "İletişimi kolaylaştırın",
         text: "WhatsApp, e-posta ve sosyal medya her projenin altında. Size ulaşmak tek dokunuş.",
+      },
+    ],
+  },
+  story: {
+    kicker: "Kısa gösterim",
+    title: "Sayfasını kuruyor, arkadaşı tek dokunuşla görüyor.",
+    sub: "Ürünün tamamı dört adımda: sayfayı oluştur, karta yaz, kartı telefona dokundur, sayfa açılsın.",
+    steps: [
+      {
+        title: "Sayfasını oluşturuyor",
+        text: "Fotoğraflar, projeler ve iletişim bilgileri tek linkte. Kod yok, tasarımcı yok.",
+      },
+      {
+        title: "Sayfa karta geçiyor",
+        text: "Linki, dağıttığı NFC kartına yazılır.",
+      },
+      {
+        title: "Arkadaşı dokunduruyor",
+        text: "Telefonla tek dokunuş. Kuracak uygulama, yazacak bir şey yok.",
+      },
+      {
+        title: "Sayfa açılıyor",
+        text: "Arkadaşı işleri görür ve hemen ona mesaj yazabilir.",
       },
     ],
   },

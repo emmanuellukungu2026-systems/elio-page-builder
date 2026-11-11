@@ -13,6 +13,7 @@ import { Marquee } from "@/components/Marquee";
 import { ModelPreview } from "@/components/ModelPreview";
 import { Nav } from "@/components/Nav";
 import { Reveal } from "@/components/Reveal";
+import { PageStory } from "@/components/PageStory";
 import { TiltCard } from "@/components/TiltCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -261,6 +262,9 @@ export default function Landing() {
           ))}
         </div>
       </section>
+
+      {/* ================= STORY (animated demo) ================= */}
+      <PageStory />
 
       {/* ================= FEATURES ================= */}
       <section id="features" className="relative px-4 py-24 sm:px-6">
