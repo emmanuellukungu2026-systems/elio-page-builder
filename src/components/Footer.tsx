@@ -23,7 +23,7 @@ export function Footer() {
               <p className="mt-1 text-sm leading-6 text-muted-foreground">{t.account.text}</p>
             </div>
             <Button size="lg" className="btn-glow shrink-0 rounded-2xl px-6" asChild>
-              <Link to="/auth?returnTo=%2Fdashboard">{t.account.cta}</Link>
+              <Link to="/auth?returnTo=%2Ffeed">{t.account.cta}</Link>
             </Button>
           </div>
         </div>

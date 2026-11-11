@@ -117,20 +117,39 @@ export const listPublishedPages = query({
       .collect();
     return pages
       .sort((a, b) => (b.publishedAt ?? 0) - (a.publishedAt ?? 0))
-      .map((p) => ({
-        username: p.username,
-        displayName: p.displayName,
-        trade: p.trade,
-        headline: p.headline,
-        bio: p.bio,
-        location: p.location,
-        logoUrl: p.logoUrl,
-        coverUrl: p.coverUrl,
-        accent: p.accent,
-        style: p.style,
-        itemCount: p.items.length,
-        coverKind: p.items.find((it) => it.imageUrl)?.imageUrl,
-      }));
+      .map((p) => {
+        // The newest catalog item drives the business feed: it is what the
+        // owner most recently added, so it reads as their latest post.
+        const latest = p.items[p.items.length - 1];
+        return {
+          username: p.username,
+          displayName: p.displayName,
+          trade: p.trade,
+          headline: p.headline,
+          bio: p.bio,
+          location: p.location,
+          since: p.since,
+          logoUrl: p.logoUrl,
+          coverUrl: p.coverUrl,
+          accent: p.accent,
+          style: p.style,
+          itemCount: p.items.length,
+          coverKind: p.items.find((it) => it.imageUrl)?.imageUrl,
+          viewCount: p.viewCount ?? 0,
+          publishedAt: p.publishedAt ?? null,
+          updatedAt: p.updatedAt ?? p.publishedAt ?? null,
+          latestItem: latest
+            ? {
+                id: latest.id,
+                kind: latest.kind,
+                title: latest.title,
+                description: latest.description ?? null,
+                imageUrl: latest.imageUrl ?? null,
+                date: latest.date ?? null,
+              }
+            : null,
+        };
+      });
   },
 });
 

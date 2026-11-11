@@ -26,7 +26,7 @@ interface AuthProps {
   redirectAfterAuth?: string;
 }
 
-function resolveRedirectAfterAuth(returnTo: string | null, fallback = "/dashboard") {
+function resolveRedirectAfterAuth(returnTo: string | null, fallback = "/feed") {
   if (returnTo?.startsWith("/") && !returnTo.startsWith("//")) {
     return returnTo;
   }

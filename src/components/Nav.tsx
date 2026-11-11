@@ -49,6 +49,8 @@ export function Nav({ overlay = false }: { overlay?: boolean }) {
   const onHero = overlay && !scrolled;
 
   const links = [
+    // Signed-in businesses land in the feed, so it leads their navigation.
+    ...(isAuthenticated ? [{ label: t.nav.feed, href: "/feed" }] : []),
     { label: t.nav.features, href: "/#features" },
     { label: t.nav.directory, href: "/directory" },
     { label: t.nav.services, href: "/services" },
@@ -209,7 +211,7 @@ export function Nav({ overlay = false }: { overlay?: boolean }) {
                   "hidden rounded-lg sm:inline-flex",
                   onHero && "text-white hover:bg-white/10 hover:text-white",
                 )}
-                onClick={() => navigate("/auth?returnTo=%2Fdashboard")}
+                onClick={() => navigate("/auth?returnTo=%2Ffeed")}
               >
                 {t.nav.signIn}
               </Button>
@@ -272,7 +274,7 @@ export function Nav({ overlay = false }: { overlay?: boolean }) {
             )}
             {!isAuthenticated && (
               <button
-                onClick={() => navigate("/auth?returnTo=%2Fdashboard")}
+                onClick={() => navigate("/auth?returnTo=%2Ffeed")}
                 className="block w-full rounded-xl px-3 py-2.5 text-left text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 {t.nav.signIn}

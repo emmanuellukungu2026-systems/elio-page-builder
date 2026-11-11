@@ -21,6 +21,7 @@ const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const Services = lazy(() => import("./pages/Services.tsx"));
 const Profile = lazy(() => import("./pages/Profile.tsx"));
 const Directory = lazy(() => import("./pages/Directory.tsx"));
+const Feed = lazy(() => import("./pages/Feed.tsx"));
 const ItemDetail = lazy(() => import("./pages/ItemDetail.tsx"));
 
 // Simple loading fallback for route transitions
@@ -127,7 +128,7 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/" element={<Landing />} />
               <Route
                 path="/auth"
-                element={<AuthPage redirectAfterAuth="/dashboard" />}
+                element={<AuthPage redirectAfterAuth="/feed" />}
               />
               <Route
                 path="/dashboard"
@@ -142,6 +143,14 @@ createRoot(document.getElementById("root")!).render(
                 element={
                   <RequireAuth redirectImmediately>
                     <Admin />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/feed"
+                element={
+                  <RequireAuth>
+                    <Feed />
                   </RequireAuth>
                 }
               />
