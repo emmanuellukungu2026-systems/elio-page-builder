@@ -6,6 +6,7 @@ import type { Id } from "@/convex/_generated/dataModel";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 /**
@@ -25,6 +26,7 @@ export function ImageUpload({
   label: string;
   aspect?: "aspect-video" | "aspect-square";
 }) {
+  const { t } = useI18n();
   const generateUploadUrl = useMutation(api.media.generateUploadUrl);
   const attachMedia = useMutation(api.media.attachMedia);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -33,7 +35,7 @@ export function ImageUpload({
 
   const upload = async (file: File) => {
     if (!file.type.startsWith("image/")) {
-      toast.error("Images only (PNG, JPG, WebP…)");
+      toast.error(t.admin.imageOnly);
       return;
     }
     if (file.size > 8 * 1024 * 1024) {
@@ -48,13 +50,13 @@ export function ImageUpload({
         headers: { "Content-Type": file.type },
         body: file,
       });
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) throw new Error(t.admin.uploadFailed);
       const { storageId } = (await res.json()) as { storageId: string };
       const { url } = await attachMedia({ storageId: storageId as Id<"_storage"> });
       onUploaded(url);
       toast.success(label + " — OK");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Upload failed");
+      toast.error(err instanceof Error ? err.message : t.admin.uploadFailed);
     } finally {
       setBusy(false);
     }
@@ -76,7 +78,7 @@ export function ImageUpload({
               disabled={busy}
             >
               {busy ? <Loader2 className="size-3.5 animate-spin" /> : <ImagePlus className="size-3.5" />}
-              Replace
+              {t.admin.replace}
             </Button>
             {onClear && (
               <Button

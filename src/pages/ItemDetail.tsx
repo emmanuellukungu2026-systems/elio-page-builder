@@ -155,7 +155,9 @@ export default function ItemDetail() {
                     window.open(
                       waLink(
                         business.whatsapp!,
-                        `Hello ${business.displayName} — I just saw "${item.title}" on your Elio page. Is something like this possible?`,
+                        d.waMessage
+                          .replace("{name}", business.displayName)
+                          .replace("{item}", item.title),
                       ),
                       "_blank",
                     )

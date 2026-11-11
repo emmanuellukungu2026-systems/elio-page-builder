@@ -588,10 +588,7 @@ export default function Landing() {
                 asChild
               >
                 <a
-                  href={waLink(
-                    CONCIERGE_WHATSAPP,
-                    "Hello Aethel team 👋 I'd like to work with you / join the team — here's who I am and what I do:",
-                  )}
+                  href={waLink(CONCIERGE_WHATSAPP, t.aethelTeam.waMessage)}
                   target="_blank"
                   rel="noreferrer"
                 >

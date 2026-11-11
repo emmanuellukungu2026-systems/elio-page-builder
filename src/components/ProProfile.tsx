@@ -90,6 +90,7 @@ type PortfolioDict = {
   experienceKicker: string;
   featured: string;
   statsKicker: string;
+  waMessage: string;
 };
 
 /** Structural shape — accepts the public page object as returned by Convex. */
@@ -140,7 +141,7 @@ export function ProProfile({
     ? { ...model.theme, accent: customAccent, onAccent: readableOn(customAccent) }
     : model.theme;
   const accent = theme.accent;
-  const waMessage = `Hello ${page.displayName} — found you through your Elio page.`;
+  const waMessage = w.waMessage.replace("{name}", page.displayName);
 
   const projects = (page.items ?? []).filter((it) => it.kind === "project");
   const articles = (page.items ?? []).filter((it) => it.kind === "article");

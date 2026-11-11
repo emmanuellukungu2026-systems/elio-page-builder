@@ -74,10 +74,7 @@ export default function Dashboard() {
   const cardTier: CardTier =
     chosenTier === "pro" || chosenTier === "independent" ? chosenTier : "standard";
 
-  const trackHref = waLink(
-    CONCIERGE_WHATSAPP,
-    "Hello Elio team — I'd like an update on my page order.",
-  );
+  const trackHref = waLink(CONCIERGE_WHATSAPP, c.trackMessage);
 
   const submitModification = async () => {
     const message = modText.trim();
@@ -100,7 +97,7 @@ export default function Dashboard() {
       setModSent(true);
       setModText("");
     } catch {
-      toast.error("Could not reach the studio — please try again.");
+      toast.error(mp.modError);
     } finally {
       setModSending(false);
     }

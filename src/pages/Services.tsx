@@ -28,6 +28,7 @@ export default function Services() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const f = t.services.form;
   const p = t.services.pdf;
+  const b = t.services.brief;
 
   const [businessName, setBusinessName] = useState("");
   const [contactName, setContactName] = useState("");
@@ -52,26 +53,25 @@ export default function Services() {
     items: [],
   };
 
-  const cardLine =
-    withCard === null ? null : withCard ? `*NFC card:* YES — ship a physical card` : `*NFC card:* NO — page only`;
+  const cardLine = withCard === null ? null : withCard ? b.cardYes : b.cardNo;
 
   const modelLine = pageModel
-    ? `*Page style:* ${MODELS[pageModel].label} (model ${MODEL_ORDER.indexOf(pageModel) + 1})`
+    ? `${b.style} ${MODELS[pageModel].label} (model ${MODEL_ORDER.indexOf(pageModel) + 1})`
     : null;
 
   const waMessage = [
-    "*Elio Pages — Order*",
+    b.title,
     "",
-    `*Business:* ${businessName || "—"}`,
-    contactName ? `*Contact:* ${contactName}` : "",
-    whatsapp ? `*WhatsApp:* ${whatsapp}` : "",
-    trade ? `*Trade:* ${trade}` : "",
+    `${b.business} ${businessName || "—"}`,
+    contactName ? `${b.contact} ${contactName}` : "",
+    whatsapp ? `${b.whatsapp} ${whatsapp}` : "",
+    trade ? `${b.trade} ${trade}` : "",
     "",
     cardLine,
     modelLine,
-    `*Details:* ${details || "—"}`,
+    `${b.details} ${details || "—"}`,
     "",
-    "_This message is my order — please build my Elio page from it._",
+    b.footer,
   ]
     .filter((l) => l !== "" && l !== null)
     .join("\n");
